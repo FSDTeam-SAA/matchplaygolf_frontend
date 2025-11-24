@@ -17,7 +17,7 @@ const Category = () => {
           </div>
 
           <div className="overflow-hidden rounded-lg">
-            <Link href={`/brackets`}>
+            <Link href={`/tournaments`}>
               <Image
                 src={"/images/landing-page/category-1.png"}
                 alt="img.png"
@@ -32,7 +32,7 @@ const Category = () => {
         {/* card -2 */}
         <div className="space-y-4">
           <div className="overflow-hidden rounded-lg">
-            <Link href={`/brackets`}>
+            <Link href={`/tournaments`}>
               <Image
                 src={"/images/landing-page/category-2.png"}
                 alt="img.png"
@@ -59,7 +59,7 @@ const Category = () => {
           </div>
 
           <div className="overflow-hidden rounded-lg">
-            <Link href={`/brackets`}>
+            <Link href={`/tournaments`}>
               <Image
                 src={"/images/landing-page/category-3.png"}
                 alt="img.png"
@@ -74,7 +74,7 @@ const Category = () => {
         {/* card -2 */}
         <div className="space-y-4">
           <div className="overflow-hidden rounded-lg">
-            <Link href={`/brackets`}>
+            <Link href={`/tournaments`}>
               <Image
                 src={"/images/landing-page/category-4.jpg"}
                 alt="img.png"
