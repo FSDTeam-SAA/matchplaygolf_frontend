@@ -10,7 +10,7 @@ const NewsLetterSubscription = () => {
       <div className="w-full lg:w-auto text-center lg:text-left">
         <div>
           <h1 className="text-3xl sm:text-4xl lg:text-5xl font-semibold uppercase font-hexco flex flex-col">
-            <span className="bg-gradient-to-b from-primary via-primary to-[#26262636] bg-clip-text text-transparent ">
+            <span className="bg-gradient-to-b from-primary via-primary to-[#26262636] bg-clip-text text-transparent">
               Newsletter
             </span>{" "}
             <span className="bg-gradient-to-b from-black via-gray to-[#26262636] bg-clip-text text-transparent ">
@@ -21,7 +21,7 @@ const NewsLetterSubscription = () => {
 
         <div className="flex items-center justify-center lg:justify-start mt-5 max-w-md mx-auto lg:mx-0">
           <Input
-            className="w-full lg:w-[400px] border border-black rounded-r-none h-[45px]"
+            className="w-full lg:w-[400px] border border-black rounded-r-none h-[45px] focus-visible:ring-0"
             placeholder="Write Your Email..."
           />
           <button className="bg-black p-2 h-[45px] rounded-r-lg flex-shrink-0">
