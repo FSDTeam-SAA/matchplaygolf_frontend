@@ -18,8 +18,8 @@ const Navbar = () => {
       path: "/about",
     },
     {
-      label: "Brackets",
-      path: "/brackets",
+      label: "Tournaments",
+      path: "/tournaments",
     },
     {
       label: "Contact",
