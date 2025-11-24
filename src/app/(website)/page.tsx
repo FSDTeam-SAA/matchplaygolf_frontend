@@ -1,8 +1,9 @@
+import HowItWorks from "./_components/landing-page/how-it-works";
 import Banner from "./_components/re-usable/banner";
 
 export default function Home() {
   return (
-    <div>
+    <div className="space-y-24">
       <Banner
         bannerURL="/images/landing-page/hero.jpg"
         title="Top scorer to the final match"
@@ -10,6 +11,10 @@ export default function Home() {
         buttonTitle="Join Tournament"
         buttonPath="/brackets"
       />
+
+      <div className="container mx-auto">
+        <HowItWorks />
+      </div>
     </div>
   );
 }
