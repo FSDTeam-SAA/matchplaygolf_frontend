@@ -1,6 +1,7 @@
 import NewsLetterSubscription from "../_components/landing-page/newsletter-Subscription";
 import SportsArticles from "../_components/landing-page/sports-articles";
 import Banner from "../_components/re-usable/banner";
+import JoinRevolution from "./_components/join-revolution";
 import MissionVision from "./_components/mission-vision";
 
 export default function Home() {
@@ -16,6 +17,7 @@ export default function Home() {
 
       <div className="container mx-auto space-y-24">
         <MissionVision />
+        <JoinRevolution />
         <SportsArticles />
         <NewsLetterSubscription />
       </div>
