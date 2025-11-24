@@ -1,5 +1,6 @@
 import React from "react";
 import Navbar from "./_components/shared/navbar/navbar";
+import Footer from "./_components/shared/footer/footer";
 
 const Layout = ({ children }: { children: React.ReactNode }) => {
   return (
@@ -8,6 +9,9 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
         <Navbar />
       </header>
       <div>{children}</div>
+      <footer>
+        <Footer />
+      </footer>
     </div>
   );
 };
