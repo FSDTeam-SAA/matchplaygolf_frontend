@@ -5,7 +5,7 @@ import JoinRevolution from "./_components/join-revolution";
 import MissionVision from "./_components/mission-vision";
 import OurTeam from "./_components/our-team";
 
-export default function Home() {
+export default function About() {
   return (
     <div className="space-y-24">
       <Banner

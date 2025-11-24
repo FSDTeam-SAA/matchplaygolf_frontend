@@ -2,7 +2,7 @@ import NewsLetterSubscription from "../_components/landing-page/newsletter-Subsc
 import SportsArticles from "../_components/landing-page/sports-articles";
 import Banner from "../_components/re-usable/banner";
 
-export default function Home() {
+export default function Tournaments() {
   return (
     <div className="space-y-24">
       <Banner
