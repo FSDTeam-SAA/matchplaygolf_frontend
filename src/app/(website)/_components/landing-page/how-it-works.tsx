@@ -34,7 +34,7 @@ const HowItWorks = () => {
         {items.map((item, index) => (
           <div
             key={index}
-            className="p-8 shadow-[0px_8px_10px_6px_#0000001A] rounded-lg"
+            className="p-8 shadow-[0px_8px_10px_6px_#0000001A] rounded-lg hover:scale-105 duration-200 transition-all"
           >
             <Image
               src={item.image}
