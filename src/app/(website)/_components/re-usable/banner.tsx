@@ -26,7 +26,7 @@ const Banner: React.FC<BannerProps> = ({
         backgroundBlendMode: "overlay",
         backgroundAttachment: "fixed",
       }}
-      className="min-h-[600px] flex items-center justify-center bg-[#00000088]"
+      className="min-h-[650px] flex items-center justify-center bg-[#00000088]"
     >
       <div className="text-center text-white">
         <h1 className="text-4xl md:text-5xl lg:text-5xl font-bold font-hexco mb-4">
