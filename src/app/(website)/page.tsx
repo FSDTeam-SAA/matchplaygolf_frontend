@@ -1,3 +1,4 @@
+import Category from "./_components/landing-page/category";
 import HowItWorks from "./_components/landing-page/how-it-works";
 import Banner from "./_components/re-usable/banner";
 
@@ -12,8 +13,9 @@ export default function Home() {
         buttonPath="/brackets"
       />
 
-      <div className="container mx-auto">
+      <div className="container mx-auto space-y-24">
         <HowItWorks />
+        <Category />
       </div>
     </div>
   );

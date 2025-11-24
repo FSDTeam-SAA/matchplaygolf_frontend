@@ -25,16 +25,16 @@ const HowItWorks = () => {
       <h1 className="text-3xl font-hexco">
         <span className="text-primary">How It </span>Works
       </h1>
-      <p className="text-gray-600 text-md">
+      <p className="text-gray-600 text-md mt-2">
         Get started in three simple steps and join the competitive golf
         community
       </p>
 
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-10 mt-8">
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-10 mt-10">
         {items.map((item, index) => (
           <div
             key={index}
-            className="p-5 shadow-[0px_8px_10px_6px_#0000001A] rounded-lg"
+            className="p-8 shadow-[0px_8px_10px_6px_#0000001A] rounded-lg"
           >
             <Image
               src={item.image}
