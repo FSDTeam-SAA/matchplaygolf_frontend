@@ -1,5 +1,6 @@
 import Category from "./_components/landing-page/category";
 import HowItWorks from "./_components/landing-page/how-it-works";
+import SportsArticles from "./_components/landing-page/sports-articles";
 import UpcomingTournaments from "./_components/landing-page/upcoming-tournaments";
 import Banner from "./_components/re-usable/banner";
 
@@ -18,6 +19,7 @@ export default function Home() {
         <HowItWorks />
         <Category />
         <UpcomingTournaments />
+        <SportsArticles />
       </div>
     </div>
   );

@@ -25,7 +25,8 @@ const UpcomingTournaments = () => {
               <Calendar className="text-primary font-bold" /> Dec 15, 2025
             </h1>
             <h1 className="flex items-center gap-2">
-              <MapPin className="text-primary font-bold" /> Pebble Beach Golf Links
+              <MapPin className="text-primary font-bold" /> Pebble Beach Golf
+              Links
             </h1>
             <h1 className="flex items-center gap-2">
               <Users className="text-primary font-bold" /> 24/32 Players5
