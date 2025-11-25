@@ -11,7 +11,7 @@ const StateCard = ({
   value: string;
 }) => {
   return (
-    <div className="bg-white rounded-lg p-4 flex items-center justify-between h-[130px] shadow-[0px_4px_6px_0px_#0000001A]">
+    <div className="bg-white rounded-lg p-5 flex items-center justify-between h-[130px] shadow-[0px_4px_6px_0px_#0000001A]">
       <div>
         <h1 className="text-md text-gray-600">{title}</h1>
         <p className="font-hexco text-3xl text-primary mt-2">{value}</p>
