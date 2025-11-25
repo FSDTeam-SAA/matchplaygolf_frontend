@@ -1,18 +1,21 @@
-import LoginForm from "./_components/login-form";
+import React from "react";
+import SignUpForm from "../_components/sign-up-form";
 
-export default function Login() {
+const page = () => {
   return (
     <div className="bg-[#ffffff7e] p-5 rounded-lg w-[400px] lg:w-[600px]">
       <div className="text-center">
-        <h1 className="text-2xl font-medium">Welcome</h1>
+        <h1 className="text-2xl font-medium">Register</h1>
         <p className="text-sm text-gray-700">
-          Login to your Golf Knockout account
+          Join the competitive golf community
         </p>
       </div>
 
       <div className="mt-10">
-        <LoginForm />
+        <SignUpForm />
       </div>
     </div>
   );
-}
+};
+
+export default page;
