@@ -46,6 +46,8 @@ const SignUpForm = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const pathName = usePathname();
+  const isPlayer = pathName?.includes("/player");
+  const roll = isPlayer ? "User" : "Organizer";
 
   const form = useForm<FormType>({
     resolver: zodResolver(formSchema),
@@ -62,10 +64,9 @@ const SignUpForm = () => {
   });
 
   function onSubmit(values: FormType) {
-    console.log("pathName: ", pathName)
     const submitData = {
       ...values,
-      roll: pathName === "/sign-up/player" ? "User" : "Organizer",
+      roll: roll,
     };
     console.log(submitData);
   }
