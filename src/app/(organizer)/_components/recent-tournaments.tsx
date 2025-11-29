@@ -1,65 +1,70 @@
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { MapPin, Calendar } from "lucide-react"
+import { MapPin } from "lucide-react";
+import Link from "next/link";
+import React from "react";
 
-const tournaments = [
-  {
-    id: 1,
-    name: "Spring Championship 2023",
-    location: "Pine Valley Golf Club",
-    date: "May 15-20, 2023",
-    players: 48,
-  },
-  {
-    id: 2,
-    name: "Spring Championship 2023",
-    location: "Pine Valley Golf Club",
-    date: "May 15-20, 2023",
-    players: 48,
-  },
-  {
-    id: 3,
-    name: "Spring Championship 2023",
-    location: "Pine Valley Golf Club",
-    date: "May 15-20, 2023",
-    players: 48,
-  },
-]
-
-export function RecentTournaments() {
+const RecentTournaments = () => {
+  const tournaments = [
+    {
+      id: 1,
+      name: "Spring Championship 2023",
+      location: "Pine Valley Golf Club",
+      date: "May 15-20, 2023",
+      players: 48,
+    },
+    {
+      id: 2,
+      name: "Spring Championship 2023",
+      location: "Pine Valley Golf Club",
+      date: "May 15-20, 2023",
+      players: 48,
+    },
+    {
+      id: 3,
+      name: "Spring Championship 2023",
+      location: "Pine Valley Golf Club",
+      date: "May 15-20, 2023",
+      players: 48,
+    },
+  ];
   return (
-    <Card>
-      <CardHeader className="flex flex-row items-center justify-between">
-        <CardTitle>Recent Tournaments</CardTitle>
-        <button className="text-red-600 text-sm font-medium hover:text-red-700">View All</button>
-      </CardHeader>
-      <CardContent>
-        <div className="space-y-4">
-          {tournaments.map((tournament) => (
-            <div
-              key={tournament.id}
-              className="flex items-center justify-between p-4 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors"
-            >
-              <div className="flex-1">
-                <h3 className="font-semibold text-foreground">{tournament.name}</h3>
-                <div className="flex items-center gap-4 mt-2 text-sm text-muted-foreground">
-                  <div className="flex items-center gap-1">
-                    <MapPin className="w-4 h-4" />
-                    {tournament.location}
-                  </div>
-                  <div className="flex items-center gap-1">
-                    <Calendar className="w-4 h-4" />
-                    {tournament.date}
-                  </div>
-                </div>
-              </div>
-              <div className="text-right">
-                <p className="font-semibold text-foreground">{tournament.players}</p>
-                <p className="text-xs text-muted-foreground">Players</p>
-              </div>
-            </div>
-          ))}
+    <div className="px-6 pb-20 ">
+      <div className="bg-white border border-[#E6E6E8] p-6 rounded-[12px]">
+        <div className="w-full flex items-center justify-between">
+          <h4 className="text-xl font-semibold leading-[150%] text-[#343A40] font-hexco">
+            Recent Tournaments
+          </h4>
+          <Link href="/organizer/tournaments-management">
+            <button className="text-sm font-medium leading-[150%] text-[#DF1020] cursor-pointer hover:underline">
+              View All
+            </button>
+          </Link>
         </div>
-      </CardContent>
-    </Card>
-  )
-}
+        <div>
+          {tournaments?.map((item) => {
+            return (
+              <div
+                key={item?.id}
+                className="w-full flex items-center justify-between border-b border-[#E6E6E8] p-6"
+              >
+                <h4 className="text-base font-semibold leading-[150%] text-[#181818]">
+                  {item?.name}
+                </h4>
+                <p className="flex items-center gap-2 text-sm font-normal leading-[150%] text-[#616161]">
+                  <MapPin className="w-4 h-4 " /> {item?.location}
+                </p>
+                <p className="text-sm font-normal leading-[150%] text-[#616161]">
+                  {item?.players}
+                </p>
+                <p className="text-sm font-normal leading-[150%] text-[#616161]">
+                  {item?.date}
+                </p>
+              </div>
+            );
+          })}
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export default RecentTournaments;

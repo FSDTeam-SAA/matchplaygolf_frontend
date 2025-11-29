@@ -5,7 +5,7 @@ export function DashboardOverview() {
   return (
     <div className="">
       {/* Header */}
-      <div className="bg-white p-6">
+      <div className="bg-white p-6 sticky top-0  z-50">
         <h1 className="text-2xl lg:text-3xl font-bold text-[#181818] leading-[150%]">
           Welcome back, Michael
         </h1>

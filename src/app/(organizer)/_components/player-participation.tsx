@@ -1,38 +1,81 @@
-"use client"
 
-import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from "recharts"
+"use client";
 
-const data = [
-  { month: "Jan", value: 65 },
-  { month: "Feb", value: 78 },
-  { month: "Mar", value: 72 },
-  { month: "Apr", value: 85 },
-  { month: "May", value: 92 },
-  { month: "Jun", value: 110 },
-  { month: "Jul", value: 125 },
-  { month: "Aug", value: 145 },
-  { month: "Sep", value: 165 },
-  { month: "Oct", value: 155 },
-  { month: "Nov", value: 120 },
-  { month: "Dec", value: 105 },
-]
+import { Area, AreaChart, CartesianGrid, XAxis, YAxis } from "recharts";
+
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  ChartConfig,
+  ChartContainer,
+  ChartTooltip,
+  ChartTooltipContent,
+} from "@/components/ui/chart";
+import { CircleAlert } from "lucide-react";
+
+export const description = "A simple area chart";
+
+const chartData = [
+  { month: "January", desktop: 186 },
+  { month: "February", desktop: 305 },
+  { month: "March", desktop: 237 },
+  { month: "April", desktop: 73 },
+  { month: "May", desktop: 209 },
+  { month: "June", desktop: 214 },
+  { month: "July", desktop: 198 },
+  { month: "August", desktop: 256 },
+  { month: "September", desktop: 310 },
+  { month: "October", desktop: 275 },
+  { month: "November", desktop: 240 },
+  { month: "December", desktop: 320 },
+];
+
+const chartConfig = {
+  desktop: {
+    label: "Desktop",
+    color: "#DF1020",
+  },
+} satisfies ChartConfig;
 
 export function PlayerParticipation() {
   return (
-    <ResponsiveContainer width="100%" height={300}>
-      <LineChart data={data} margin={{ top: 5, right: 30, left: 0, bottom: 5 }}>
-        <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" />
-        <XAxis dataKey="month" stroke="#999" />
-        <YAxis stroke="#999" />
-        <Tooltip
-          contentStyle={{
-            backgroundColor: "#fff",
-            border: "1px solid #ddd",
-            borderRadius: "8px",
-          }}
-        />
-        <Line type="monotone" dataKey="value" stroke="#dc2626" dot={false} strokeWidth={3} fill="#fee2e2" />
-      </LineChart>
-    </ResponsiveContainer>
-  )
+    <div className="px-6 pb-6">
+      <Card className="">
+        <CardHeader>
+          <CardTitle className="flex items-center gap-2 text-xl font-semibold leading-[150%] text-[#343A40] font-hexco">
+            Player Participation <CircleAlert />
+          </CardTitle>
+        </CardHeader>
+        <CardContent>
+          <ChartContainer config={chartConfig} className="w-full max-h-[373px]">
+            <AreaChart
+              accessibilityLayer
+              data={chartData}
+              className=" w-full"
+            >
+              <CartesianGrid vertical={false} />
+              <XAxis
+                dataKey="month"
+                tickLine={false}
+                axisLine={false}
+                tickMargin={8}
+                tickFormatter={(value) => value.slice(0, 3)}
+              />
+              <YAxis stroke="#999" />
+              <ChartTooltip
+                cursor={false}
+                content={<ChartTooltipContent indicator="line" />}
+              />
+              <Area
+                dataKey="desktop"
+                type="monotone"
+                fill="var(--color-desktop)"
+                fillOpacity={0.1}
+                stroke="var(--color-desktop)"
+              />
+            </AreaChart>
+          </ChartContainer>
+        </CardContent>
+      </Card>
+    </div>
+  );
 }
