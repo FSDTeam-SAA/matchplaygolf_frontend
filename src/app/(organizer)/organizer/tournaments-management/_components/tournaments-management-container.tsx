@@ -13,13 +13,19 @@ import { Eye, Plus, Trash } from "lucide-react";
 import MatchPlayGolfPagination from "@/components/ui/matchplaygolf-pagination";
 import { Input } from "@/components/ui/input";
 import DeleteModal from "@/components/modals/delete-modal";
+import TournamentView from "./tournament-view";
+import { Tournament } from "@/components/types/tournaments-data-type";
 
 const TournamentsManagementContainer = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [search, setSearch] = useState("");
-  const [deleteModalOpen, setDeleteModalOpen ] = useState(false);
+  const [deleteModalOpen, setDeleteModalOpen] = useState(false);
+  const [viewTournament, setViewTournament] = useState(false);
+  const [selectedTournament, setSelectedTournament] =
+    useState<Tournament | null>(null);
+
   console.log(search);
-  const mockTournaments = [
+  const mockTournaments: Tournament[] = [
     {
       id: 1,
       name: "Spring Championship 2023",
@@ -76,9 +82,7 @@ const TournamentsManagementContainer = () => {
     },
   ];
 
-  const handleDelete = ()=>{
-    
-  }
+  const handleDelete = () => {};
   return (
     <div>
       {/* Header */}
@@ -171,10 +175,21 @@ const TournamentsManagementContainer = () => {
                     </button>
                   </TableCell>
                   <TableCell className="flex items-center justify-center gap-6 py-4">
-                    <button className="cursor-pointer">
+                    <button
+                      onClick={() => {
+                        setViewTournament(true);
+                        setSelectedTournament(item);
+                      }}
+                      className="cursor-pointer"
+                    >
                       <Eye className="h-6 w-6 text-[#181818]" />
                     </button>
-                    <button onClick={()=>{setDeleteModalOpen(true)}} className="cursor-pointer">
+                    <button
+                      onClick={() => {
+                        setDeleteModalOpen(true);
+                      }}
+                      className="cursor-pointer"
+                    >
                       <Trash className="h-6 w-6 text-[#181818]" />
                     </button>
                   </TableCell>
@@ -198,16 +213,27 @@ const TournamentsManagementContainer = () => {
           </div>
         </div>
 
-         {/* delete modal  */}
-      {deleteModalOpen && (
-        <DeleteModal
-          isOpen={deleteModalOpen}
-          onClose={() => setDeleteModalOpen(false)}
-          onConfirm={handleDelete}
-          title="Are You Sure?"
-          desc="Are you sure you want to delete this tournaments?"
-        />
-      )}
+        {/* delete modal  */}
+        {deleteModalOpen && (
+          <DeleteModal
+            isOpen={deleteModalOpen}
+            onClose={() => setDeleteModalOpen(false)}
+            onConfirm={handleDelete}
+            title="Are You Sure?"
+            desc="Are you sure you want to delete this tournaments?"
+          />
+        )}
+
+        {/* tournament view modal  */}
+        <div>
+          {viewTournament && (
+            <TournamentView
+              open={viewTournament}
+              onOpenChange={(open: boolean) => setViewTournament(open)}
+              tournamentData={selectedTournament}
+            />
+          )}
+        </div>
       </div>
     </div>
   );
