@@ -1,19 +1,19 @@
-import React from "react";
+import React from 'react'
 
-const TournamentsManagementContainer = () => {
+const PairKnockoutsContainer = () => {
   return (
     <div>
       {/* Header */}
       <div className="bg-white p-6 sticky top-0  z-50">
         <h1 className="text-2xl lg:text-3xl font-bold text-[#181818] leading-[150%]">
-          Tournaments
+          Spring Championship {new Date().getFullYear()}
         </h1>
         <p className="text-sm font-normal text-[#424242] leading-[150%]">
-          Manage all golf tournaments
+          View tournament bracket progression
         </p>
       </div>
     </div>
-  );
-};
+  )
+}
 
-export default TournamentsManagementContainer;
+export default PairKnockoutsContainer

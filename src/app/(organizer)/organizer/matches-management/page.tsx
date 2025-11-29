@@ -1,9 +1,10 @@
 import React from 'react'
+import MatchesManagementContainer from './_components/matches-management-container'
 
 const MatchesManagementPage = () => {
   return (
     <div>
-      Matches ManagementPage
+      <MatchesManagementContainer/>
     </div>
   )
 }
