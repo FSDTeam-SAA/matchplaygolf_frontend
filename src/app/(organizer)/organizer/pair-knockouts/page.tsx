@@ -1,9 +1,10 @@
 import React from 'react'
+import PairKnockoutsContainer from './_components/pair-knockouts-container'
 
 const PairKnockoutsPage = () => {
   return (
     <div>
-      Pair Knockouts Page 
+      <PairKnockoutsContainer/>
     </div>
   )
 }

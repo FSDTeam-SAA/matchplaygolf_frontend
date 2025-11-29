@@ -14,7 +14,7 @@ export default function OrganizerLayout({ children }: { children: React.ReactNod
             <SidebarTrigger />
           </div>
           <div className="w-full">
-            <div className="pb-10 bg-[#f8f9fa] min-h-screen">{children}</div>
+            <div className="bg-[#F8F9FA] min-h-screen">{children}</div>
           </div>
         </main>
       </SidebarProvider>

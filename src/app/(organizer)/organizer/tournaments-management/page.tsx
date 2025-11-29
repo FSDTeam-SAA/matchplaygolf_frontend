@@ -1,11 +1,14 @@
-import React from 'react'
+import React from "react";
+import TournamentsManagementContainer from "./_components/tournaments-management-container";
+import TournamentsManagementHeader from "./_components/tournaments-management-header";
 
 const TournamentsManagementPage = () => {
   return (
     <div>
-      Tournaments ManagementPage
+      <TournamentsManagementHeader />
+      <TournamentsManagementContainer />
     </div>
-  )
-}
+  );
+};
 
-export default TournamentsManagementPage
+export default TournamentsManagementPage;
