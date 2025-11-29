@@ -87,10 +87,10 @@ const MatchPlayGolfPagination: React.FC<PaginationProps> = ({
             <PaginationLink
               onClick={() => handlePageClick(page)}
               className={cn(
-                'border cursor-pointer border-[#525773] hover:bg-[rgb(66,69,230)] hover:text-white rounded-[4px]',
+                'border cursor-pointer border-[#DF1020] hover:bg-red-700 hover:text-white rounded-[4px]',
                 page === currentPage
                   ? 'bg-primary text-white'
-                  : 'hover:bg-[rgb(66,69,230)] hover:text-white'
+                  : 'hover:bg-red-700 hover:text-white'
               )}
             >
               {page === '...' ? '...' : page}
@@ -108,7 +108,7 @@ const MatchPlayGolfPagination: React.FC<PaginationProps> = ({
               }
             }}
             className={cn(
-              'border border-[#525773] hover:bg-primary cursor-pointer  hover:text-white rounded-[4px]',
+              'border border-[#DF1020] hover:bg-primary cursor-pointer  hover:text-white rounded-[4px]',
               currentPage === totalPages &&
                 'cursor-not-allowed bg-[#E3E3E3] border-0  pointer-events-none'
             )}
