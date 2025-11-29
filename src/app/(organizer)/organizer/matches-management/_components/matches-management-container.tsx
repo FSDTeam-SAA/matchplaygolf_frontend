@@ -12,73 +12,77 @@ import {
 import { Plus, Trash } from "lucide-react";
 import MatchPlayGolfPagination from "@/components/ui/matchplaygolf-pagination";
 import { Input } from "@/components/ui/input";
+import DeleteModal from "@/components/modals/delete-modal";
 
 const MatchesManagementContainer = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [search, setSearch] = useState("");
+  const [deleteModalOpen, setDeleteModalOpen] = useState(false);
   console.log(search);
   const mockMatches = [
-  {
-    "Match ID": "M001",
-    "Tournament Name": "Spring Championship",
-    "Round": "Final",
-    "Player 1": "Michael Johnson",
-    "Player 2": "David Thompson",
-    "Score": "3-2",
-    "Date": "May 15, 2023",
-    "Status": "Completed"
-  },
-  {
-    "Match ID": "M002",
-    "Tournament Name": "Summer Invitational",
-    "Round": "Quarter Final",
-    "Player 1": "Sarah Williams",
-    "Player 2": "Emma Davis",
-    "Score": "1-1",
-    "Date": "Jun 12, 2023",
-    "Status": "Ongoing"
-  },
-  {
-    "Match ID": "M003",
-    "Tournament Name": "Pro-Arm Tournament",
-    "Round": "Round 1",
-    "Player 1": "James Wilson",
-    "Player 2": "Michael Johnson",
-    "Score": "-",
-    "Date": "Jun 22, 2023",
-    "Status": "Upcoming"
-  },
-  {
-    "Match ID": "M004",
-    "Tournament Name": "Regional Qualifier",
-    "Round": "Semi Final",
-    "Player 1": "David Thompson",
-    "Player 2": "Sarah Williams",
-    "Score": "-",
-    "Date": "Jul 8, 2023",
-    "Status": "Upcoming"
-  },
-  {
-    "Match ID": "M005",
-    "Tournament Name": "Championship 2025",
-    "Round": "Final",
-    "Player 1": "Michael Johnson",
-    "Player 2": "David Thompson",
-    "Score": "7-5",
-    "Date": "Jan 06, 2025",
-    "Status": "Completed"
-  },
-  {
-    "Match ID": "M006",
-    "Tournament Name": "Annual Ship 2025",
-    "Round": "Round 2",
-    "Player 1": "James Wilson",
-    "Player 2": "James Wilson",
-    "Score": "0-1",
-    "Date": "Jan 06, 2025",
-    "Status": "Ongoing"
-  }
-]
+    {
+      "Match ID": "M001",
+      "Tournament Name": "Spring Championship",
+      Round: "Final",
+      "Player 1": "Michael Johnson",
+      "Player 2": "David Thompson",
+      Score: "3-2",
+      Date: "May 15, 2023",
+      Status: "Completed",
+    },
+    {
+      "Match ID": "M002",
+      "Tournament Name": "Summer Invitational",
+      Round: "Quarter Final",
+      "Player 1": "Sarah Williams",
+      "Player 2": "Emma Davis",
+      Score: "1-1",
+      Date: "Jun 12, 2023",
+      Status: "Ongoing",
+    },
+    {
+      "Match ID": "M003",
+      "Tournament Name": "Pro-Arm Tournament",
+      Round: "Round 1",
+      "Player 1": "James Wilson",
+      "Player 2": "Michael Johnson",
+      Score: "-",
+      Date: "Jun 22, 2023",
+      Status: "Upcoming",
+    },
+    {
+      "Match ID": "M004",
+      "Tournament Name": "Regional Qualifier",
+      Round: "Semi Final",
+      "Player 1": "David Thompson",
+      "Player 2": "Sarah Williams",
+      Score: "-",
+      Date: "Jul 8, 2023",
+      Status: "Upcoming",
+    },
+    {
+      "Match ID": "M005",
+      "Tournament Name": "Championship 2025",
+      Round: "Final",
+      "Player 1": "Michael Johnson",
+      "Player 2": "David Thompson",
+      Score: "7-5",
+      Date: "Jan 06, 2025",
+      Status: "Completed",
+    },
+    {
+      "Match ID": "M006",
+      "Tournament Name": "Annual Ship 2025",
+      Round: "Round 2",
+      "Player 1": "James Wilson",
+      "Player 2": "James Wilson",
+      Score: "0-1",
+      Date: "Jan 06, 2025",
+      Status: "Ongoing",
+    },
+  ];
+
+  const handleDelete = () => {};
   return (
     <div>
       {/* Header */}
@@ -163,13 +167,12 @@ const MatchesManagementContainer = () => {
                   <TableCell className="text-base font-medium text-[#343A40] leading-[150%] text-center py-4">
                     {item?.["Player 2"]}
                   </TableCell>
-                    <TableCell className="text-base font-normal text-[#68706A] leading-[150%] text-center py-4">
+                  <TableCell className="text-base font-normal text-[#68706A] leading-[150%] text-center py-4">
                     {item?.Score}
                   </TableCell>
                   <TableCell className="text-base font-medium text-[#343A40] leading-[150%] text-center py-4">
                     {item?.Date}
                   </TableCell>
-
 
                   <TableCell className="text-base font-medium text-[#68706A] leading-[150%] text-center py-4">
                     <button
@@ -185,7 +188,12 @@ const MatchesManagementContainer = () => {
                     </button>
                   </TableCell>
                   <TableCell className="flex items-center justify-center gap-6 py-4">
-                    <button className="cursor-pointer">
+                    <button
+                      onClick={() => {
+                        setDeleteModalOpen(true);
+                      }}
+                      className="cursor-pointer"
+                    >
                       <Trash className="h-6 w-6 text-[#181818]" />
                     </button>
                   </TableCell>
@@ -208,6 +216,17 @@ const MatchesManagementContainer = () => {
             />
           </div>
         </div>
+
+        {/* delete modal  */}
+        {deleteModalOpen && (
+          <DeleteModal
+            isOpen={deleteModalOpen}
+            onClose={() => setDeleteModalOpen(false)}
+            onConfirm={handleDelete}
+            title="Are You Sure?"
+            desc="Are you sure you want to delete this match?"
+          />
+        )}
       </div>
     </div>
   );

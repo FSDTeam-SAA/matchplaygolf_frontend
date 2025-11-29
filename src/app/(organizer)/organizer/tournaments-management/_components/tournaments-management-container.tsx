@@ -12,10 +12,12 @@ import {
 import { Eye, Plus, Trash } from "lucide-react";
 import MatchPlayGolfPagination from "@/components/ui/matchplaygolf-pagination";
 import { Input } from "@/components/ui/input";
+import DeleteModal from "@/components/modals/delete-modal";
 
 const TournamentsManagementContainer = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [search, setSearch] = useState("");
+  const [deleteModalOpen, setDeleteModalOpen ] = useState(false);
   console.log(search);
   const mockTournaments = [
     {
@@ -73,6 +75,10 @@ const TournamentsManagementContainer = () => {
       status: "Registration",
     },
   ];
+
+  const handleDelete = ()=>{
+    
+  }
   return (
     <div>
       {/* Header */}
@@ -168,7 +174,7 @@ const TournamentsManagementContainer = () => {
                     <button className="cursor-pointer">
                       <Eye className="h-6 w-6 text-[#181818]" />
                     </button>
-                    <button className="cursor-pointer">
+                    <button onClick={()=>{setDeleteModalOpen(true)}} className="cursor-pointer">
                       <Trash className="h-6 w-6 text-[#181818]" />
                     </button>
                   </TableCell>
@@ -191,6 +197,17 @@ const TournamentsManagementContainer = () => {
             />
           </div>
         </div>
+
+         {/* delete modal  */}
+      {deleteModalOpen && (
+        <DeleteModal
+          isOpen={deleteModalOpen}
+          onClose={() => setDeleteModalOpen(false)}
+          onConfirm={handleDelete}
+          title="Are You Sure?"
+          desc="Are you sure you want to delete this tournaments?"
+        />
+      )}
       </div>
     </div>
   );
