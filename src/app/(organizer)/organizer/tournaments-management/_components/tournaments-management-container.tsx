@@ -11,9 +11,12 @@ import {
 } from "@/components/ui/table";
 import { Eye, Plus, Trash } from "lucide-react";
 import MatchPlayGolfPagination from "@/components/ui/matchplaygolf-pagination";
+import { Input } from "@/components/ui/input";
 
 const TournamentsManagementContainer = () => {
   const [currentPage, setCurrentPage] = useState(1);
+  const [search, setSearch] = useState("");
+  console.log(search);
   const mockTournaments = [
     {
       id: 1,
@@ -87,11 +90,17 @@ const TournamentsManagementContainer = () => {
         {/* table header  */}
         <div className="w-full flex items-center justify-between">
           <div>
-            
+            <Input
+              type="search"
+              className="w-[479px] h-[48px] border border-[#C0C3C1] rounded-[4px] outline-none right-0 text-base font-medium leading-[120%] text-[#343A40]"
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+              placeholder="Search..."
+            />
           </div>
           <div>
             <button className="flex items-center gap-2 bg-[#DF1020] p-3 rounded-[8px] text-[#F8F9FA] text-base font-medium leading-[150%] ">
-             <Plus/>  Create Tournament
+              <Plus /> Create Tournament
             </button>
           </div>
         </div>
