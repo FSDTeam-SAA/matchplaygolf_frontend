@@ -4,18 +4,8 @@ import { Calendar, NotepadText, Trophy, Users } from "lucide-react";
 export function DashboardOverview() {
   return (
     <div className="">
-      {/* Header */}
-      <div className="bg-white p-6 sticky top-0  z-50">
-        <h1 className="text-2xl lg:text-3xl font-bold text-[#181818] leading-[150%]">
-          Welcome back, Michael
-        </h1>
-        <p className="text-sm font-normal text-[#424242] leading-[150%]">
-          Ready to compete in your next match?
-        </p>
-      </div>
 
       {/* dashboard overview  */}
-
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 p-6">
 
         <div className="md:col-span-1 h-[139px] flex items-center justify-between bg-white shadow-[0px_4px_6px_0px_#0000001A] px-4 rounded-[8px]">
