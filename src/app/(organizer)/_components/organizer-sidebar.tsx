@@ -56,7 +56,7 @@ export function OrganizerSidebar() {
   const pathName = usePathname();
 
   return (
-    <Sidebar className="border-none w-[386px]">
+    <Sidebar className="border-none w-[340px]">
       <SidebarContent className="bg-white scrollbar-hide">
         <SidebarGroup className="p-0">
           <div className="flex flex-col justify-between min-h-screen pb-5">

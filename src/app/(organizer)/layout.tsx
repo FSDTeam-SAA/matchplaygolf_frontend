@@ -6,7 +6,7 @@ export default function OrganizerLayout({ children }: { children: React.ReactNod
   return (
     <div>
       <SidebarProvider defaultOpen={true}>
-        <div style={{ "--sidebar-width": "386px" } as React.CSSProperties}>
+        <div style={{ "--sidebar-width": "340px" } as React.CSSProperties}>
           <OrganizerSidebar />
         </div>
         <main className="w-full">
