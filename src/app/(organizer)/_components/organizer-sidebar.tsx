@@ -76,8 +76,8 @@ export function OrganizerSidebar() {
                 <SidebarMenu>
                   {items.map((item) => {
                     const isActive =
-                      item.url === "/player"
-                        ? pathName === "/player"
+                      item.url === "/organizer"
+                        ? pathName === "/organizer"
                         : pathName === item.url ||
                           pathName.startsWith(`${item.url}/`);
 
