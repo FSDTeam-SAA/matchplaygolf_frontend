@@ -1,17 +1,16 @@
 import React from "react";
+import Notifications from "./_components/notifcations";
 import AppTopBar from "../../_components/shared/app-topbar";
-import MatchSchedule from "./_components/match-schedule";
 
 const page = () => {
   return (
     <div>
       <AppTopBar
-        title="Match Schedule"
-        desc="View your upcoming matches and completed results"
+        title="Notifications"
+        desc="Stay updated with your tournament activity"
       />
-
       <div className="p-5 space-y-8">
-        <MatchSchedule />
+        <Notifications />
       </div>
     </div>
   );
