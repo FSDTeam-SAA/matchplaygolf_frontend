@@ -1,4 +1,5 @@
 import { Bell } from "lucide-react";
+import Link from "next/link";
 import React from "react";
 
 const AppTopBar = ({ title, desc }: { title: string; desc: string }) => {
@@ -10,9 +11,11 @@ const AppTopBar = ({ title, desc }: { title: string; desc: string }) => {
       </div>
 
       <div>
-        <button>
-          <Bell />
-        </button>
+        <Link href={"/player/notification"}>
+          <button>
+            <Bell />
+          </button>
+        </Link>
       </div>
     </div>
   );
