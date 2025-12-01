@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Open_Sans } from "next/font/google";
 import { hexco } from "./fonts";
 import "./globals.css";
+import AppProvider from "@/components/provider/AppProvider";
 
 const openSans = Open_Sans({
   variable: "--font-open-sans",
@@ -23,7 +24,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={`${openSans.className} ${hexco.variable} antialiased`}>
-        {children}
+        <AppProvider>{children}</AppProvider>
       </body>
     </html>
   );
