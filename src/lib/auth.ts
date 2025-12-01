@@ -49,7 +49,7 @@ export const authOptions: NextAuthOptions = {
       async authorize(credentials): Promise<User | null> {
         try {
           if (!credentials?.email || !credentials?.password) {
-            return null;
+            throw new Error("Email and password are required");
           }
 
           const res = await fetch(
@@ -67,17 +67,13 @@ export const authOptions: NextAuthOptions = {
           const data = await res.json();
 
           if (!res.ok) {
-            console.error("API Error:", {
-              status: res.status,
-              message: data?.message || data?.error || "Unknown error",
-              data: data,
-            });
-            return null;
+            throw new Error(
+              data?.message || data?.error || "Invalid credentials"
+            );
           }
 
           if (!data?.data?.user?._id || !data?.data?.accessToken) {
-            console.error("Invalid response structure:", data);
-            return null;
+            throw new Error("Invalid server response");
           }
 
           return {
@@ -89,9 +85,11 @@ export const authOptions: NextAuthOptions = {
             accessToken: data.data.accessToken,
             refreshToken: data.data.refreshToken,
           };
-        } catch (error) {
-          console.error("Auth error:", error);
-          return null;
+        } catch (error: unknown) {
+          if (error instanceof Error) {
+            throw new Error(error.message);
+          }
+          throw new Error("Login failed");
         }
       },
     }),
