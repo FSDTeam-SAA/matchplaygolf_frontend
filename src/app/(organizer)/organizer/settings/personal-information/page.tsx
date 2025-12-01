@@ -6,7 +6,7 @@ import YourTournamentStats from "./_components/your-tournament-stats";
 
 const PersonalInformationPage = () => {
   return (
-    <div className="pb-14">
+    <div className="pb-24">
       <SettingsHeader />
       <div className="grid grid-cols-1 md:grid-cols-4 gap-6 px-6">
         <div className="md:col-span-1">

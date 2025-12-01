@@ -148,7 +148,7 @@ const ProfilePicture = () => {
   // };
 
   return (
-    <div className="flex flex-col justify-center items-center gap-4 mb-8 mt-8 p-6 relative rounded-[16px] border border-[#F3F4F6] bg-white shadow-[0_4px_6px_-4px_rgba(0,0,0,0.10),0_4px_10px_-3px_rgba(0,0,0,0.10)]">
+    <div className="flex flex-col justify-center items-center gap-4 my-6 p-6 relative rounded-[16px] border border-[#F3F4F6] bg-white shadow-[0_4px_6px_-4px_rgba(0,0,0,0.10),0_4px_10px_-3px_rgba(0,0,0,0.10)]">
       <div className="relative">
 
         <p className="text-base font-semibold leading-[120%] text-[#111827] text-center pb-4">Profile Picture</p>

@@ -25,6 +25,7 @@ import { Calendar } from "@/components/ui/calendar";
 import { CalendarIcon, Upload, X } from "lucide-react";
 import Image from "next/image";
 import { useState } from "react";
+import { ColorPicker } from "@/components/ui/color-picker";
 
 const formSchema = z.object({
   gender: z.string().min(1, "Please select an option"),
@@ -50,6 +51,9 @@ const formSchema = z.object({
 
   dateOfBirth: z.union([z.date(), z.string()]),
   image: z.any().optional(),
+   color: z.string().min(6, {
+    message: "Please pick a background color.",
+  }),
 });
 
 const PersonalInformationForm = () => {
@@ -68,6 +72,7 @@ const PersonalInformationForm = () => {
       whsNumber: "",
       dateOfBirth: new Date(),
       image: undefined,
+      color: "#000000"
     },
   });
 
@@ -426,6 +431,26 @@ const PersonalInformationForm = () => {
               )}
             />
 
+                <FormField
+                control={form.control}
+                name="color"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel className="text-base text-[#434C45] leading-[150%] font-medium">
+                      Select Color
+                    </FormLabel>
+                    <FormControl>
+                      <ColorPicker
+                        selectedColor={field.value ?? "#FFFFFF"}
+                        onColorChange={field.onChange}
+                        // previousColor={"#000000"}
+                      />
+                    </FormControl>
+                    <FormMessage className="text-red-500" />
+                  </FormItem>
+                )}
+              />
+
              <FormField
               control={form.control}
               name="status"
@@ -473,6 +498,8 @@ const PersonalInformationForm = () => {
                 </FormItem>
               )}
             />
+
+
 
             {/* Buttons */}
             <div className="flex justify-end gap-4 pt-6">
