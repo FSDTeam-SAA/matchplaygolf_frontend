@@ -67,18 +67,27 @@ export const authOptions: NextAuthOptions = {
           const data = await res.json();
 
           if (!res.ok) {
+            console.error("API Error:", {
+              status: res.status,
+              message: data?.message || data?.error || "Unknown error",
+              data: data,
+            });
             return null;
           }
 
+          if (!data?.data?.user?._id || !data?.data?.accessToken) {
+            console.error("Invalid response structure:", data);
+            return null;
+          }
 
           return {
-            id: data?.data?.user?._id,
-            name: data?.data?.user?.fullName,
-            email: data?.data?.user?.email,
-            role: data?.data?.user?.role,
-            profileImage: data?.data?.user?.profileImage,
-            accessToken: data?.data?.accessToken,
-            refreshToken: data?.data?.refreshToken,
+            id: data.data.user._id,
+            name: data.data.user.fullName,
+            email: data.data.user.email,
+            role: data.data.user.role,
+            profileImage: data.data.user.profileImage,
+            accessToken: data.data.accessToken,
+            refreshToken: data.data.refreshToken,
           };
         } catch (error) {
           console.error("Auth error:", error);
