@@ -17,6 +17,9 @@ import { Input } from "@/components/ui/input";
 import { Checkbox } from "@/components/ui/checkbox";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { useMutation } from "@tanstack/react-query";
+import { toast } from "sonner";
+import { Spinner } from "@/components/ui/spinner";
 
 const formSchema = z
   .object({
@@ -63,12 +66,43 @@ const SignUpForm = () => {
     },
   });
 
-  function onSubmit(values: FormType) {
+  const { mutateAsync, isPending } = useMutation({
+    mutationKey: ["sign-up"],
+    mutationFn: async (submitData: FormType) => {
+      const res = await fetch(
+        `${process.env.NEXT_PUBLIC_BACKEND_URL}/auth/register`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(submitData),
+        }
+      );
+
+      return await res.json();
+    },
+
+    onSuccess: async (data) => {
+      toast.success(data?.message);
+    },
+
+    onError: async (error) => {
+      toast.error(error?.message);
+    },
+  });
+
+  async function onSubmit(values: FormType) {
     const submitData = {
       ...values,
       roll: roll,
     };
-    console.log(submitData);
+
+    try {
+      await mutateAsync(submitData);
+    } catch (error) {
+      console.log(`registration error : ${error}`);
+    }
   }
 
   const togglePasswordVisibility = () => {
@@ -283,7 +317,17 @@ const SignUpForm = () => {
             type="submit"
             className="h-[45px] w-full bg-black hover:bg-black/85 text-white"
           >
-            Sign Up
+            {isPending ? (
+              <div className="flex items-center gap-1">
+                <div>
+                  <Spinner />
+                </div>
+
+                <div>Sign Up</div>
+              </div>
+            ) : (
+              "Sign Up"
+            )}
           </Button>
         </form>
       </Form>

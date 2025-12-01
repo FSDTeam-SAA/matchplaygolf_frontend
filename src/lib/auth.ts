@@ -66,11 +66,10 @@ export const authOptions: NextAuthOptions = {
 
           const data = await res.json();
 
-          console.log("res: ", res);
-
           if (!res.ok) {
             return null;
           }
+
 
           return {
             id: data?.data?.user?._id,
