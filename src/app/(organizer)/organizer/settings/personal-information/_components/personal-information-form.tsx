@@ -26,6 +26,8 @@ import { CalendarIcon, Upload, X } from "lucide-react";
 import Image from "next/image";
 import { useState } from "react";
 import { ColorPicker } from "@/components/ui/color-picker";
+import { useQuery } from "@tanstack/react-query";
+import { ProfileApiResponse } from "./personal-information-data-type";
 
 const formSchema = z.object({
   gender: z.string().min(1, "Please select an option"),
@@ -59,6 +61,25 @@ const formSchema = z.object({
 const PersonalInformationForm = () => {
   const [previewImage, setPreviewImage] = useState<string | null>(null);
   const [isDragOver, setIsDragOver] = useState(false);
+  const token = `eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2OTI1NGM3ZmI0OTIxZmU3MjE2ZjNkZWMiLCJyb2xlIjoiVXNlciIsImlhdCI6MTc2NDU2Mzc3MywiZXhwIjoxNzY1MTY4NTczfQ.k3WGcc392GJ2ZPlW4NOJJnBHzWQK83K_tNj8dpDkKsI`
+
+
+  const {data} = useQuery<ProfileApiResponse>({
+    queryKey: ["personal-info"],
+    queryFn: async ()=>{
+      const res = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/user/profile`,{
+        method: "GET",
+        headers: {
+          "Authorization": `Bearer ${token}`,
+        }
+      })
+      return await res.json();
+    }
+  })
+
+  console.log(data)
+
+
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -75,6 +96,9 @@ const PersonalInformationForm = () => {
       color: "#000000"
     },
   });
+
+
+
 
   const handleImageChange = (file: File) => {
     if (file) {
