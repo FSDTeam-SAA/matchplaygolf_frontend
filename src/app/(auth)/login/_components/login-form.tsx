@@ -1,5 +1,4 @@
 "use client";
-
 import { Button } from "@/components/ui/button";
 import {
   Form,
@@ -16,6 +15,9 @@ import { useForm } from "react-hook-form";
 import z from "zod";
 import { useState } from "react";
 import { Eye, EyeOff } from "lucide-react";
+import { signIn } from "next-auth/react";
+import { Spinner } from "@/components/ui/spinner";
+import { toast } from "sonner";
 
 const formSchema = z.object({
   email: z.string().email(),
@@ -26,6 +28,7 @@ type FormType = z.infer<typeof formSchema>;
 
 const LoginForm = () => {
   const [showPassword, setShowPassword] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
 
   const form = useForm<FormType>({
     resolver: zodResolver(formSchema),
@@ -35,8 +38,32 @@ const LoginForm = () => {
     },
   });
 
-  function onSubmit(values: FormType) {
-    console.log(values);
+  const handleSignIn = async (payload: FormType) => {
+    try {
+      setIsLoading(true);
+
+      const res = await signIn("credentials", {
+        email: payload.email,
+        password: payload.password,
+        redirect: false,
+      });
+
+      if (res?.error) {
+        toast.error(res.error);
+      } else {
+        toast.success("Login successful!");
+        window.location.href = "/";
+      }
+    } catch (error) {
+      console.log(`login error : ${error}`);
+      toast.error("Something went wrong!");
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  async function onSubmit(payload: FormType) {
+    await handleSignIn(payload);
   }
 
   const togglePasswordVisibility = () => {
@@ -110,7 +137,17 @@ const LoginForm = () => {
             type="submit"
             className="h-[45px] w-full bg-black hover:bg-black/85 text-white"
           >
-            Log In
+            {isLoading ? (
+              <div className="flex items-center gap-1">
+                <div>
+                  <Spinner />
+                </div>
+
+                <div>Log In</div>
+              </div>
+            ) : (
+              `Log In`
+            )}
           </Button>
         </form>
       </Form>

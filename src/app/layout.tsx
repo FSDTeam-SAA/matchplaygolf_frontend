@@ -3,6 +3,7 @@ import { Open_Sans } from "next/font/google";
 import { hexco } from "./fonts";
 import "./globals.css";
 import AppProvider from "@/components/provider/AppProvider";
+import { Toaster } from "sonner";
 
 const openSans = Open_Sans({
   variable: "--font-open-sans",
@@ -25,6 +26,7 @@ export default function RootLayout({
     <html lang="en">
       <body className={`${openSans.className} ${hexco.variable} antialiased`}>
         <AppProvider>{children}</AppProvider>
+        <Toaster richColors={true} position="bottom-right" />
       </body>
     </html>
   );

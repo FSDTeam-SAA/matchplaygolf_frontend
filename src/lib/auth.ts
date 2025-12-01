@@ -8,7 +8,7 @@ declare module "next-auth" {
     name: string;
     email: string;
     role: string;
-    profileImage?: string;
+    profileImage: string | undefined;
     accessToken: string;
     refreshToken: string;
   }
@@ -19,7 +19,7 @@ declare module "next-auth" {
       name: string;
       email: string;
       role: string;
-      profileImage?: string;
+      profileImage: string | undefined;
       accessToken: string;
       refreshToken: string;
     };
@@ -32,7 +32,7 @@ declare module "next-auth/jwt" {
     name: string;
     email: string;
     role: string;
-    profileImage?: string;
+    profileImage: string | undefined;
     accessToken: string;
     refreshToken: string;
   }
@@ -66,18 +66,20 @@ export const authOptions: NextAuthOptions = {
 
           const data = await res.json();
 
-          if (!res.ok || !data?.data?.user) {
+          console.log("res: ", res);
+
+          if (!res.ok) {
             return null;
           }
 
           return {
-            id: data.data.user._id,
-            name: data.data.user.fullName,
-            email: data.data.user.email,
-            role: data.data.user.role,
-            profileImage: data.data.user.profileImage,
-            accessToken: data.data.accessToken,
-            refreshToken: data.data.refreshToken,
+            id: data?.data?.user?._id,
+            name: data?.data?.user?.fullName,
+            email: data?.data?.user?.email,
+            role: data?.data?.user?.role,
+            profileImage: data?.data?.user?.profileImage,
+            accessToken: data?.data?.accessToken,
+            refreshToken: data?.data?.refreshToken,
           };
         } catch (error) {
           console.error("Auth error:", error);
@@ -117,6 +119,10 @@ export const authOptions: NextAuthOptions = {
       };
       return session;
     },
+  },
+
+  pages: {
+    signIn: "/login",
   },
 
   secret: process.env.NEXTAUTH_SECRET,
