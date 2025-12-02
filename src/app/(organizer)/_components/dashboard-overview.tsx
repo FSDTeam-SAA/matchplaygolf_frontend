@@ -25,7 +25,7 @@ export function DashboardOverview() {
   const {data, isLoading, isError, error} = useQuery<DashboardSummaryResponse>({
     queryKey: ["dashboard-overview"],
     queryFn: async ()=>{
-      const res = await fetch(`https://matchplaygolf-backend.onrender.com/api/organizer-dashboard/summary`,{
+      const res = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/organizer-dashboard/summary`,{
         method: "GET",
         headers: {
           "Authorization": `Bearer ${token}`,

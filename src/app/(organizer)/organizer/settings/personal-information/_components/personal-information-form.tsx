@@ -24,14 +24,14 @@ import {
 import { Calendar } from "@/components/ui/calendar";
 import { CalendarIcon, Upload, X } from "lucide-react";
 import Image from "next/image";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { ColorPicker } from "@/components/ui/color-picker";
 import { useQuery } from "@tanstack/react-query";
 import { ProfileApiResponse } from "./personal-information-data-type";
 
 const formSchema = z.object({
   gender: z.string().min(1, "Please select an option"),
-  status: z.string().min(1, "Please select an option"),
+  newsletterPreference: z.string().min(1, "Please select an option"),
   fullName: z.string().min(2, {
     message: "Full Name must be at least 2 characters.",
   }),
@@ -64,7 +64,28 @@ const PersonalInformationForm = () => {
   const token = `eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2OTI1NGM3ZmI0OTIxZmU3MjE2ZjNkZWMiLCJyb2xlIjoiVXNlciIsImlhdCI6MTc2NDU2Mzc3MywiZXhwIjoxNzY1MTY4NTczfQ.k3WGcc392GJ2ZPlW4NOJJnBHzWQK83K_tNj8dpDkKsI`
 
 
-  const {data} = useQuery<ProfileApiResponse>({
+
+
+
+  const form = useForm<z.infer<typeof formSchema>>({
+    resolver: zodResolver(formSchema),
+    defaultValues: {
+      gender: "",
+      newsletterPreference: "",
+      fullName: "",
+      phone: "",
+      country: "",
+      sportNationalId: "",
+      handicapIndex: "",
+      whsNumber: "",
+      dateOfBirth: new Date(),
+      image: undefined,
+      color: "#000000"
+    },
+  });
+
+
+    const {data} = useQuery<ProfileApiResponse>({
     queryKey: ["personal-info"],
     queryFn: async ()=>{
       const res = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/user/profile`,{
@@ -79,23 +100,24 @@ const PersonalInformationForm = () => {
 
   console.log(data)
 
+  useEffect(()=>{
+    if(data?.data){
+      form.reset({
+        fullName : data?.data?.fullName,
+        phone : data?.data?.phone,
+        country: data?.data?.clubName,
+        dateOfBirth: data?.data?.dob,
+        sportNationalId:data?.data?.sportNationalId,
+        handicapIndex: data?.data?.handicap,
+        whsNumber: data?.data?.whsNumber,
+        gender: data?.data?.gender,
+        newsletterPreference: data?.data?.newsletterPreference,
+        color: data?.data?.color,
+      });
+      setPreviewImage(data?.data?.profileImage || "")
+    }
 
-  const form = useForm<z.infer<typeof formSchema>>({
-    resolver: zodResolver(formSchema),
-    defaultValues: {
-      gender: "",
-      status: "",
-      fullName: "",
-      phone: "",
-      country: "",
-      sportNationalId: "",
-      handicapIndex: "",
-      whsNumber: "",
-      dateOfBirth: new Date(),
-      image: undefined,
-      color: "#000000"
-    },
-  });
+  },[data, form])
 
 
 
@@ -165,7 +187,7 @@ const PersonalInformationForm = () => {
                     >
                       <FormItem className="flex items-center space-x-2">
                         <FormControl>
-                          <RadioGroupItem value="option-one" className="mt-2" />
+                          <RadioGroupItem value="male" className="mt-2" />
                         </FormControl>
                         <FormLabel className="cursor-pointer">
                           Male
@@ -174,7 +196,7 @@ const PersonalInformationForm = () => {
 
                       <FormItem className="flex items-center space-x-2">
                         <FormControl>
-                          <RadioGroupItem value="option-two" className="mt-2" />
+                          <RadioGroupItem value="female" className="mt-2" />
                         </FormControl>
                         <FormLabel className="cursor-pointer">
                           Female
@@ -477,7 +499,7 @@ const PersonalInformationForm = () => {
 
              <FormField
               control={form.control}
-              name="status"
+              name="newsletterPreference"
               render={({ field }) => (
                 <FormItem className="space-y-1">
                   {/* <FormLabel className="text-base text-[#434C45] leading-[150%] font-medium">
@@ -492,7 +514,7 @@ const PersonalInformationForm = () => {
                     >
                       <FormItem className="flex items-center space-x-2">
                         <FormControl>
-                          <RadioGroupItem value="option-one" className="mt-2" />
+                          <RadioGroupItem value="subscribe" className="mt-2" />
                         </FormControl>
                         <FormLabel className="cursor-pointer">
                           Subscribe to our newsletter
@@ -501,7 +523,7 @@ const PersonalInformationForm = () => {
 
                       <FormItem className="flex items-center space-x-2">
                         <FormControl>
-                          <RadioGroupItem value="option-two" className="mt-2" />
+                          <RadioGroupItem value="unsubscribe" className="mt-2" />
                         </FormControl>
                         <FormLabel className="cursor-pointer">
                           Unsubscribe from our newsletter
@@ -509,7 +531,7 @@ const PersonalInformationForm = () => {
                       </FormItem>
                        <FormItem className="flex items-center space-x-2">
                         <FormControl>
-                          <RadioGroupItem value="option-two" className="mt-2" />
+                          <RadioGroupItem value="none" className="mt-2" />
                         </FormControl>
                         <FormLabel className="cursor-pointer">
                           Receive Order Updates
