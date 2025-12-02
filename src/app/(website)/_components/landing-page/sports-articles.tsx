@@ -3,6 +3,7 @@ import { useQuery } from "@tanstack/react-query";
 import Image from "next/image";
 import React from "react";
 import { Skeleton } from "@/components/ui/skeleton";
+import Link from "next/link";
 
 interface Article {
   _id: string;
@@ -62,7 +63,7 @@ const SportsArticles = () => {
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-          {Array.from({ length: 4 }).map((_, index) => (
+          {Array.from({ length: 8 }).map((_, index) => (
             <div
               key={index}
               className="rounded-lg shadow-[0px_2px_4px_2px_#0000001A]"
@@ -111,68 +112,74 @@ const SportsArticles = () => {
         </p>
       </div>
 
-      <div className="mt-10 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-        {articles?.map((article) => (
-          <div
-            key={article?._id}
-            className="cursor-pointer rounded-lg shadow-[0px_2px_4px_2px_#0000001A] group hover:shadow-lg transition-all duration-300"
-          >
-            <div className="overflow-hidden rounded-t-lg">
-              <Image
-                src={article?.coverImage || "/images/common/placeholder.png"}
-                alt={article?.title}
-                width={1000}
-                height={1000}
-                className="h-[250px] w-full object-cover rounded-t-lg group-hover:scale-110 duration-300 transition-transform"
-              />
-            </div>
+      <div className="mt-10 mb-4 text-end">
+        <Link href={"/article"}>
+          <button className="hover:underline">See All</button>
+        </Link>
+      </div>
 
-            <div className="p-4">
-              <div className="flex items-center justify-between mb-2">
-                <span className="px-2 py-1 bg-gray-100 text-gray-700 text-xs rounded">
-                  {article?.type}
-                </span>
-                <span className="text-xs text-gray-500">
-                  {new Date(article?.createdAt).toLocaleDateString("en-US", {
-                    month: "short",
-                    day: "numeric",
-                    year: "numeric",
-                  })}
-                </span>
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+        {articles?.slice(0, 8)?.map((article) => (
+
+          <Link key={article?._id} href={`/article/${article?._id}`}>
+            <div className="cursor-pointer rounded-lg shadow-[0px_2px_4px_2px_#0000001A] group hover:shadow-lg transition-all duration-300">
+              <div className="overflow-hidden rounded-t-lg">
+                <Image
+                  src={article?.coverImage || "/images/common/placeholder.png"}
+                  alt={article?.title}
+                  width={1000}
+                  height={1000}
+                  className="h-[250px] w-full object-cover rounded-t-lg group-hover:scale-110 duration-300 transition-transform"
+                />
               </div>
 
-              <h1 className="text-lg font-semibold line-clamp-2">
-                {article?.title}
-              </h1>
-
-              <p className="text-sm text-gray-600 mt-2 line-clamp-3">
-                {article?.description.slice(0, 75)}...
-              </p>
-
-              <div className="mt-4 flex items-center">
-                <div className="relative w-8 h-8 rounded-full overflow-hidden mr-2">
-                  <Image
-                    src={
-                      article?.createdBy?.profileImage ||
-                      "/images/common/user_placeholder.png"
-                    }
-                    alt={article?.createdBy?.fullName}
-                    width={1000}
-                    height={1000}
-                    className="object-cover h-36 w-36"
-                  />
+              <div className="p-4">
+                <div className="flex items-center justify-between mb-2">
+                  <span className="px-2 py-1 bg-gray-100 text-gray-700 text-xs rounded">
+                    {article?.type}
+                  </span>
+                  <span className="text-xs text-gray-500">
+                    {new Date(article?.createdAt).toLocaleDateString("en-US", {
+                      month: "short",
+                      day: "numeric",
+                      year: "numeric",
+                    })}
+                  </span>
                 </div>
-                <div>
-                  <p className="text-sm font-medium">
-                    {article?.createdBy?.fullName}
-                  </p>
-                  <p className="text-xs text-gray-500">
-                    {article?.createdBy?.role}
-                  </p>
+
+                <h1 className="text-lg font-semibold line-clamp-2">
+                  {article?.title}
+                </h1>
+
+                <p className="text-sm text-gray-600 mt-2 line-clamp-3">
+                  {article?.description.slice(0, 75)}...
+                </p>
+
+                <div className="mt-4 flex items-center">
+                  <div className="relative w-8 h-8 rounded-full overflow-hidden mr-2">
+                    <Image
+                      src={
+                        article?.createdBy?.profileImage ||
+                        "/images/common/user_placeholder.png"
+                      }
+                      alt={article?.createdBy?.fullName}
+                      width={1000}
+                      height={1000}
+                      className="object-cover h-36 w-36"
+                    />
+                  </div>
+                  <div>
+                    <p className="text-sm font-medium">
+                      {article?.createdBy?.fullName}
+                    </p>
+                    <p className="text-xs text-gray-500">
+                      {article?.createdBy?.role}
+                    </p>
+                  </div>
                 </div>
               </div>
             </div>
-          </div>
+          </Link>
         ))}
       </div>
     </div>
