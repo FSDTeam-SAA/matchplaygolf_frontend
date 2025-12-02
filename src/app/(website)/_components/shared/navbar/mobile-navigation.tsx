@@ -2,10 +2,12 @@
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { Menu } from "lucide-react";
+import { useSession } from "next-auth/react";
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import React, { useState } from "react";
+import NavDropdown from "./nav-dropdown";
 
 interface Props {
   navLinks: {
@@ -17,6 +19,8 @@ interface Props {
 const MobileNavigation = ({ navLinks }: Props) => {
   const [isOpen, setIsOpen] = useState(false);
   const pathName = usePathname();
+  const session = useSession();
+  const status = session?.status;
 
   return (
     <div className="md:hidden">
@@ -64,25 +68,28 @@ const MobileNavigation = ({ navLinks }: Props) => {
               </ul>
             </nav>
 
-            {/* Mobile Buttons */}
-            <div className="space-y-4 pt-8 border-t">
-              <div>
-                <Link href={"/sign-up"}>
-                  <Button
-                    variant={"outline"}
-                    className="border border-primary w-full h-[45px]"
-                  >
-                    Sign Up
-                  </Button>
-                </Link>
-              </div>
+            {status === "authenticated" ? (
+              <NavDropdown />
+            ) : (
+              <div className="space-y-4 pt-8 border-t">
+                <div>
+                  <Link href={"/sign-up"}>
+                    <Button
+                      variant={"outline"}
+                      className="border border-primary w-full h-[45px]"
+                    >
+                      Sign Up
+                    </Button>
+                  </Link>
+                </div>
 
-              <div>
-                <Link href={"/login"}>
-                  <Button className="w-full h-[45px]">Log In</Button>
-                </Link>
+                <div>
+                  <Link href={"/login"}>
+                    <Button className="w-full h-[45px]">Log In</Button>
+                  </Link>
+                </div>
               </div>
-            </div>
+            )}
           </div>
         </SheetContent>
       </Sheet>

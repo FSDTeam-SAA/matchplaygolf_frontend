@@ -4,9 +4,13 @@ import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import MobileNavigation from "./mobile-navigation";
+import NavDropdown from "./nav-dropdown";
+import { useSession } from "next-auth/react";
 
 const Navbar = () => {
   const pathName = usePathname();
+  const session = useSession();
+  const status = session?.status;
 
   const navLinks = [
     {
@@ -64,24 +68,29 @@ const Navbar = () => {
           </ul>
         </div>
 
-        {/* Desktop Buttons */}
-        <div className="hidden md:flex space-x-5">
-          <div>
-            <Link href={"/sign-up"}>
-              <Button
-                variant={"outline"}
-                className="border border-primary w-[156px] h-[45px]"
-              >
-                Sign Up
-              </Button>
-            </Link>
+        {status === "authenticated" ? (
+          <div className="hidden lg:block">
+            <NavDropdown />
           </div>
-          <div>
-            <Link href={"/login"}>
-              <Button className="w-[156px] h-[45px]">Log In</Button>
-            </Link>
+        ) : (
+          <div className="hidden md:flex space-x-5">
+            <div>
+              <Link href={"/sign-up"}>
+                <Button
+                  variant={"outline"}
+                  className="border border-primary w-[156px] h-[45px]"
+                >
+                  Sign Up
+                </Button>
+              </Link>
+            </div>
+            <div>
+              <Link href={"/login"}>
+                <Button className="w-[156px] h-[45px]">Log In</Button>
+              </Link>
+            </div>
           </div>
-        </div>
+        )}
 
         {/* Mobile Navigation */}
         <MobileNavigation navLinks={navLinks} />

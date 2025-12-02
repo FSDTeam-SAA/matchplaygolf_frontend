@@ -85,6 +85,7 @@ const SignUpForm = () => {
 
     onSuccess: async (data) => {
       toast.success(data?.message);
+      window.location.href = "/login";
     },
 
     onError: async (error) => {
