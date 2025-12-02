@@ -26,8 +26,9 @@ import { CalendarIcon, Upload, X } from "lucide-react";
 import Image from "next/image";
 import { useEffect, useState } from "react";
 import { ColorPicker } from "@/components/ui/color-picker";
-import { useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery } from "@tanstack/react-query";
 import { ProfileApiResponse } from "./personal-information-data-type";
+import { useSession } from "next-auth/react";
 
 const formSchema = z.object({
   gender: z.string().min(1, "Please select an option"),
@@ -44,7 +45,7 @@ const formSchema = z.object({
   sportNationalId: z.string().min(2, {
     message: "Sport National Id must be at least 2 characters.",
   }),
-  handicapIndex: z.string().min(2, {
+  handicap: z.string().min(2, {
     message: "Handicap Index must be at least 2 characters.",
   }),
   whsNumber: z.string().min(2, {
@@ -52,16 +53,17 @@ const formSchema = z.object({
   }),
 
   dateOfBirth: z.union([z.date(), z.string()]),
-  image: z.any().optional(),
+  organizerLogo: z.any().optional(),
    color: z.string().min(6, {
     message: "Please pick a background color.",
   }),
 });
 
 const PersonalInformationForm = () => {
+  const session = useSession();
+  const token = (session?.data?.user as {accessToken:string})?.accessToken;
   const [previewImage, setPreviewImage] = useState<string | null>(null);
   const [isDragOver, setIsDragOver] = useState(false);
-  const token = `eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2OTI1NGM3ZmI0OTIxZmU3MjE2ZjNkZWMiLCJyb2xlIjoiVXNlciIsImlhdCI6MTc2NDU2Mzc3MywiZXhwIjoxNzY1MTY4NTczfQ.k3WGcc392GJ2ZPlW4NOJJnBHzWQK83K_tNj8dpDkKsI`
 
 
 
@@ -76,15 +78,15 @@ const PersonalInformationForm = () => {
       phone: "",
       country: "",
       sportNationalId: "",
-      handicapIndex: "",
+      handicap: "",
       whsNumber: "",
       dateOfBirth: new Date(),
-      image: undefined,
+      organizerLogo: undefined,
       color: "#000000"
     },
   });
 
-
+    // get api 
     const {data} = useQuery<ProfileApiResponse>({
     queryKey: ["personal-info"],
     queryFn: async ()=>{
@@ -95,7 +97,8 @@ const PersonalInformationForm = () => {
         }
       })
       return await res.json();
-    }
+    },
+    enabled: !!token
   })
 
   console.log(data)
@@ -108,7 +111,7 @@ const PersonalInformationForm = () => {
         country: data?.data?.clubName,
         dateOfBirth: data?.data?.dob,
         sportNationalId:data?.data?.sportNationalId,
-        handicapIndex: data?.data?.handicap,
+        handicap: data?.data?.handicap,
         whsNumber: data?.data?.whsNumber,
         gender: data?.data?.gender,
         newsletterPreference: data?.data?.newsletterPreference,
@@ -120,6 +123,23 @@ const PersonalInformationForm = () => {
   },[data, form])
 
 
+  // post api 
+
+  const {mutate, isPending} = useMutation({
+    mutationKey: ["user-profile-update"],
+    mutationFn: async (formData:FormData)=>{
+      const res = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/user/profile`,{
+        method: "PUT",
+        headers:{
+          "Authorization": `Bearer ${token}`
+        },
+        body: formData
+      });
+      return await res.json()
+    }
+  })
+
+
 
 
   const handleImageChange = (file: File) => {
@@ -129,7 +149,7 @@ const PersonalInformationForm = () => {
         setPreviewImage(reader.result as string);
       };
       reader.readAsDataURL(file);
-      form.setValue("image", [file]);
+      form.setValue("organizerLogo", [file]);
     }
   };
 
@@ -155,6 +175,22 @@ const PersonalInformationForm = () => {
   // 2. Define a submit handler.
   function onSubmit(values: z.infer<typeof formSchema>) {
     console.log(values);
+
+    const formData = new FormData();
+    formData.append("fullName", values?.fullName);
+    formData?.append("gender", values?.gender);
+    formData?.append("phone", values?.country);
+    formData?.append("country", values?.country);
+    formData?.append("color", values?.color);
+    formData?.append("sportNationalId", values?.sportNationalId);
+    formData?.append("whsNumber", values?.whsNumber);
+    formData?.append("handicap", values?.handicap);
+    formData?.append("newsletterPreference", values?.newsletterPreference);
+     if (values.organizerLogo && values.organizerLogo[0]) {
+      formData.append("organizerLogo", values.organizerLogo[0]);
+    }
+
+    mutate(formData)
   }
   return (
     <div className="px-6">
@@ -335,7 +371,7 @@ const PersonalInformationForm = () => {
               />
               <FormField
                 control={form.control}
-                name="handicapIndex"
+                name="handicap"
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel className="text-base text-[#434C45] leading-[150%] font-medium">
@@ -375,7 +411,7 @@ const PersonalInformationForm = () => {
 
             <FormField
               control={form.control}
-              name="image"
+              name="organizerLogo"
               render={() => (
                 <FormItem>
                   <FormLabel className="text-base text-[#434C45] leading-[150%] font-medium">
@@ -441,7 +477,7 @@ const PersonalInformationForm = () => {
                             type="button"
                             onClick={() => {
                               setPreviewImage(null);
-                              form.setValue("image", undefined);
+                              form.setValue("organizerLogo", undefined);
                             }}
                             className="absolute top-2 right-2 bg-white rounded-full p-1 shadow-md hover:bg-gray-50"
                           >
@@ -529,14 +565,15 @@ const PersonalInformationForm = () => {
                           Unsubscribe from our newsletter
                         </FormLabel>
                       </FormItem>
-                       <FormItem className="flex items-center space-x-2">
+                      
+                       {/* <FormItem className="flex items-center space-x-2">
                         <FormControl>
                           <RadioGroupItem value="none" className="mt-2" />
                         </FormControl>
                         <FormLabel className="cursor-pointer">
                           Receive Order Updates
                         </FormLabel>
-                      </FormItem>
+                      </FormItem> */}
                     </RadioGroup>
                   </FormControl>
 
@@ -558,12 +595,13 @@ const PersonalInformationForm = () => {
                 Discard Changes
               </Button>
               <Button
+                disabled={isPending}
                 type="submit"
                 className="h-[49px] bg-gradient-to-b from-[#DF1020] to-[#310000]
             hover:from-[#310000] hover:to-[#DF1020]
             transition-all duration-300 text-[#F7F8FA] font-bold text-lg leading-[120%] rounded-[8px] px-12"
               >
-                Save Changes
+                {isPending ? "Saving..." : "Save Changes"}
               </Button>
             </div>
           </form>

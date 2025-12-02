@@ -3,6 +3,7 @@ import { useQuery } from "@tanstack/react-query";
 import { Calendar, NotepadText, Trophy, Users } from "lucide-react";
 import DashboardOverviewSkeleton from "./dashboard-overview-skeleton";
 import ErrorContainer from "@/components/shared/ErrorContainer/ErrorContainer";
+import { useSession } from "next-auth/react";
 
 export interface DashboardSummaryResponse {
   success: boolean;
@@ -20,7 +21,8 @@ export interface DashboardSummaryData {
 
 export function DashboardOverview() {
 
-  const token = `eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2OTIxNGIxYTM3NGU3NTUwY2Y0N2I1MDEiLCJyb2xlIjoib3JnYW5pemVyIiwiaWF0IjoxNzY0MTMzNDc2LCJleHAiOjE3NjQ3MzgyNzZ9.XB4k_V0UnVs5nIS-XbepVC3oPo5y7qwnh_JwDdXb4XQ`
+  const session = useSession();
+  const token = (session?.data?.user as {accessToken:string})?.accessToken;
 
   const {data, isLoading, isError, error} = useQuery<DashboardSummaryResponse>({
     queryKey: ["dashboard-overview"],
@@ -32,7 +34,8 @@ export function DashboardOverview() {
         }
       })
       return await res.json()
-    }
+    },
+    enabled: !!token
   })
 
   console.log(data)
@@ -59,7 +62,7 @@ export function DashboardOverview() {
               Active Tournaments
             </p>
             <p className="text-3xl leading-[120%] text-[#DF1020] font-normal font-hexco pt-1">
-              5
+              {data?.data?.activeTournaments || 0}
             </p>
           </div>
           <div>
@@ -75,7 +78,7 @@ export function DashboardOverview() {
               Total Players
             </p>
             <p className="text-3xl leading-[120%] text-[#DF1020] font-normal font-hexco pt-1">
-              126
+              {data?.data?.totalPlayers || 0}
             </p>
           </div>
           <div>
@@ -91,7 +94,7 @@ export function DashboardOverview() {
               Ongoing Matches
             </p>
             <p className="text-3xl leading-[120%] text-[#DF1020] font-normal font-hexco pt-1">
-              16
+              {data?.data?.ongoingMatches || 0}
             </p>
           </div>
           <div>
@@ -107,7 +110,7 @@ export function DashboardOverview() {
               Upcoming Matches
             </p>
             <p className="text-3xl leading-[120%] text-[#DF1020] font-normal font-hexco pt-1">
-              3
+              {data?.data?.upcomingMatches || 0}
             </p>
           </div>
           <div>
