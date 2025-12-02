@@ -1,6 +1,4 @@
 "use client";
-
-import { Button } from "@/components/ui/button";
 import {
   Form,
   FormControl,
@@ -11,20 +9,25 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { zodResolver } from "@hookform/resolvers/zod";
-import Link from "next/link";
 import { useForm } from "react-hook-form";
 import z from "zod";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Eye, EyeOff } from "lucide-react";
+import { useMutation } from "@tanstack/react-query";
+import { toast } from "sonner";
+import { useRouter, useSearchParams } from "next/navigation";
+import Loader from "@/app/(website)/_components/loader/Loader";
 
 const formSchema = z
   .object({
-    password: z.string().min(6, { message: "Password should be 6 character." }),
+    newPassword: z
+      .string()
+      .min(6, { message: "Password should be 6 character." }),
     confirmPassword: z
       .string()
       .min(1, { message: "Please confirm your password." }),
   })
-  .refine((data) => data.password === data.confirmPassword, {
+  .refine((data) => data.newPassword === data.confirmPassword, {
     message: "Passwords don't match",
     path: ["confirmPassword"],
   });
@@ -34,18 +37,24 @@ type FormType = z.infer<typeof formSchema>;
 const ResetPasswordForm = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  const [email, setEmail] = useState<string | null>(null);
+  const router = useRouter();
+  const searchParams = useSearchParams();
+
+  useEffect(() => {
+    const emailParam = searchParams.get("email");
+    if (emailParam) {
+      setEmail(decodeURIComponent(emailParam));
+    }
+  }, [searchParams]);
 
   const form = useForm<FormType>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      password: "",
+      newPassword: "",
       confirmPassword: "",
     },
   });
-
-  function onSubmit(values: FormType) {
-    console.log(values);
-  }
 
   const togglePasswordVisibility = () => {
     setShowPassword(!showPassword);
@@ -55,13 +64,56 @@ const ResetPasswordForm = () => {
     setShowConfirmPassword(!showConfirmPassword);
   };
 
+  const { mutateAsync, isPending } = useMutation({
+    mutationKey: ["reset-password"],
+    mutationFn: async (payload: FormType) => {
+      const requestBody = email ? { ...payload, email } : payload;
+
+      const res = await fetch(
+        `${process.env.NEXT_PUBLIC_BACKEND_URL}/auth/reset-password`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(requestBody),
+        }
+      );
+
+      const data = await res.json();
+
+      if (!res.ok) {
+        throw new Error(data?.message || "Something went wrong");
+      }
+
+      return await data;
+    },
+
+    onSuccess: async (data) => {
+      toast.success(data?.message);
+      router.push(`/login`);
+    },
+
+    onError: async (error) => {
+      toast.error(error?.message);
+    },
+  });
+
+  async function onSubmit(payload: FormType) {
+    try {
+      await mutateAsync(payload);
+    } catch (error) {
+      console.log(`error : ${error}`);
+    }
+  }
+
   return (
     <div>
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-5">
           <FormField
             control={form.control}
-            name="password"
+            name="newPassword"
             render={({ field }) => (
               <FormItem>
                 <FormLabel>Password</FormLabel>
@@ -124,31 +176,9 @@ const ResetPasswordForm = () => {
             )}
           />
 
-          <div className="flex items-center justify-end">
-            <div>
-              <Link href={"/forgot-password"}>
-                <h4 className="underline">Forgot Password?</h4>
-              </Link>
-            </div>
-          </div>
-
-          <Button
-            type="submit"
-            className="h-[45px] w-full bg-black hover:bg-black/85 text-white"
-          >
-            Reset Password
-          </Button>
+          <Loader isPending={isPending} title="Reset Password" />
         </form>
       </Form>
-
-      <div>
-        <h3 className="text-center mt-5">
-          Don’t have an account?{" "}
-          <Link href={"/sign-up"}>
-            <span className="font-semibold hover:underline">Sign Up</span>
-          </Link>
-        </h3>
-      </div>
     </div>
   );
 };
