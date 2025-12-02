@@ -9,18 +9,21 @@ import {
 } from "@/components/ui/dropdown-menu";
 import Image from "next/image";
 import Link from "next/link";
-import { Button } from "@/components/ui/button";
 import { LayoutDashboard, LogOut, User } from "lucide-react";
-import { signOut } from "next-auth/react";
+import { signOut, useSession } from "next-auth/react";
 
 const NavDropdown = () => {
+  const session = useSession();
+  const role = session?.data?.user?.role;
+  const profileImage = session?.data?.user?.profileImage;
+
   return (
     <div>
-      <DropdownMenu>
+      <DropdownMenu modal={false}>
         <DropdownMenuTrigger className="focus-visible:outline-none">
           <div className="h-12 w-12 rounded-full">
             <Image
-              src={"/images/common/user_placeholder.png"}
+              src={profileImage || "/images/common/user_placeholder.png"}
               alt="img.png"
               width={1000}
               height={1000}
@@ -33,7 +36,7 @@ const NavDropdown = () => {
           <DropdownMenuSeparator />
           <DropdownMenuItem>
             <Link
-              href={"/player"}
+              href={role === "User" ? "/player" : "/organizer"}
               className="font-medium flex items-center gap-1"
             >
               <LayoutDashboard className="h-4 w-4" /> Dashboard
@@ -42,7 +45,9 @@ const NavDropdown = () => {
 
           <DropdownMenuItem>
             <Link
-              href={"/player/settings"}
+              href={
+                role === "User" ? "/player/settings" : "/organizer/settings"
+              }
               className="font-medium flex items-center gap-1"
             >
               <User className="h-4 w-4" /> Profile
@@ -50,13 +55,14 @@ const NavDropdown = () => {
           </DropdownMenuItem>
 
           <DropdownMenuItem>
-            <Button
+            <button
               onClick={() => {
                 signOut({ callbackUrl: "/" });
               }}
+              className="flex items-center gap-1 text-primary"
             >
-              <LogOut /> Log Out
-            </Button>
+              <LogOut className="h-4 w-4" /> Log Out
+            </button>
           </DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>
