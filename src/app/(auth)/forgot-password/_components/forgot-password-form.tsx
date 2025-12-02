@@ -13,6 +13,7 @@ import { Input } from "@/components/ui/input";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation } from "@tanstack/react-query";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import z from "zod";
@@ -24,6 +25,8 @@ const formSchema = z.object({
 type FormType = z.infer<typeof formSchema>;
 
 const ForgotPasswordForm = () => {
+  const router = useRouter();
+
   const form = useForm<FormType>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -32,7 +35,7 @@ const ForgotPasswordForm = () => {
   });
 
   const { mutateAsync, isPending } = useMutation({
-    mutationKey: ["sign-up"],
+    mutationKey: ["forgot-password"],
     mutationFn: async (payload: FormType) => {
       const res = await fetch(
         `${process.env.NEXT_PUBLIC_BACKEND_URL}/auth/forget-password`,
@@ -45,12 +48,19 @@ const ForgotPasswordForm = () => {
         }
       );
 
-      return await res.json();
+      const data = await res.json();
+
+      if (!res.ok) {
+        throw new Error(data?.message || "Something went wrong");
+      }
+
+      return await data;
     },
 
-    onSuccess: async (data) => {
+    onSuccess: async (data, variables) => {
       toast.success(data?.message);
-      window.location.href = "/otp"
+      const encodedEmail = encodeURIComponent(variables.email);
+      router.push(`/otp?email=${encodedEmail}`);
     },
 
     onError: async (error) => {
