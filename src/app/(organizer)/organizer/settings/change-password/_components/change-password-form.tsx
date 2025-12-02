@@ -17,6 +17,9 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Check, X } from "lucide-react";
+import { useSession } from "next-auth/react";
+import { useMutation } from "@tanstack/react-query";
+import { toast } from "sonner";
 
 // ──────────────────────────────────────────────────────────────
 // Password validation schema (exactly like your screenshot)
@@ -59,6 +62,9 @@ export default function ChangePasswordForm() {
     confirm: false,
   });
 
+  const session = useSession();
+  const token = (session?.data?.user as { accessToken: string })?.accessToken;
+
   const form = useForm<FormValues>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -80,8 +86,46 @@ export default function ChangePasswordForm() {
     noSpace: !/\s/.test(newPassword),
   };
 
+  // api integration
+
+  const { mutate, isPending } = useMutation({
+    mutationKey: ["chnage-password"],
+    mutationFn: async (values: {
+      oldPassword: string;
+      newPassword: string;
+    }) => {
+      const res = await fetch(
+        `${process.env.NEXT_PUBLIC_BACKEND_URL}/auth/change-password`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify(values),
+        }
+      );
+      return await res.json();
+    },
+    onSuccess: (data) => {
+      if (!data?.status) {
+        toast.error(data?.message || "Something went wrong");
+        return;
+      }
+      toast.success(data?.message || "Password Reset successfull");
+      form.reset();
+    },
+  });
+
   function onSubmit(values: FormValues) {
     console.log("Password change successful:", values);
+
+    const payload = {
+      oldPassword: values?.currentPassword,
+      newPassword: values?.newPassword,
+    };
+
+    mutate(payload);
   }
 
   return (
@@ -305,10 +349,14 @@ export default function ChangePasswordForm() {
             >
               Reset
             </Button>
-            <Button type="submit" className="h-[49px] bg-gradient-to-b from-[#DF1020] to-[#310000]
+            <Button
+              disabled={isPending}
+              type="submit"
+              className="h-[49px] bg-gradient-to-b from-[#DF1020] to-[#310000]
             hover:from-[#310000] hover:to-[#DF1020]
-            transition-all duration-300 text-[#F7F8FA] font-bold text-lg leading-[120%] rounded-[8px] px-12">
-              Save Changes
+            transition-all duration-300 text-[#F7F8FA] font-bold text-lg leading-[120%] rounded-[8px] px-12"
+            >
+              {isPending ? "Saving..." : "Save Changes"}
             </Button>
           </div>
         </form>
