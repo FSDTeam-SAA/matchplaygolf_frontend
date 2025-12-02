@@ -15,6 +15,7 @@ import { Input } from "@/components/ui/input";
 import DeleteModal from "@/components/modals/delete-modal";
 import TournamentView from "./tournament-view";
 import { Tournament } from "@/components/types/tournaments-data-type";
+import Link from "next/link";
 
 const TournamentsManagementContainer = () => {
   const [currentPage, setCurrentPage] = useState(1);
@@ -85,7 +86,6 @@ const TournamentsManagementContainer = () => {
   const handleDelete = () => {};
   return (
     <div>
-
       {/* table container */}
       <div className="p-6 space-y-6">
         {/* table header  */}
@@ -100,9 +100,11 @@ const TournamentsManagementContainer = () => {
             />
           </div>
           <div>
-            <button className="flex items-center gap-2 bg-[#DF1020] p-3 rounded-[8px] text-[#F8F9FA] text-base font-medium leading-[150%] ">
-              <Plus /> Create Tournament
-            </button>
+            <Link href="/organizer/tournaments-management/create-tournament">
+              <button className="flex items-center gap-2 bg-[#DF1020] p-3 rounded-[8px] text-[#F8F9FA] text-base font-medium leading-[150%] ">
+                <Plus /> Create New Event
+              </button>
+            </Link>
           </div>
         </div>
 
