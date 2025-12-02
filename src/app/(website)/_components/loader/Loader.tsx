@@ -12,8 +12,9 @@ const Loader = ({
 }) => {
   return (
     <Button
+      disabled={isPending}
       type="submit"
-      className="h-[45px] w-full bg-black hover:bg-black/85 text-white"
+      className="h-[45px] w-full bg-black hover:bg-black/85 text-white disabled:cursor-not-allowed"
     >
       {isPending ? (
         <div className="flex items-center gap-1">

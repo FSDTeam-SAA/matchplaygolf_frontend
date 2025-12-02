@@ -4,7 +4,6 @@ import React, { useState } from "react";
 import { useForm } from "react-hook-form";
 import z from "zod";
 import { Eye, EyeOff } from "lucide-react";
-import { Button } from "@/components/ui/button";
 import {
   Form,
   FormControl,
@@ -19,7 +18,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useMutation } from "@tanstack/react-query";
 import { toast } from "sonner";
-import { Spinner } from "@/components/ui/spinner";
+import Loader from "@/app/(website)/_components/loader/Loader";
 
 const formSchema = z
   .object({
@@ -314,22 +313,7 @@ const SignUpForm = () => {
           />
 
           {/* Submit Button */}
-          <Button
-            type="submit"
-            className="h-[45px] w-full bg-black hover:bg-black/85 text-white"
-          >
-            {isPending ? (
-              <div className="flex items-center gap-1">
-                <div>
-                  <Spinner />
-                </div>
-
-                <div>Sign Up</div>
-              </div>
-            ) : (
-              "Sign Up"
-            )}
-          </Button>
+          <Loader isPending={isPending} title="Sign Up" />
         </form>
       </Form>
 
