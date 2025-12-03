@@ -3,23 +3,10 @@ import { useQuery } from "@tanstack/react-query";
 import Image from "next/image";
 import React, { useState } from "react";
 import { Skeleton } from "@/components/ui/skeleton";
-import {
-  Pagination,
-  PaginationContent,
-  PaginationItem,
-  PaginationLink,
-  PaginationNext,
-  PaginationPrevious,
-} from "@/components/ui/pagination";
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogHeader,
-  DialogTitle,
-} from "@/components/ui/dialog";
+import { Dialog, DialogContent } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
-import { Calendar, Type, Eye } from "lucide-react";
+import { Calendar, Type, Eye, Clock } from "lucide-react";
+import CustomPagination from "@/components/shared/pagination/custom-pagination";
 
 interface Article {
   _id: string;
@@ -91,6 +78,15 @@ const SportsArticles = () => {
     setIsModalOpen(false);
   };
 
+  const formatDate = (dateString: string) => {
+    const date = new Date(dateString);
+    return date.toLocaleDateString("en-US", {
+      month: "short",
+      day: "numeric",
+      year: "numeric",
+    });
+  };
+
   if (isLoading) {
     return (
       <div>
@@ -120,25 +116,7 @@ const SportsArticles = () => {
     );
   }
 
-  if (!articles || articles.length === 0) {
-    return (
-      <div>
-        <div className="text-center">
-          <h1 className="text-3xl font-hexco">
-            <span className="text-primary">Sports </span>Articles
-          </h1>
-          <p className="text-gray-600 text-md mt-2">
-            Join these exciting tournaments and test your skills
-          </p>
-        </div>
-        <div className="mt-10 text-center">
-          <p className="text-gray-500">No published articles available.</p>
-        </div>
-      </div>
-    );
-  }
-
-  if (articles.length === 0) {
+  if (!articles.length) {
     return (
       <div>
         <div className="text-center">
@@ -157,8 +135,8 @@ const SportsArticles = () => {
   }
 
   return (
-    <div>
-      <div className="text-center mb-10">
+    <div className="space-y-8">
+      <div className="text-center">
         <h1 className="text-3xl font-hexco">
           <span className="text-primary">Sports </span>Articles
         </h1>
@@ -167,55 +145,58 @@ const SportsArticles = () => {
         </p>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 mb-10">
+      {/* Articles Grid */}
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
         {articles.map((article) => (
           <div
             key={article._id}
-            className="rounded-lg shadow-[0px_2px_4px_2px_#0000001A] group hover:shadow-lg transition-all duration-300 overflow-hidden flex flex-col h-full"
+            className="group relative bg-white rounded-xl shadow-md overflow-hidden hover:shadow-xl transition-all duration-300 border border-gray-100"
           >
-            <div className="overflow-hidden">
+            {/* Article Image */}
+            <div className="relative h-56 overflow-hidden">
               <Image
                 src={article.coverImage || "/images/common/placeholder.png"}
                 alt={article.title}
-                width={1000}
-                height={1000}
-                className="h-[250px] w-full object-cover group-hover:scale-110 duration-300 transition-transform"
+                fill
+                className="object-cover group-hover:scale-110 transition-transform duration-500"
               />
-            </div>
+              <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent" />
 
-            <div className="p-4 flex-grow">
-              <div className="flex items-center justify-between mb-2">
-                <span className="px-2 py-1 bg-gray-100 text-gray-700 text-xs rounded flex items-center gap-1">
+              {/* Type Badge */}
+              <div className="absolute top-3 left-3">
+                <span className="px-3 py-1 bg-white/90 backdrop-blur-sm text-primary text-xs font-medium rounded-full flex items-center gap-1">
                   <Type className="w-3 h-3" />
                   {article.type}
                 </span>
+              </div>
+            </div>
+
+            {/* Article Content */}
+            <div className="p-6">
+              <div className="flex items-center justify-between mb-3">
                 <span className="text-xs text-gray-500 flex items-center gap-1">
                   <Calendar className="w-3 h-3" />
-                  {new Date(article.createdAt).toLocaleDateString("en-US", {
-                    month: "short",
-                    day: "numeric",
-                    year: "numeric",
-                  })}
+                  {formatDate(article.createdAt)}
                 </span>
               </div>
 
-              <h1 className="text-lg font-semibold line-clamp-2 mb-2">
+              <h3 className="text-lg font-bold mb-3 line-clamp-2 group-hover:text-primary transition-colors">
                 {article.title}
-              </h1>
+              </h3>
 
-              <p className="text-sm text-gray-600 line-clamp-3">
-                {article.description.slice(0, 75)}...
+              <p className="text-sm text-gray-600 mb-4 line-clamp-3">
+                {article.description.slice(0, 100)}...
               </p>
-            </div>
 
-            <div className="p-4 pt-0 mt-2">
+              {/* See Details Button */}
               <Button
                 onClick={() => handleOpenModal(article)}
-                className="w-full flex items-center justify-center gap-2"
-                variant="outline"
+                variant={"outline"}
+                className="w-full h-[40px]"
+                size="sm"
               >
                 <Eye className="w-4 h-4" />
-                See Details
+                View Details
               </Button>
             </div>
           </div>
@@ -224,110 +205,71 @@ const SportsArticles = () => {
 
       {/* Pagination */}
       {totalPages > 1 && (
-        <div className="flex justify-center mt-8">
-          <Pagination>
-            <PaginationContent>
-              <PaginationItem>
-                <PaginationPrevious
-                  onClick={() => handlePageChange(Math.max(1, currentPage - 1))}
-                  className={
-                    currentPage === 1
-                      ? "pointer-events-none opacity-50"
-                      : "cursor-pointer"
-                  }
-                />
-              </PaginationItem>
-
-              {Array.from({ length: totalPages }, (_, i) => i + 1).map(
-                (page) => (
-                  <PaginationItem key={page}>
-                    <PaginationLink
-                      onClick={() => handlePageChange(page)}
-                      isActive={currentPage === page}
-                      className="cursor-pointer"
-                    >
-                      {page}
-                    </PaginationLink>
-                  </PaginationItem>
-                )
-              )}
-
-              <PaginationItem>
-                <PaginationNext
-                  onClick={() =>
-                    handlePageChange(Math.min(totalPages, currentPage + 1))
-                  }
-                  className={
-                    currentPage === totalPages
-                      ? "pointer-events-none opacity-50"
-                      : "cursor-pointer"
-                  }
-                />
-              </PaginationItem>
-            </PaginationContent>
-          </Pagination>
+        <div className="flex justify-end">
+          <CustomPagination
+            currentPage={currentPage}
+            totalPages={totalPages}
+            onPageChange={handlePageChange}
+          />
         </div>
       )}
 
       {/* Article Details Modal */}
       <Dialog open={isModalOpen} onOpenChange={handleCloseModal}>
-        <DialogContent className="max-w-3xl max-h-[90vh] overflow-y-auto scrollbar-hide">
+        <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto p-0 border-0">
           {selectedArticle && (
-            <>
-              <DialogHeader>
-                <DialogTitle className="text-2xl">
-                  {selectedArticle.title}
-                </DialogTitle>
-                <DialogDescription>
-                  <div className="flex items-center gap-4 mt-2">
-                    <span className="flex items-center gap-1">
-                      <Type className="w-4 h-4" />
+            <div className="bg-white rounded-lg overflow-hidden">
+              {/* Modal Header with Image */}
+              <div className="relative h-64 md:h-80">
+                <Image
+                  src={
+                    selectedArticle.coverImage ||
+                    "/images/common/placeholder.png"
+                  }
+                  alt={selectedArticle.title}
+                  fill
+                  className="object-cover"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
+                <div className="absolute bottom-6 left-6 right-6">
+                  <div className="flex items-center gap-3 mb-3">
+                    <span className="px-3 py-1 bg-white/90 backdrop-blur-sm text-primary text-sm font-medium rounded-full">
                       {selectedArticle.type}
                     </span>
-                    <span className="flex items-center gap-1">
-                      <Calendar className="w-4 h-4" />
-                      {new Date(selectedArticle.createdAt).toLocaleDateString(
-                        "en-US",
-                        {
-                          year: "numeric",
-                          month: "long",
-                          day: "numeric",
-                          hour: "2-digit",
-                          minute: "2-digit",
-                        }
-                      )}
+                    <span className="px-3 py-1 bg-white/90 backdrop-blur-sm text-gray-700 text-sm font-medium rounded-full flex items-center gap-1">
+                      <Clock className="w-3 h-3" />
+                      {formatDate(selectedArticle.createdAt)}
                     </span>
                   </div>
-                </DialogDescription>
-              </DialogHeader>
-
-              <div className="mt-4">
-                <div className="relative w-full h-[400px] rounded-lg overflow-hidden">
-                  <Image
-                    src={
-                      selectedArticle.coverImage ||
-                      "/images/common/placeholder.png"
-                    }
-                    alt={selectedArticle.title}
-                    fill
-                    className="object-cover"
-                  />
+                  <h2 className="text-2xl md:text-3xl font-bold text-white">
+                    {selectedArticle.title}
+                  </h2>
                 </div>
+              </div>
 
-                <div className="mt-6">
-                  <h3 className="text-lg font-semibold mb-2">Description</h3>
-                  <p className="text-gray-700 whitespace-pre-line">
+              {/* Modal Content */}
+              <div className="p-6 md:p-8">
+                <div className="prose max-w-none">
+                  <h3 className="text-xl font-semibold mb-4 text-gray-800">
+                    Article Description
+                  </h3>
+                  <p className="text-gray-700 leading-relaxed whitespace-pre-line">
                     {selectedArticle.description}
                   </p>
                 </div>
 
-                <div className="mt-6 flex justify-end">
-                  <Button onClick={handleCloseModal} variant="outline">
+                {/* Actions */}
+                <div className="mt-8 flex justify-end gap-3">
+                  <Button
+                    onClick={handleCloseModal}
+                    variant="outline"
+                    className="border-gray-300 hover:bg-gray-50"
+                  >
                     Close
                   </Button>
                 </div>
               </div>
-            </>
+            </div>
           )}
         </DialogContent>
       </Dialog>
