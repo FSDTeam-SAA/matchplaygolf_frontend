@@ -16,11 +16,11 @@ export default function CreateTournamentContainer() {
   }, []);
 
   return (
-    <div className="min-h-screen bg-gray-50 py-8">
-      <div className="max-w-4xl mx-auto px-4">
+    <div className="px-6 pt-6 pb-20">
+      <div className="">
 
         {/* Progress Indicator */}
-        <div className="flex items-center justify-center mb-10">
+        {/* <div className="flex items-center justify-center mb-10">
           <div className="flex items-center">
             <div className={`w-10 h-10 rounded-full flex items-center justify-center font-bold ${step >= 1 ? 'bg-red-600 text-white' : 'bg-gray-300'}`}>
               1
@@ -30,7 +30,7 @@ export default function CreateTournamentContainer() {
               2
             </div>
           </div>
-        </div>
+        </div> */}
 
         {/* Conditional Rendering */}
         {step === 1 && <Step1Form />}

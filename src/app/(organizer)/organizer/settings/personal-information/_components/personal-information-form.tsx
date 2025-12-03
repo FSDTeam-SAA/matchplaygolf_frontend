@@ -191,7 +191,7 @@ const PersonalInformationForm = () => {
 
     formData.append("fullName", values?.fullName);
     formData?.append("gender", values?.gender);
-    formData?.append("phone", values?.country);
+    formData?.append("phone", values?.phone);
     formData?.append("country", values?.country);
     formData?.append("color", values?.color);
     formData?.append("dob", formattedDate);

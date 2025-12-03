@@ -64,7 +64,7 @@ export default function Step1Form() {
     <Form {...form}>
       <form
         onSubmit={form.handleSubmit(onSubmit)}
-        className="space-y-6 bg-white p-8 rounded-lg shadow"
+        className="space-y-6"
       >
         <FormField
           control={form.control}
