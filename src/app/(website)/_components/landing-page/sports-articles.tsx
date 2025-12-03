@@ -46,7 +46,7 @@ const SportsArticles = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   const { data, isLoading } = useQuery<ApiResponse>({
-    queryKey: ["articles", currentPage],
+    queryKey: ["articles", currentPage, ITEMS_PER_PAGE],
     queryFn: async () => {
       const res = await fetch(
         `${process.env.NEXT_PUBLIC_BACKEND_URL}/article?page=${currentPage}&limit=${ITEMS_PER_PAGE}`,
