@@ -1,3 +1,4 @@
+import { Suspense } from "react";
 import ResetPasswordForm from "./_components/reset-password-form";
 
 export default function ResetPasswordPage() {
@@ -11,7 +12,9 @@ export default function ResetPasswordPage() {
       </div>
 
       <div className="mt-10">
-        <ResetPasswordForm />
+        <Suspense fallback={<div>loading...</div>}>
+          <ResetPasswordForm />
+        </Suspense>
       </div>
     </div>
   );

@@ -1,3 +1,4 @@
+import { Suspense } from "react";
 import OtpForm from "./_components/otp-form";
 
 export default function OtpPage() {
@@ -11,7 +12,9 @@ export default function OtpPage() {
       </div>
 
       <div className="mt-5">
-        <OtpForm />
+      <Suspense fallback={<div>loading...</div>}>
+          <OtpForm />
+      </Suspense>
       </div>
     </div>
   );
