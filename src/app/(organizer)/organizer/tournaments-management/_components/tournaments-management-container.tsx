@@ -9,106 +9,81 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import moment from "moment";
 import { Eye, Plus, Trash } from "lucide-react";
 import MatchPlayGolfPagination from "@/components/ui/matchplaygolf-pagination";
 import { Input } from "@/components/ui/input";
 import DeleteModal from "@/components/modals/delete-modal";
 import TournamentView from "./tournament-view";
-import { Tournament } from "@/components/types/tournaments-data-type";
 import Link from "next/link";
+import { Tournament, TournamentResponse } from "./tournament-data-type";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useSession } from "next-auth/react";
+import { toast } from "sonner";
+import NotFound from "@/components/shared/NotFound/NotFound";
+import ErrorContainer from "@/components/shared/ErrorContainer/ErrorContainer";
+import TableSkeletonWrapper from "@/components/shared/TableSkeletonWrapper/TableSkeletonWrapper";
 
 const TournamentsManagementContainer = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [search, setSearch] = useState("");
   const [deleteModalOpen, setDeleteModalOpen] = useState(false);
   const [viewTournament, setViewTournament] = useState(false);
+  const [tournementId, setTournamentId] = useState("");
   const [selectedTournament, setSelectedTournament] =
     useState<Tournament | null>(null);
 
+  const queryClient = useQueryClient();
+  const session = useSession();
+  const token = (session?.data?.user as { accessToken: string })?.accessToken;
+  console.log(token);
+
   console.log(search);
-  const mockTournaments: Tournament[] = [
-    {
-      id: 1,
-      name: "Spring Championship 2023",
-      location: "Pine Valley Golf...",
-      startDate: "May 15, 2023",
-      endDate: "May 20, 2025",
-      players: 48,
-      status: "Active",
-    },
-    {
-      id: 2,
-      name: "Summer Invitational",
-      location: "Augusta National",
-      startDate: "Jun 10, 2023",
-      endDate: "Jun 15, 2025",
-      players: 36,
-      status: "Active",
-    },
-    {
-      id: 3,
-      name: "Pro-Am Tournament",
-      location: "Pebble Beach",
-      startDate: "Jun 22, 2023",
-      endDate: "Jun 25, 2025",
-      players: 64,
-      status: "Upcoming",
-    },
-    {
-      id: 4,
-      name: "Regional Qualifier",
-      location: "St. Andrews Links",
-      startDate: "Jan 06, 2025",
-      endDate: "Jul 8, 2025",
-      players: 32,
-      status: "Upcoming",
-    },
-    {
-      id: 5,
-      name: "Junior Championship",
-      location: "Torrey Pines",
-      startDate: "Jan 06, 2025",
-      endDate: "Jul 12, 2025",
-      players: 24,
-      status: "Registration",
-    },
-    {
-      id: 6,
-      name: "Spring Championship 2023",
-      location: "St. Andrews Links",
-      startDate: "Jan 06, 2025",
-      endDate: "Aug 12, 2025",
-      players: 14,
-      status: "Registration",
-    },
-  ];
 
-  const handleDelete = () => {};
-  return (
-    <div>
-      {/* table container */}
-      <div className="p-6 space-y-6">
-        {/* table header  */}
-        <div className="w-full flex items-center justify-between">
-          <div>
-            <Input
-              type="search"
-              className="w-[479px] h-[48px] border border-[#C0C3C1] rounded-[4px] outline-none right-0 text-base font-medium leading-[120%] text-[#343A40]"
-              value={search}
-              onChange={(e) => setSearch(e.target.value)}
-              placeholder="Search..."
-            />
-          </div>
-          <div>
-            <Link href="/organizer/tournaments-management/create-tournament">
-              <button className="flex items-center gap-2 bg-[#DF1020] p-3 rounded-[8px] text-[#F8F9FA] text-base font-medium leading-[150%] ">
-                <Plus /> Create New Event
-              </button>
-            </Link>
-          </div>
-        </div>
+  // get tournament api
+  const { data, isLoading, isError, error } = useQuery<TournamentResponse>({
+    queryKey: ["tournaments", currentPage],
+    queryFn: async () => {
+      const res = await fetch(
+        `${process.env.NEXT_PUBLIC_BACKEND_URL}/tournament?page=${currentPage}&limit=10`
+      );
+      return res.json();
+    },
+  });
 
-        {/* table  */}
+  let content;
+
+  if (isLoading) {
+    content = (
+      <div>
+        <TableSkeletonWrapper count={5} />
+      </div>
+    );
+  } else if (isError) {
+    content = (
+      <div>
+        <ErrorContainer message={error?.message || "Something went wrong"} />
+      </div>
+    );
+  } else if (
+    data &&
+    data?.data &&
+    data?.data?.tournaments &&
+    data?.data?.tournaments?.length === 0
+  ) {
+    content = (
+      <div>
+        <NotFound message="Oops! No data available. Modify your filters or check your internet connection." />
+      </div>
+    );
+  } else if (
+    data &&
+    data?.data &&
+    data?.data?.tournaments &&
+    data?.data?.tournaments?.length > 0
+  ) {
+    content = (
+      <div>
         <Table className="">
           <TableHeader className="bg-[#FCE7E9] rounded-t-[12px]">
             <TableRow className="">
@@ -136,23 +111,23 @@ const TournamentsManagementContainer = () => {
             </TableRow>
           </TableHeader>
           <TableBody className="border-b border-x border-[#E6E7E6] rounded-b-[12px]">
-            {mockTournaments?.map((item) => {
+            {data?.data?.tournaments?.map((item) => {
               return (
-                <TableRow key={item?.id} className="">
+                <TableRow key={item?._id} className="">
                   <TableCell className="text-base font-medium text-[#68706A] leading-[150%] pl-6 py-4">
-                    {item?.name}
+                    {item?.tournamentName}
                   </TableCell>
                   <TableCell className="text-base font-normal text-[#68706A] leading-[150%] text-center py-4">
-                    {item?.location}
+                    {item?.billingAddress?.country}
                   </TableCell>
                   <TableCell className="text-base font-normal text-[#68706A] leading-[150%] text-center py-4">
-                    {item?.startDate}
+                    {moment(item?.startDate).format("MMM DD, YYYY")}
                   </TableCell>
                   <TableCell className="text-base font-normal text-[#68706A] leading-[150%] text-center py-4">
-                    {item?.endDate}
+                    {moment(item?.endDate).format("MMM DD, YYYY")}
                   </TableCell>
                   <TableCell className="text-base font-medium text-[#343A40] leading-[150%] text-center py-4">
-                    {item?.players}
+                    {0}
                   </TableCell>
                   <TableCell className="text-base font-medium text-[#68706A] leading-[150%] text-center py-4">
                     <button
@@ -180,10 +155,11 @@ const TournamentsManagementContainer = () => {
                     <button
                       onClick={() => {
                         setDeleteModalOpen(true);
+                        setTournamentId(item?._id);
                       }}
                       className="cursor-pointer"
                     >
-                      <Trash className="h-6 w-6 text-[#181818]" />
+                      <Trash className="h-6 w-6 text-primary" />
                     </button>
                   </TableCell>
                 </TableRow>
@@ -191,20 +167,87 @@ const TournamentsManagementContainer = () => {
             })}
           </TableBody>
         </Table>
+      </div>
+    );
+  }
 
-        {/* pagination  */}
-        <div className="w-full flex items-center justify-between py-6">
-          <p className="text-base font-normal text-[#68706A] leading-[150%]">
-            Showing 1 to 5 of 12 results
-          </p>
+  console.log(data);
+
+  // delete tournament api
+  const { mutate } = useMutation({
+    mutationKey: ["delete-tournament"],
+    mutationFn: async (id: string) => {
+      const res = await fetch(
+        `${process.env.NEXT_PUBLIC_BACKEND_URL}/tournament/${id}`,
+        {
+          method: "DELETE",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      return res.json();
+    },
+    onSuccess: (data) => {
+      if (!data?.success) {
+        toast.error(data?.message || "Something went wrong");
+        return;
+      }
+      toast.success(data?.message || "Tournament deleted successfully");
+      queryClient.invalidateQueries({ queryKey: ["tournaments"] });
+    },
+  });
+
+  const handleDelete = () => {
+    if (tournementId) {
+      mutate(tournementId);
+    }
+    setDeleteModalOpen(false);
+  };
+  return (
+    <div>
+      {/* table container */}
+      <div className="p-6 space-y-6">
+        {/* table header  */}
+        <div className="w-full flex items-center justify-between">
           <div>
-            <MatchPlayGolfPagination
-              currentPage={currentPage}
-              totalPages={10}
-              onPageChange={(page) => setCurrentPage(page)}
+            <Input
+              type="search"
+              className="w-[300px] lg:w-[479px] h-[48px] border border-[#C0C3C1] rounded-[4px] outline-none right-0 text-base font-medium leading-[120%] text-[#343A40]"
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+              placeholder="Search..."
             />
           </div>
+          <div>
+            <Link href="/organizer/tournaments-management/create-tournament">
+              <button className="flex items-center gap-2 bg-[#DF1020] p-3 rounded-[8px] text-[#F8F9FA] text-base font-medium leading-[150%] ">
+                <Plus /> Create New Event
+              </button>
+            </Link>
+          </div>
         </div>
+
+        {/* table  */}
+        <div>{content}</div>
+
+        {/* pagination  */}
+        {data && data?.data && data?.data?.totalPages > 1 && (
+          <div className="w-full flex items-center justify-between py-6">
+            <p className="text-base font-normal text-[#68706A] leading-[150%]">
+              Showing {data?.data?.currentPage} to 10 of{" "}
+              {data?.data?.totalTournaments} results
+            </p>
+            <div>
+              <MatchPlayGolfPagination
+                currentPage={currentPage}
+                totalPages={data?.data?.totalPages}
+                onPageChange={(page) => setCurrentPage(page)}
+              />
+            </div>
+          </div>
+        )}
 
         {/* delete modal  */}
         {deleteModalOpen && (
