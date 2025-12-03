@@ -115,6 +115,7 @@ export default function ChangePasswordForm() {
       toast.success(data?.message || "Password Reset successfull");
       form.reset();
     },
+    
   });
 
   function onSubmit(values: FormValues) {
