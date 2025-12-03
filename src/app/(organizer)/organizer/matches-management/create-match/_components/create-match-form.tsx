@@ -22,38 +22,29 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Checkbox } from "@/components/ui/checkbox";
-import { Label } from "@/components/ui/label";
-import Link from "next/link";
 
 const formSchema = z.object({
   tournamentName: z.string().min(2, {
     message: "Tournament Name must be at least 2 characters.",
   }),
   sportName: z.string().min(2, {
-    message: "Sport Name must be at least 2 characters.",
+    message: "Tournament Name must be at least 2 characters.",
   }),
-  totalDrawSize: z.string().min(1, {
-    message: "Total Draw Size is required.",
+  totalDrawSize: z.string().min(2, {
+    message: "Total Draw Size must be at least 2 characters.",
   }),
-  drawFormat: z.string().min(1, {
-    message: "Draw Format is required.",
+  drawFormat: z.string().min(2, {
+    message: "Draw Format must be at least 2 characters.",
   }),
-  format: z.string().min(1, {
-    message: "Format is required.",
+  team: z.string().min(2, {
+    message: "Team must be at least 2 characters.",
   }),
-   terms: z.boolean().refine((val) => val === true, {
-    message: "You must accept the terms and conditions.",
+  format: z.string().min(2, {
+    message: "Format must be at least 2 characters.",
   }),
-})
+});
 
-const DRAW_FORMAT_OPTIONS = [
-  // { id: "matrix", label: "Matrix 2", value: "matrix" },
-  { id: "knockout", label: "Knockout ?", value: "knockout" },
-  { id: "teams", label: "Teams ?", value: "teams" },
-]
-
-const CreateTournament = () => {
+const CreateMatch = () => {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -61,8 +52,8 @@ const CreateTournament = () => {
       sportName: "",
       totalDrawSize: "",
       drawFormat: "",
+      team: "",
       format: "",
-      terms: false,
     },
   });
 
@@ -114,37 +105,46 @@ const CreateTournament = () => {
               )}
             />
 
-
-          <FormField
-            control={form.control}
-            name="drawFormat"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel className="text-base text-[#434C45] leading-[150%] font-medium">
-                  Draw Format <span className="text-red-500">*</span>
-                </FormLabel>
-                <FormControl>
-                  <div className="grid grid-cols-2 gap-6">
-                    {DRAW_FORMAT_OPTIONS.map((option) => (
-                      <button
-                        key={option.id}
-                        type="button"
-                        onClick={() => field.onChange(option.value)}
-                        className={`py-3 px-4 rounded-[8px] border-2 text-base font-medium leading-[120%] transition-all duration-200 ${
-                          field.value === option.value
-                            ? "border-primary bg-[#F0FFFE] text-[#434C45]"
-                            : "border-[#C0C3C1] bg-white text-[#434C45] hover:border-primary"
-                        }`}
-                      >
-                        {option.label}
-                      </button>
-                    ))}
-                  </div>
-                </FormControl>
-                <FormMessage className="text-red-500" />
-              </FormItem>
-            )}
-          />
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <FormField
+                control={form.control}
+                name="drawFormat"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel className="text-base text-[#434C45] leading-[150%] font-medium">
+                      Draw Format 
+                    </FormLabel>
+                    <FormControl>
+                      <Input
+                        className="w-full h-[48px] py-2 px-3 rounded-[8px] border border-[#C0C3C1] text-base font-medium leading-[120%] text-[#434C45)]"
+                        placeholder="Knockout ?"
+                        {...field}
+                      />
+                    </FormControl>
+                    <FormMessage className="text-red-500" />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="team"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel className="text-base text-[#434C45] leading-[150%] font-medium">
+                      Team
+                    </FormLabel>
+                    <FormControl>
+                      <Input
+                        className="w-full h-[48px] py-2 px-3 rounded-[8px] border border-[#C0C3C1] text-base font-medium leading-[120%] text-[#434C45)]"
+                        placeholder="Team ?"
+                        {...field}
+                      />
+                    </FormControl>
+                    <FormMessage className="text-red-500" />
+                  </FormItem>
+                )}
+              />
+            </div>
 
             <FormField
               control={form.control}
@@ -152,7 +152,7 @@ const CreateTournament = () => {
               render={({ field }) => (
                 <FormItem>
                   <FormLabel className="text-base text-[#434C45] leading-[150%] font-medium">
-                    Format <span className="text-red-500">*</span>
+                    Format
                   </FormLabel>
                   <FormControl>
                     <Select
@@ -204,39 +204,6 @@ const CreateTournament = () => {
               )}
             />
 
-
-             <div>
-               <p className="text-base text-[#1F2937] leading-[150%] ">Your personal information will be used to process your order, enhance your experience on our website, and for other purposes outlined in our <Link href="/privacy-policy" className="text-base text-[#E5102E] leading-[150%] underline">privacy policy.</Link></p>
-             <FormField
-                control={form.control}
-                name="terms"
-                render={({ field }) => (
-                  <FormItem className="flex items-start space-x-3">
-                    <FormControl>
-                      <Checkbox
-                        checked={field.value}
-                        onCheckedChange={field.onChange}
-                        id="terms"
-                        className="mt-3"
-                      />
-                    </FormControl>
-                     <div>
-                     <Label
-                        htmlFor="terms"
-                        className="text-base text-[#1F2937] font-normal leading-[150%]"
-                      >
-
-                        I agree to the 
-                        <Link href="/terms-and-conditions" className="text-base text-[#E5102E] font-semibold"> Terms and Conditions </Link>
-                      </Label> <br />
-                     
-                        <FormMessage className="text-red-500 pt-2" />
-                      </div>
-                  </FormItem>
-                )}
-              />
-             </div>
-
             {/* Buttons */}
             <div className="flex justify-end gap-4 pt-6">
               <Button
@@ -265,4 +232,4 @@ const CreateTournament = () => {
   );
 };
 
-export default CreateTournament;
+export default CreateMatch;
