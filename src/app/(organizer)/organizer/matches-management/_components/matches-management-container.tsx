@@ -185,7 +185,7 @@ const MatchesManagementContainer = () => {
                       }}
                       className="cursor-pointer"
                     >
-                      <Trash className="h-6 w-6 text-[#181818]" />
+                      <Trash className="h-6 w-6 text-primary" />
                     </button>
                   </TableCell>
                 </TableRow>
