@@ -204,6 +204,9 @@ const CreateTournament = () => {
               )}
             />
 
+            <div className="w-full h-[100px] flex items-center justify-start pl-8 text-xl font-bold text-[#343A40] leading-[120%] bg-[#E6E7E6] rounded-[6px]">
+              Total : $ 15
+            </div>
 
              <div>
                <p className="text-base text-[#1F2937] leading-[150%] ">Your personal information will be used to process your order, enhance your experience on our website, and for other purposes outlined in our <Link href="/privacy-policy" className="text-base text-[#E5102E] leading-[150%] underline">privacy policy.</Link></p>
