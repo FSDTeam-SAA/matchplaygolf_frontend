@@ -9,17 +9,21 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
+import { Spinner } from "@/components/ui/spinner";
 import { Textarea } from "@/components/ui/textarea";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useMutation } from "@tanstack/react-query";
+import { useSession } from "next-auth/react";
 import Image from "next/image";
 import React from "react";
 import { useForm } from "react-hook-form";
+import { toast } from "sonner";
 import { z } from "zod";
 
 const formSchema = z.object({
   name: z.string().min(2).max(50),
   email: z.email(),
-  phoneNumber: z.string().min(1, { message: "Phone number is required" }),
+  phone: z.string().min(1, { message: "Phone number is required" }),
   message: z
     .string()
     .min(10, { message: "Message should at least 10 character!" }),
@@ -28,17 +32,59 @@ const formSchema = z.object({
 type FormType = z.input<typeof formSchema>;
 
 const GetInTouch = () => {
+  const session = useSession();
+  const token = session?.data?.user?.accessToken;
+
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
       name: "",
       email: "",
-      phoneNumber: "",
+      phone: "",
+      message: "",
     },
   });
 
-  function onSubmit(values: FormType) {
-    console.log(values);
+  const { mutateAsync, isPending } = useMutation({
+    mutationKey: ["contact"],
+    mutationFn: async (payload: FormType) => {
+      const res = await fetch(
+        `${process.env.NEXT_PUBLIC_BACKEND_URL}/contact`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `bearer ${token}`,
+          },
+          body: JSON.stringify(payload),
+        }
+      );
+
+      const data = await res.json();
+
+      if (!res.ok) {
+        throw new Error(data?.message);
+      }
+
+      return await data;
+    },
+
+    onSuccess: (data) => {
+      toast.success(data?.message);
+      form.reset();
+    },
+
+    onError: (error) => {
+      toast.error(error?.message);
+    },
+  });
+
+  async function onSubmit(payload: FormType) {
+    try {
+      await mutateAsync(payload);
+    } catch (error) {
+      console.log("error : ", error);
+    }
   }
 
   return (
@@ -93,7 +139,7 @@ const GetInTouch = () => {
 
             <FormField
               control={form.control}
-              name="phoneNumber"
+              name="phone"
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Phone Number</FormLabel>
@@ -127,8 +173,22 @@ const GetInTouch = () => {
               )}
             />
 
-            <Button type="submit" className="h-[45px] w-full">
-              Send Message
+            <Button
+              disabled={isPending}
+              type="submit"
+              className="h-[45px] w-full"
+            >
+              {isPending ? (
+                <div className="flex items-center gap-1">
+                  <div>
+                    <Spinner />
+                  </div>
+
+                  <div>Send Message....</div>
+                </div>
+              ) : (
+                `Send Message`
+              )}
             </Button>
           </form>
         </Form>
