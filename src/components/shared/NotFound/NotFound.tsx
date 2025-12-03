@@ -9,7 +9,7 @@ interface Props {
 const NotFound = ({ message }: Props) => {
   return (
     <div className="">
-      <div className="bg-gray-300 h-[360px] w-full flex flex-col items-center justify-center rounded-[20px]">
+      <div className="bg-primary/10 h-[360px] w-full flex flex-col items-center justify-center rounded-[20px]">
         {/* Image */}
         <Image
           src="/images/404.png"

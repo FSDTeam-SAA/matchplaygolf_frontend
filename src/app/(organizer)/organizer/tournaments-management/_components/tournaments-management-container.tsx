@@ -20,6 +20,9 @@ import { Tournament, TournamentResponse } from "./tournament-data-type";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useSession } from "next-auth/react";
 import { toast } from "sonner";
+import NotFound from "@/components/shared/NotFound/NotFound";
+import ErrorContainer from "@/components/shared/ErrorContainer/ErrorContainer";
+import TableSkeletonWrapper from "@/components/shared/TableSkeletonWrapper/TableSkeletonWrapper";
 
 const TournamentsManagementContainer = () => {
   const [currentPage, setCurrentPage] = useState(1);
@@ -33,12 +36,12 @@ const TournamentsManagementContainer = () => {
   const queryClient = useQueryClient();
   const session = useSession();
   const token = (session?.data?.user as { accessToken: string })?.accessToken;
-  console.log(token)
+  console.log(token);
 
   console.log(search);
 
   // get tournament api
-  const { data } = useQuery<TournamentResponse>({
+  const { data, isLoading, isError, error } = useQuery<TournamentResponse>({
     queryKey: ["tournaments", currentPage],
     queryFn: async () => {
       const res = await fetch(
@@ -48,65 +51,39 @@ const TournamentsManagementContainer = () => {
     },
   });
 
-  console.log(data);
+  let content;
 
-  // delete tournament api
-  const { mutate } = useMutation({
-    mutationKey: ["delete-tournament"],
-    mutationFn: async (id: string) => {
-      const res = await fetch(
-        `${process.env.NEXT_PUBLIC_BACKEND_URL}/tournament/${id}`,
-        {
-          method: "DELETE",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
-      return res.json();
-    },
-    onSuccess: (data) => {
-      if(!data?.success){
-        toast.error(data?.message || "Something went wrong")
-        return;
-      }
-      toast.success(data?.message || "Tournament deleted successfully")
-      queryClient.invalidateQueries({ queryKey: ["tournaments"] });
-    },
-  });
-
-  const handleDelete = () => {
-    if (tournementId) {
-      mutate(tournementId);
-    }
-    setDeleteModalOpen(false);
-  };
-  return (
-    <div>
-      {/* table container */}
-      <div className="p-6 space-y-6">
-        {/* table header  */}
-        <div className="w-full flex items-center justify-between">
-          <div>
-            <Input
-              type="search"
-              className="w-[300px] lg:w-[479px] h-[48px] border border-[#C0C3C1] rounded-[4px] outline-none right-0 text-base font-medium leading-[120%] text-[#343A40]"
-              value={search}
-              onChange={(e) => setSearch(e.target.value)}
-              placeholder="Search..."
-            />
-          </div>
-          <div>
-            <Link href="/organizer/tournaments-management/create-tournament">
-              <button className="flex items-center gap-2 bg-[#DF1020] p-3 rounded-[8px] text-[#F8F9FA] text-base font-medium leading-[150%] ">
-                <Plus /> Create New Event
-              </button>
-            </Link>
-          </div>
-        </div>
-
-        {/* table  */}
+  if (isLoading) {
+    content = (
+      <div>
+        <TableSkeletonWrapper count={5} />
+      </div>
+    );
+  } else if (isError) {
+    content = (
+      <div>
+        <ErrorContainer message={error?.message || "Something went wrong"} />
+      </div>
+    );
+  } else if (
+    data &&
+    data?.data &&
+    data?.data?.tournaments &&
+    data?.data?.tournaments?.length === 0
+  ) {
+    content = (
+      <div>
+        <NotFound message="Oops! No data available. Modify your filters or check your internet connection." />
+      </div>
+    );
+  } else if (
+    data &&
+    data?.data &&
+    data?.data?.tournaments &&
+    data?.data?.tournaments?.length > 0
+  ) {
+    content = (
+      <div>
         <Table className="">
           <TableHeader className="bg-[#FCE7E9] rounded-t-[12px]">
             <TableRow className="">
@@ -190,6 +167,70 @@ const TournamentsManagementContainer = () => {
             })}
           </TableBody>
         </Table>
+      </div>
+    );
+  }
+
+  console.log(data);
+
+  // delete tournament api
+  const { mutate } = useMutation({
+    mutationKey: ["delete-tournament"],
+    mutationFn: async (id: string) => {
+      const res = await fetch(
+        `${process.env.NEXT_PUBLIC_BACKEND_URL}/tournament/${id}`,
+        {
+          method: "DELETE",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      return res.json();
+    },
+    onSuccess: (data) => {
+      if (!data?.success) {
+        toast.error(data?.message || "Something went wrong");
+        return;
+      }
+      toast.success(data?.message || "Tournament deleted successfully");
+      queryClient.invalidateQueries({ queryKey: ["tournaments"] });
+    },
+  });
+
+  const handleDelete = () => {
+    if (tournementId) {
+      mutate(tournementId);
+    }
+    setDeleteModalOpen(false);
+  };
+  return (
+    <div>
+      {/* table container */}
+      <div className="p-6 space-y-6">
+        {/* table header  */}
+        <div className="w-full flex items-center justify-between">
+          <div>
+            <Input
+              type="search"
+              className="w-[300px] lg:w-[479px] h-[48px] border border-[#C0C3C1] rounded-[4px] outline-none right-0 text-base font-medium leading-[120%] text-[#343A40]"
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+              placeholder="Search..."
+            />
+          </div>
+          <div>
+            <Link href="/organizer/tournaments-management/create-tournament">
+              <button className="flex items-center gap-2 bg-[#DF1020] p-3 rounded-[8px] text-[#F8F9FA] text-base font-medium leading-[150%] ">
+                <Plus /> Create New Event
+              </button>
+            </Link>
+          </div>
+        </div>
+
+        {/* table  */}
+        <div>{content}</div>
 
         {/* pagination  */}
         {data && data?.data && data?.data?.totalPages > 1 && (

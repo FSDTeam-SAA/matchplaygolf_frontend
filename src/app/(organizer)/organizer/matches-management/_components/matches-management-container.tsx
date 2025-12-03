@@ -85,7 +85,6 @@ const MatchesManagementContainer = () => {
   const handleDelete = () => {};
   return (
     <div>
-
       {/* table container */}
       <div className="p-6 space-y-6">
         {/* table header  */}
