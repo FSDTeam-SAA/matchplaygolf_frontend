@@ -4,37 +4,38 @@ import React from "react";
 
 const MissionVision = () => {
   return (
-    <div>
+    <div className="px-4 sm:px-6 lg:px-8">
       {/* mission section */}
-      <section className="flex gap-10">
-        <div>
+      <section className="flex flex-col lg:flex-row gap-8 lg:gap-10 items-center lg:items-start">
+        <div className="w-full lg:w-1/2">
           <Image
             src={"/images/about/mission.jpg"}
-            alt="img.png"
+            alt="Mission image"
             width={1000}
             height={1000}
-            className="h-[500px] w-[500px] rounded-lg"
+            className="w-full h-auto max-w-full lg:max-w-none rounded-lg object-cover"
+            sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
           />
         </div>
 
-        <div className="flex-1">
-          <h1 className="text-3xl font-hexco">
+        <div className="w-full lg:w-1/2 lg:flex-1">
+          <h1 className="text-2xl sm:text-3xl md:text-4xl font-hexco text-center lg:text-left">
             <span className="text-primary">Our </span>Mission
           </h1>
 
-          <div className="text-sm text-gray-500 mt-3 space-y-5">
+          <div className="text-sm sm:text-base text-gray-500 mt-4 sm:mt-6 space-y-4 sm:space-y-5">
             <p>
-              We believe that golf is more than just a sport it’s a test of
+              We believe that golf is more than just a sport it&apos;s a test of
               precision, patience, and passion. Every swing tells a story, and
               every player deserves a fair, transparent, and professionally
               managed tournament experience that honors the spirit of the game.
             </p>
 
             <p>
-              At our core, we’re driven by a single vision to transform how golf
-              tournaments are organized, played, and experienced. We’re building
+              At our core, we&apos;re driven by a single vision to transform how golf
+              tournaments are organized, played, and experienced. We&apos;re building
               a platform that eliminates the hassle of manual tournament
-              management and replaces it with a system that’s intuitive,
+              management and replaces it with a system that&apos;s intuitive,
               automated, and built for both organizers and players.
             </p>
 
@@ -49,31 +50,46 @@ const MissionVision = () => {
 
             <p>
               We believe technology should enhance, not replace, the spirit of
-              competition. That’s why our platform focuses on fair play,
+              competition. That&apos;s why our platform focuses on fair play,
               accuracy, and inclusivity ensuring that every participant,
               regardless of skill level, enjoys the same professional standard
               of gameplay.
             </p>
 
             <p>
-              With innovation, fairness, and a deep respect for tradition, we’re
+              With innovation, fairness, and a deep respect for tradition, we&apos;re
               redefining the future of competitive golf one tournament at a
               time.
             </p>
 
-            <Button>Join Tournament</Button>
+            <div className="flex justify-center lg:justify-start pt-2">
+              <Button className="w-full sm:w-auto px-6 py-3 text-sm sm:text-base">
+                Join Tournament
+              </Button>
+            </div>
           </div>
         </div>
       </section>
 
       {/* vision section */}
-      <section className="flex gap-10 mt-24">
-        <div className="flex-1">
-          <h1 className="text-3xl font-hexco">
+      <section className="flex flex-col lg:flex-row gap-8 lg:gap-10 mt-16 sm:mt-20 lg:mt-24 items-center lg:items-start">
+        <div className="w-full lg:w-1/2 lg:order-2">
+          <Image
+            src={"/images/about/vision.png"}
+            alt="Vision image"
+            width={1000}
+            height={1000}
+            className="w-full h-auto max-w-full lg:max-w-none rounded-lg object-cover"
+            sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+          />
+        </div>
+
+        <div className="w-full lg:w-1/2 lg:flex-1 lg:order-1">
+          <h1 className="text-2xl sm:text-3xl md:text-4xl font-hexco text-center lg:text-left">
             <span className="text-primary">Our </span>Vision
           </h1>
 
-          <div className="text-sm text-gray-500 mt-3 space-y-5">
+          <div className="text-sm sm:text-base text-gray-500 mt-4 sm:mt-6 space-y-4 sm:space-y-5">
             <p>
               We envision a future where technology bridges every gap in the
               world of golf tournaments — bringing together players, organizers,
@@ -98,18 +114,12 @@ const MissionVision = () => {
               bigger, connected future for golf.
             </p>
 
-            <Button>Join Tournament</Button>
+            <div className="flex justify-center lg:justify-start pt-2">
+              <Button className="w-full sm:w-auto px-6 py-3 text-sm sm:text-base">
+                Join Tournament
+              </Button>
+            </div>
           </div>
-        </div>
-
-        <div>
-          <Image
-            src={"/images/about/vision.png"}
-            alt="img.png"
-            width={1000}
-            height={1000}
-            className="h-[500px] w-[550px] rounded-lg"
-          />
         </div>
       </section>
     </div>

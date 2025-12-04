@@ -1,5 +1,6 @@
 import NewsLetterSubscription from "../_components/landing-page/newsletter-Subscription";
 import SportsArticles from "../_components/landing-page/sports-articles";
+import UpcomingTournaments from "../_components/landing-page/upcoming-tournaments";
 import Banner from "../_components/re-usable/banner";
 
 export default function Tournaments() {
@@ -14,6 +15,7 @@ export default function Tournaments() {
       />
 
       <div className="container mx-auto space-y-24">
+        <UpcomingTournaments />
         <SportsArticles />
         <NewsLetterSubscription />
       </div>
