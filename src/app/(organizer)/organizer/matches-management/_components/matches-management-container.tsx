@@ -21,6 +21,7 @@ import NotFound from "@/components/shared/NotFound/NotFound";
 import { useSession } from "next-auth/react";
 import { MatchApiResponse } from "./matches-data-type";
 import moment from "moment";
+import Link from "next/link";
 
 const MatchesManagementContainer = () => {
   const [currentPage, setCurrentPage] = useState(1);
@@ -221,9 +222,11 @@ const MatchesManagementContainer = () => {
             />
           </div>
           <div>
+            <Link href="/organizer/matches-management/create-match">
             <button className="flex items-center gap-2 bg-[#DF1020] py-3 px-9 rounded-[8px] text-[#F8F9FA] text-base font-medium leading-[150%] ">
               <Plus /> Create Match
             </button>
+            </Link>
           </div>
         </div>
 
