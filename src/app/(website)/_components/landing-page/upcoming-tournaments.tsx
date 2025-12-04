@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useQuery } from "@tanstack/react-query";
 import { Calendar, MapPin, Users } from "lucide-react";
+import { usePathname } from "next/navigation";
 import React, { useState } from "react";
 
 interface Tournament {
@@ -62,7 +63,8 @@ interface ApiResponse {
 
 const UpcomingTournaments = () => {
   const [currentPage, setCurrentPage] = useState(1);
-  const ITEMS_PER_PAGE = 6;
+  const pathName = usePathname();
+  const ITEMS_PER_PAGE = pathName === "/tournaments" ? 15 : 9;
 
   const {
     data = {} as ApiResponse["data"],
