@@ -1,9 +1,15 @@
 import React from 'react'
+import SettingsHeader from './_components/settings-header'
+import SettingsContainer from './_components/settings-container'
 
-const page = () => {
+
+const SettingsPage = () => {
   return (
-    <div>page</div>
+    <div>
+      <SettingsHeader/>
+      <SettingsContainer/>
+    </div>
   )
 }
 
-export default page
+export default SettingsPage
