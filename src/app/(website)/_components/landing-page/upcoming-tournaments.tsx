@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useQuery } from "@tanstack/react-query";
 import { Calendar, MapPin, Users } from "lucide-react";
+import Link from "next/link";
 import { usePathname } from "next/navigation";
 import React, { useState } from "react";
 
@@ -238,12 +239,14 @@ const UpcomingTournaments = () => {
             </div>
 
             <div className="mt-5">
-              <Button
-                variant={"outline"}
-                className="w-full h-[45px] border border-primary text-primary hover:text-primary font-semibold hover:bg-primary/10"
-              >
-                View Tournament
-              </Button>
+              <Link href={`/tournaments/${tournament?._id}`}>
+                <Button
+                  variant={"outline"}
+                  className="w-full h-[45px] border border-primary text-primary hover:text-primary font-semibold hover:bg-primary/10"
+                >
+                  View Tournament
+                </Button>
+              </Link>
             </div>
           </div>
         ))}
