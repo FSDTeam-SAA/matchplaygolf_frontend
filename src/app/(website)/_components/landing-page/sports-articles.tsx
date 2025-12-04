@@ -192,7 +192,7 @@ const SportsArticles = () => {
               <Button
                 onClick={() => handleOpenModal(article)}
                 variant={"outline"}
-                className="w-full h-[40px]"
+                className="w-full h-[45px] border border-primary text-primary hover:text-primary font-semibold hover:bg-primary/10"
                 size="sm"
               >
                 <Eye className="w-4 h-4" />
