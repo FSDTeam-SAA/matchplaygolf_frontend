@@ -74,7 +74,7 @@ const UpcomingTournaments = () => {
     queryKey: ["tournaments", currentPage, ITEMS_PER_PAGE],
     queryFn: async () => {
       const res = await fetch(
-        `${process.env.NEXT_PUBLIC_BACKEND_URL}/tournament?page=${currentPage}&limit=${ITEMS_PER_PAGE}`
+        `${process.env.NEXT_PUBLIC_BACKEND_URL}/tournament?status=scheduled&page=${currentPage}&limit=${ITEMS_PER_PAGE}`
       );
 
       if (!res.ok) {
@@ -102,10 +102,6 @@ const UpcomingTournaments = () => {
   });
 
   const tournaments = data?.tournaments || [];
-
-  const scheduledTournaments = tournaments?.filter(
-    (i: Tournament) => i?.status === "scheduled"
-  );
 
   const totalPages = data?.pagination?.totalPages || 1;
 
@@ -179,7 +175,7 @@ const UpcomingTournaments = () => {
     );
   }
 
-  if (scheduledTournaments.length === 0) {
+  if (tournaments.length === 0) {
     return (
       <div>
         <div className="text-center">
@@ -215,7 +211,7 @@ const UpcomingTournaments = () => {
       </div>
 
       <div className="mt-10 grid grid-cols-1 md:grid-cols-3 gap-8">
-        {scheduledTournaments.map((tournament: Tournament) => (
+        {tournaments.map((tournament: Tournament) => (
           <div
             key={tournament._id}
             className="p-5 rounded-lg shadow-[0px_2px_4px_2px_#0000001A] hover:scale-105 duration-200 transition-all"
