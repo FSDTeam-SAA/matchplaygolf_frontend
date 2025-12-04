@@ -16,7 +16,6 @@ import { Input } from "@/components/ui/input";
 import DeleteModal from "@/components/modals/delete-modal";
 import TournamentView from "./tournament-view";
 import Link from "next/link";
-import { Tournament, TournamentResponse } from "./tournament-data-type";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useSession } from "next-auth/react";
 import { toast } from "sonner";
@@ -24,6 +23,7 @@ import NotFound from "@/components/shared/NotFound/NotFound";
 import ErrorContainer from "@/components/shared/ErrorContainer/ErrorContainer";
 import TableSkeletonWrapper from "@/components/shared/TableSkeletonWrapper/TableSkeletonWrapper";
 import { useDebounce } from "@/hooks/useDebounce";
+import { Tournament, TournamentApiResponse } from "./tournament-data-type";
 
 const TournamentsManagementContainer = () => {
   const [currentPage, setCurrentPage] = useState(1);
@@ -43,11 +43,11 @@ const TournamentsManagementContainer = () => {
   console.log(search);
 
   // get tournament api
-  const { data, isLoading, isError, error } = useQuery<TournamentResponse>({
+  const { data, isLoading, isError, error } = useQuery<TournamentApiResponse>({
     queryKey: ["tournaments", currentPage, debouncedSearch],
     queryFn: async () => {
       const res = await fetch(
-        `${process.env.NEXT_PUBLIC_BACKEND_URL}/tournament?page=${currentPage}&limit=10&tournamentName=${debouncedSearch}`
+        `${process.env.NEXT_PUBLIC_BACKEND_URL}/tournament?page=${currentPage}&limit=8&tournamentName=${debouncedSearch}`
       );
       return res.json();
     },
@@ -235,16 +235,16 @@ const TournamentsManagementContainer = () => {
         <div>{content}</div>
 
         {/* pagination  */}
-        {data && data?.data && data?.data?.totalPages > 1 && (
-          <div className="w-full flex items-center justify-between py-6">
+        {data && data?.data && data?.data?.pagination && data?.data?.pagination?.totalPages > 1 && (
+          <div className="w-full flex items-center justify-between pb-6">
             <p className="text-base font-normal text-[#68706A] leading-[150%]">
-              Showing {data?.data?.currentPage} to 10 of{" "}
-              {data?.data?.totalTournaments} results
+              Showing {data?.data?.pagination?.page} to 8 of{" "}
+              {data?.data?.pagination?.total} results
             </p>
             <div>
               <MatchPlayGolfPagination
                 currentPage={currentPage}
-                totalPages={data?.data?.totalPages}
+                totalPages={data?.data?.pagination?.totalPages}
                 onPageChange={(page) => setCurrentPage(page)}
               />
             </div>

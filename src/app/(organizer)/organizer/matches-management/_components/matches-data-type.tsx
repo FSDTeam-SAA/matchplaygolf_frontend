@@ -8,7 +8,7 @@ export interface MatchApiResponse {
 
 export interface MatchItem {
   _id: string;
-  tournamentId: string | null;
+  tournamentId: TournamentId;
   roundId: RoundInfo;
   matchType: string; // "Single" | "Double" | etc.
   player1Id: PlayerInfo | null;
@@ -25,6 +25,14 @@ export interface MatchItem {
   updatedAt: string;
   __v: number;
 }
+
+export interface TournamentId {
+  _id: string;
+  tournamentName: string;
+  sportName: string;
+  format: string;
+}
+
 
 export interface RoundInfo {
   _id: string;

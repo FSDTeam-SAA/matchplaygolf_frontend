@@ -1,4 +1,4 @@
-// app/create-tournament/page.tsx or components/CreateTournament.tsx
+
 "use client";
 
 import { useEffect } from "react";

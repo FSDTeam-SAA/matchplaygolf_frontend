@@ -32,6 +32,7 @@ const formSchema = z.object({
   drawFormat: z.string().min(1, "Please select draw format"),
   format: z.string().min(1, "Please select format"),
   totalDrawSize: z.string().min(1, "Please select draw size"),
+  // price: z.string().min(2, "Price is required"),
   terms: z.boolean().refine((v) => v === true, "You must accept terms"),
 });
 
@@ -51,6 +52,7 @@ export default function Step1Form() {
       drawFormat: "",
       format: "",
       totalDrawSize: "",
+      // price:"",
       terms: false,
     },
   });

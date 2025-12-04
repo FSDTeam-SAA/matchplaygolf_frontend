@@ -7,20 +7,57 @@ import { z } from "zod";
 import { useTournamentStore } from "@/store/useTournamentStore";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
 
-const schema = z.object({
-  email: z.string().email(),
-  firstName: z.string().min(2),
-  lastName: z.string().min(2),
-  companyName: z.string().optional(),
-  country: z.string().min(2),
-  streetAddress: z.string().min(5),
-  townCity: z.string().min(2),
-  county: z.string().optional(),
-  postcode: z.string().min(3),
-  phone: z.string().min(10),
+export const schema = z.object({
+  fullName: z
+    .string()
+    .min(2, { message: "Full Name must be at least 2 characters." })
+    .max(100, { message: "Full Name cannot exceed 100 characters." }),
+
+  email: z
+    .string()
+    .email({ message: "Please provide a valid email address." }),
+
+  companyName: z
+    .string()
+    .max(150, { message: "Company Name cannot exceed 150 characters." })
+    .optional(),
+
+  country: z
+    .string()
+    .min(2, { message: "Country name must be at least 2 characters." }),
+
+  streetAddress: z
+    .string()
+    .min(2, { message: "Street Address must be at least 2 characters." }),
+
+  city: z
+    .string()
+    .min(2, { message: "Town/City name must be at least 2 characters." }),
+
+  district: z
+    .string()
+    .max(100, { message: "District cannot exceed 100 characters." })
+    .optional(),
+
+  zipcode: z
+    .string()
+    .min(3, { message: "Postcode must be at least 3 characters." }),
+
+  phone: z
+    .string()
+    .min(9, { message: "Phone Number must be at least 9 digits." })
+    .max(15, { message: "Phone Number cannot exceed 15 digits." }),
 });
+
 
 export default function Step2Form() {
   const { step1Data, setStep } = useTournamentStore();
@@ -29,13 +66,12 @@ export default function Step2Form() {
     resolver: zodResolver(schema),
     defaultValues: {
       email: "",
-      firstName: "Golf",
-      lastName: "Golf",
-      country: "Golf",
-      streetAddress: "Golf",
-      townCity: "Golf",
-      postcode: "Golf",
-      phone: "Golf",
+      fullName: "",
+      country: "",
+      streetAddress: "",
+      city: "",
+      zipcode: "",
+      phone: "",
     },
   });
 
@@ -50,30 +86,198 @@ export default function Step2Form() {
 
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
-          {/* Reuse your billing fields here */}
-          <div className="grid grid-cols-2 gap-4">
-            <FormField control={form.control} name="firstName" render={({ field }) => (
+          <FormField
+            control={form.control}
+            name="email"
+            render={({ field }) => (
               <FormItem>
-                <FormLabel>First Name *</FormLabel>
-                <FormControl><Input {...field} /></FormControl>
-                <FormMessage />
+                <FormLabel className="text-base text-[#434C45] leading-[150%] font-medium">
+                  Email Address <sup className="text-red-500">*</sup>
+                </FormLabel>
+                <FormControl>
+                  <Input
+                    className="w-full h-[48px] py-2 px-3 rounded-[8px] border border-[#C0C3C1] text-base font-medium leading-[120%] text-[#434C45)]"
+                    placeholder="Enter your email address"
+                    {...field}
+                  />
+                </FormControl>
+                <FormMessage className="text-red-500" />
               </FormItem>
-            )} />
-            <FormField control={form.control} name="lastName" render={({ field }) => (
+            )}
+          />
+
+          <div className="grid grid-cols-2 gap-6">
+             <FormField
+            control={form.control}
+            name="fullName"
+            render={({ field }) => (
               <FormItem>
-                <FormLabel>Last Name *</FormLabel>
-                <FormControl><Input {...field} /></FormControl>
-                <FormMessage />
+                <FormLabel className="text-base text-[#434C45] leading-[150%] font-medium">
+                  Full Name <sup className="text-red-500">*</sup>
+                </FormLabel>
+                <FormControl>
+                  <Input
+                    className="w-full h-[48px] py-2 px-3 rounded-[8px] border border-[#C0C3C1] text-base font-medium leading-[120%] text-[#434C45)]"
+                    placeholder="Enter your email address"
+                    {...field}
+                  />
+                </FormControl>
+                <FormMessage className="text-red-500" />
               </FormItem>
-            )} />
-            {/* Add all other fields similarly */}
+            )}
+          />
+           <FormField
+            control={form.control}
+            name="companyName"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel className="text-base text-[#434C45] leading-[150%] font-medium">
+                  Company Name (Optional)
+                </FormLabel>
+                <FormControl>
+                  <Input
+                    className="w-full h-[48px] py-2 px-3 rounded-[8px] border border-[#C0C3C1] text-base font-medium leading-[120%] text-[#434C45)]"
+                    placeholder="Golf"
+                    {...field}
+                  />
+                </FormControl>
+                <FormMessage className="text-red-500" />
+              </FormItem>
+            )}
+          />
+          </div>
+
+           <div className="grid grid-cols-2 gap-6">
+             <FormField
+            control={form.control}
+            name="country"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel className="text-base text-[#434C45] leading-[150%] font-medium">
+                  Country / Region<sup className="text-red-500">*</sup>
+                </FormLabel>
+                <FormControl>
+                  <Input
+                    className="w-full h-[48px] py-2 px-3 rounded-[8px] border border-[#C0C3C1] text-base font-medium leading-[120%] text-[#434C45)]"
+                    placeholder="Enter your email address"
+                    {...field}
+                  />
+                </FormControl>
+                <FormMessage className="text-red-500" />
+              </FormItem>
+            )}
+          />
+           <FormField
+            control={form.control}
+            name="streetAddress"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel className="text-base text-[#434C45] leading-[150%] font-medium">
+                  Street Address<sup className="text-red-500">*</sup>
+                </FormLabel>
+                <FormControl>
+                  <Input
+                    className="w-full h-[48px] py-2 px-3 rounded-[8px] border border-[#C0C3C1] text-base font-medium leading-[120%] text-[#434C45)]"
+                    placeholder="Enter your email address"
+                    {...field}
+                  />
+                </FormControl>
+                <FormMessage className="text-red-500" />
+              </FormItem>
+            )}
+          />
+          </div>
+
+
+          <div className="grid grid-cols-2 gap-6">
+             <FormField
+            control={form.control}
+            name="city"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel className="text-base text-[#434C45] leading-[150%] font-medium">
+                  Town / City<sup className="text-red-500">*</sup>
+                </FormLabel>
+                <FormControl>
+                  <Input
+                    className="w-full h-[48px] py-2 px-3 rounded-[8px] border border-[#C0C3C1] text-base font-medium leading-[120%] text-[#434C45)]"
+                    placeholder="Golf"
+                    {...field}
+                  />
+                </FormControl>
+                <FormMessage className="text-red-500" />
+              </FormItem>
+            )}
+          />
+           <FormField
+            control={form.control}
+            name="district"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel className="text-base text-[#434C45] leading-[150%] font-medium">
+                  Country / State (Optional)
+                </FormLabel>
+                <FormControl>
+                  <Input
+                    className="w-full h-[48px] py-2 px-3 rounded-[8px] border border-[#C0C3C1] text-base font-medium leading-[120%] text-[#434C45)]"
+                    placeholder="Golf"
+                    {...field}
+                  />
+                </FormControl>
+                <FormMessage className="text-red-500" />
+              </FormItem>
+            )}
+          />
+          </div>
+          <div className="grid grid-cols-2 gap-6">
+             <FormField
+            control={form.control}
+            name="zipcode"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel className="text-base text-[#434C45] leading-[150%] font-medium">
+                  Postcode<sup className="text-red-500">*</sup>
+                </FormLabel>
+                <FormControl>
+                  <Input
+                    className="w-full h-[48px] py-2 px-3 rounded-[8px] border border-[#C0C3C1] text-base font-medium leading-[120%] text-[#434C45)]"
+                    placeholder="Golf"
+                    {...field}
+                  />
+                </FormControl>
+                <FormMessage className="text-red-500" />
+              </FormItem>
+            )}
+          />
+           <FormField
+            control={form.control}
+            name="phone"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel className="text-base text-[#434C45] leading-[150%] font-medium">
+                  Phone Number <sup className="text-red-500">*</sup>
+                </FormLabel>
+                <FormControl>
+                  <Input
+                    className="w-full h-[48px] py-2 px-3 rounded-[8px] border border-[#C0C3C1] text-base font-medium leading-[120%] text-[#434C45)]"
+                    placeholder="Golf"
+                    {...field}
+                  />
+                </FormControl>
+                <FormMessage className="text-red-500" />
+              </FormItem>
+            )}
+          />
           </div>
 
           <div className="flex justify-between pt-6">
             <Button type="button" variant="outline" onClick={() => setStep(1)}>
               Back
             </Button>
-            <Button type="submit" className="bg-red-600 hover:bg-red-700 text-white px-12">
+            <Button
+              type="submit"
+              className="bg-red-600 hover:bg-red-700 text-white px-12"
+            >
               Place Order
             </Button>
           </div>

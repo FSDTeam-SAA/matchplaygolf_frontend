@@ -43,7 +43,7 @@ const MatchesManagementContainer = () => {
     queryKey: ["matches", currentPage, debouncedSearch],
     queryFn: async () => {
       const res = await fetch(
-        `${process.env.NEXT_PUBLIC_BACKEND_URL}/match?page=${currentPage}&limit=10`
+        `${process.env.NEXT_PUBLIC_BACKEND_URL}/match?page=${currentPage}&limit=10&roundName=${debouncedSearch}`
       );
       return res.json();
     },
@@ -116,7 +116,7 @@ const MatchesManagementContainer = () => {
               return (
                 <TableRow key={item?._id} className="">
                   <TableCell className="text-base font-normal text-[#68706A] leading-[150%] text-center py-4">
-                    {item?.["Tournament Name"]}
+                    {item?.tournamentId?.tournamentName}
                   </TableCell>
                   <TableCell className="text-base font-normal text-[#68706A] leading-[150%] text-center py-4">
                     {item?.roundId?.roundName}
