@@ -17,6 +17,7 @@ export interface MatchItem {
   teeTime: string; // ISO date string
   startingHole: number;
   groupNumber: number;
+  score:"",
   createdBy: PlayerInfo;
   players: PlayerInfo[];
 //   teams: any[];

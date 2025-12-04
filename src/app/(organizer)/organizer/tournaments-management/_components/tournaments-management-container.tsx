@@ -23,6 +23,7 @@ import { toast } from "sonner";
 import NotFound from "@/components/shared/NotFound/NotFound";
 import ErrorContainer from "@/components/shared/ErrorContainer/ErrorContainer";
 import TableSkeletonWrapper from "@/components/shared/TableSkeletonWrapper/TableSkeletonWrapper";
+import { useDebounce } from "@/hooks/useDebounce";
 
 const TournamentsManagementContainer = () => {
   const [currentPage, setCurrentPage] = useState(1);
@@ -32,6 +33,7 @@ const TournamentsManagementContainer = () => {
   const [tournementId, setTournamentId] = useState("");
   const [selectedTournament, setSelectedTournament] =
     useState<Tournament | null>(null);
+    const debouncedSearch = useDebounce(search, 500);
 
   const queryClient = useQueryClient();
   const session = useSession();
@@ -42,10 +44,10 @@ const TournamentsManagementContainer = () => {
 
   // get tournament api
   const { data, isLoading, isError, error } = useQuery<TournamentResponse>({
-    queryKey: ["tournaments", currentPage],
+    queryKey: ["tournaments", currentPage, debouncedSearch],
     queryFn: async () => {
       const res = await fetch(
-        `${process.env.NEXT_PUBLIC_BACKEND_URL}/tournament?page=${currentPage}&limit=10`
+        `${process.env.NEXT_PUBLIC_BACKEND_URL}/tournament?page=${currentPage}&limit=10&tournamentName=${debouncedSearch}`
       );
       return res.json();
     },

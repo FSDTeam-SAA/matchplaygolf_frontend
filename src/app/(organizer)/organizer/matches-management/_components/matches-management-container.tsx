@@ -22,12 +22,14 @@ import { useSession } from "next-auth/react";
 import { MatchApiResponse } from "./matches-data-type";
 import moment from "moment";
 import Link from "next/link";
+import { useDebounce } from "@/hooks/useDebounce";
 
 const MatchesManagementContainer = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [search, setSearch] = useState("");
   const [deleteModalOpen, setDeleteModalOpen] = useState(false);
   const [matchId, setMatchId] = useState("");
+  const debouncedSearch = useDebounce(search, 500);
 
   const queryClient = useQueryClient();
   const session = useSession();
@@ -38,7 +40,7 @@ const MatchesManagementContainer = () => {
 
   // get tournament api
   const { data, isLoading, isError, error } = useQuery<MatchApiResponse>({
-    queryKey: ["matches", currentPage],
+    queryKey: ["matches", currentPage, debouncedSearch],
     queryFn: async () => {
       const res = await fetch(
         `${process.env.NEXT_PUBLIC_BACKEND_URL}/match?page=${currentPage}&limit=10`
@@ -83,10 +85,7 @@ const MatchesManagementContainer = () => {
         <Table className="">
           <TableHeader className="bg-[#FCE7E9] rounded-t-[12px]">
             <TableRow className="">
-              <TableHead className="text-sm font-normal leading-[150%] text-[#343A40] py-4 pl-6">
-                Match ID
-              </TableHead>
-              <TableHead className="text-sm font-normal leading-[150%] text-[#343A40] text-center py-4 ">
+              <TableHead className="text-sm font-normal leading-[150%] text-[#343A40] text-center py-4 pl-6">
                 Tournament Name
               </TableHead>
               <TableHead className="text-sm font-normal leading-[150%] text-[#343A40] text-center py-4 ">
@@ -116,9 +115,6 @@ const MatchesManagementContainer = () => {
             {data?.data?.matches?.map((item) => {
               return (
                 <TableRow key={item?._id} className="">
-                  <TableCell className="text-base font-medium text-[#68706A] leading-[150%] pl-6 py-4">
-                    {item?.["Match ID"]}
-                  </TableCell>
                   <TableCell className="text-base font-normal text-[#68706A] leading-[150%] text-center py-4">
                     {item?.["Tournament Name"]}
                   </TableCell>
