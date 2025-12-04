@@ -1,6 +1,7 @@
 import React from "react";
 import { Dialog, DialogContent } from "@/components/ui/dialog";
-import { Tournament } from "@/components/types/tournaments-data-type";
+import { Tournament } from "./tournament-data-type";
+import moment from "moment";
 
 const TournamentView = ({
   open,
@@ -16,23 +17,23 @@ const TournamentView = ({
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="p-6 space-y-4">
-        <h2 className="text-2xl font-bold">{tournamentData.name}</h2>
+        <h2 className="text-2xl font-bold">{tournamentData?.tournamentName}</h2>
 
         <div className="space-y-2">
           <p>
-            <strong>Location:</strong> {tournamentData.location}
+            <strong>Location :</strong> {tournamentData?.billingAddress?.country}
           </p>
           <p>
-            <strong>Start Date:</strong> {tournamentData.startDate}
+            <strong>Start Date :</strong> {moment(tournamentData?.startDate).format("MMM DD, YYYY")}
           </p>
           <p>
-            <strong>End Date:</strong> {tournamentData.endDate}
+            <strong>End Date :</strong> {moment(tournamentData?.endDate).format("MMM DD, YYYY")}
           </p>
           <p>
-            <strong>Total Players:</strong> {tournamentData.players}
+            <strong>Total Players :</strong> {0}
           </p>
           <p>
-            <strong>Status:</strong> {tournamentData.status}
+            <strong>Status :</strong> {tournamentData?.status}
           </p>
         </div>
       </DialogContent>

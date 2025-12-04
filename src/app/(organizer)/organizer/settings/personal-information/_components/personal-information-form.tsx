@@ -29,6 +29,7 @@ import { ColorPicker } from "@/components/ui/color-picker";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { ProfileApiResponse } from "./personal-information-data-type";
 import { useSession } from "next-auth/react";
+import { toast } from "sonner";
 
 const formSchema = z.object({
   gender: z.string().min(1, "Please select an option"),
@@ -52,22 +53,18 @@ const formSchema = z.object({
     message: "Whs Number must be at least 2 characters.",
   }),
 
-  dateOfBirth: z.union([z.date(), z.string()]),
+  dob: z.union([z.date(), z.string()]),
   organizerLogo: z.any().optional(),
-   color: z.string().min(6, {
+  color: z.string().min(6, {
     message: "Please pick a background color.",
   }),
 });
 
 const PersonalInformationForm = () => {
   const session = useSession();
-  const token = (session?.data?.user as {accessToken:string})?.accessToken;
+  const token = (session?.data?.user as { accessToken: string })?.accessToken;
   const [previewImage, setPreviewImage] = useState<string | null>(null);
   const [isDragOver, setIsDragOver] = useState(false);
-
-
-
-
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -80,67 +77,78 @@ const PersonalInformationForm = () => {
       sportNationalId: "",
       handicap: "",
       whsNumber: "",
-      dateOfBirth: new Date(),
+      dob: new Date(),
       organizerLogo: undefined,
-      color: "#000000"
+      color: "#000000",
     },
   });
 
-    // get api 
-    const {data} = useQuery<ProfileApiResponse>({
+  // get api
+  const { data } = useQuery<ProfileApiResponse>({
     queryKey: ["personal-info"],
-    queryFn: async ()=>{
-      const res = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/user/profile`,{
-        method: "GET",
-        headers: {
-          "Authorization": `Bearer ${token}`,
+    queryFn: async () => {
+      const res = await fetch(
+        `${process.env.NEXT_PUBLIC_BACKEND_URL}/user/profile`,
+        {
+          method: "GET",
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
         }
-      })
+      );
       return await res.json();
     },
-    enabled: !!token
-  })
 
-  console.log(data)
+    enabled: !!token,
+  });
 
-  useEffect(()=>{
-    if(data?.data){
+  console.log(data);
+
+  useEffect(() => {
+    if (data?.data) {
       form.reset({
-        fullName : data?.data?.fullName,
-        phone : data?.data?.phone,
+        fullName: data?.data?.fullName,
+        phone: data?.data?.phone,
         country: data?.data?.clubName,
-        dateOfBirth: data?.data?.dob,
-        sportNationalId:data?.data?.sportNationalId,
+        dob: new Date(data.data.dob),
+        sportNationalId: data?.data?.sportNationalId,
         handicap: data?.data?.handicap,
         whsNumber: data?.data?.whsNumber,
         gender: data?.data?.gender,
         newsletterPreference: data?.data?.newsletterPreference,
         color: data?.data?.color,
+        organizerLogo: data?.data?.organizerLogo,
       });
-      setPreviewImage(data?.data?.profileImage || "")
+      setPreviewImage(data?.data?.organizerLogo || "");
     }
+  }, [data, form]);
 
-  },[data, form])
+  // post api
 
-
-  // post api 
-
-  const {mutate, isPending} = useMutation({
+  const { mutate, isPending } = useMutation({
     mutationKey: ["user-profile-update"],
-    mutationFn: async (formData:FormData)=>{
-      const res = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/user/profile`,{
-        method: "PUT",
-        headers:{
-          "Authorization": `Bearer ${token}`
-        },
-        body: formData
-      });
-      return await res.json()
-    }
-  })
-
-
-
+    mutationFn: async (formData: FormData) => {
+      const res = await fetch(
+        `${process.env.NEXT_PUBLIC_BACKEND_URL}/user/profile`,
+        {
+          method: "PUT",
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+          body: formData,
+        }
+      );
+      return await res.json();
+    },
+    onSuccess: (data) => {
+      if (!data?.status) {
+        toast.error(data?.message || "Something went wrong");
+        return;
+      }
+      toast.success(data?.message || "Personal Info updated successfull");
+      form.reset();
+    },
+  });
 
   const handleImageChange = (file: File) => {
     if (file) {
@@ -175,22 +183,27 @@ const PersonalInformationForm = () => {
   // 2. Define a submit handler.
   function onSubmit(values: z.infer<typeof formSchema>) {
     console.log(values);
-
     const formData = new FormData();
+    const localDate = new Date(values.dob);
+    const formattedDate = `${localDate.getFullYear()}-${String(
+      localDate.getMonth() + 1
+    ).padStart(2, "0")}-${String(localDate.getDate()).padStart(2, "0")}`;
+
     formData.append("fullName", values?.fullName);
     formData?.append("gender", values?.gender);
-    formData?.append("phone", values?.country);
+    formData?.append("phone", values?.phone);
     formData?.append("country", values?.country);
     formData?.append("color", values?.color);
+    formData?.append("dob", formattedDate);
     formData?.append("sportNationalId", values?.sportNationalId);
     formData?.append("whsNumber", values?.whsNumber);
     formData?.append("handicap", values?.handicap);
     formData?.append("newsletterPreference", values?.newsletterPreference);
-     if (values.organizerLogo && values.organizerLogo[0]) {
+    if (values.organizerLogo && values.organizerLogo[0]) {
       formData.append("organizerLogo", values.organizerLogo[0]);
     }
 
-    mutate(formData)
+    mutate(formData);
   }
   return (
     <div className="px-6">
@@ -225,18 +238,14 @@ const PersonalInformationForm = () => {
                         <FormControl>
                           <RadioGroupItem value="male" className="mt-2" />
                         </FormControl>
-                        <FormLabel className="cursor-pointer">
-                          Male
-                        </FormLabel>
+                        <FormLabel className="cursor-pointer">Male</FormLabel>
                       </FormItem>
 
                       <FormItem className="flex items-center space-x-2">
                         <FormControl>
                           <RadioGroupItem value="female" className="mt-2" />
                         </FormControl>
-                        <FormLabel className="cursor-pointer">
-                          Female
-                        </FormLabel>
+                        <FormLabel className="cursor-pointer">Female</FormLabel>
                       </FormItem>
                     </RadioGroup>
                   </FormControl>
@@ -309,7 +318,7 @@ const PersonalInformationForm = () => {
 
             <FormField
               control={form.control}
-              name="dateOfBirth"
+              name="dob"
               render={({ field }) => (
                 <FormItem>
                   <FormLabel className="text-base text-[#434C45] leading-[150%] font-medium">
@@ -513,27 +522,27 @@ const PersonalInformationForm = () => {
               )}
             />
 
-                <FormField
-                control={form.control}
-                name="color"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel className="text-base text-[#434C45] leading-[150%] font-medium">
-                      Select Color
-                    </FormLabel>
-                    <FormControl>
-                      <ColorPicker
-                        selectedColor={field.value ?? "#FFFFFF"}
-                        onColorChange={field.onChange}
-                        // previousColor={"#000000"}
-                      />
-                    </FormControl>
-                    <FormMessage className="text-red-500" />
-                  </FormItem>
-                )}
-              />
+            <FormField
+              control={form.control}
+              name="color"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel className="text-base text-[#434C45] leading-[150%] font-medium">
+                    Select Color
+                  </FormLabel>
+                  <FormControl>
+                    <ColorPicker
+                      selectedColor={field.value ?? "#FFFFFF"}
+                      onColorChange={field.onChange}
+                      // previousColor={"#000000"}
+                    />
+                  </FormControl>
+                  <FormMessage className="text-red-500" />
+                </FormItem>
+              )}
+            />
 
-             <FormField
+            <FormField
               control={form.control}
               name="newsletterPreference"
               render={({ field }) => (
@@ -559,14 +568,17 @@ const PersonalInformationForm = () => {
 
                       <FormItem className="flex items-center space-x-2">
                         <FormControl>
-                          <RadioGroupItem value="unsubscribe" className="mt-2" />
+                          <RadioGroupItem
+                            value="unsubscribe"
+                            className="mt-2"
+                          />
                         </FormControl>
                         <FormLabel className="cursor-pointer">
                           Unsubscribe from our newsletter
                         </FormLabel>
                       </FormItem>
-                      
-                       {/* <FormItem className="flex items-center space-x-2">
+
+                      {/* <FormItem className="flex items-center space-x-2">
                         <FormControl>
                           <RadioGroupItem value="none" className="mt-2" />
                         </FormControl>
@@ -582,15 +594,13 @@ const PersonalInformationForm = () => {
               )}
             />
 
-
-
             {/* Buttons */}
             <div className="flex justify-end gap-4 pt-6">
               <Button
                 type="button"
                 variant="outline"
                 onClick={() => form.reset()}
-                className="h-[49px] text-[#929292] text-lg font-medium leading-[150%] border-[1px] border-[#929292] rounded-[8px] py-3 px-16"
+                className="h-[49px] text-[#929292] text-lg font-medium leading-[150%] border-[1px] border-[#929292] rounded-[8px] py-3 px-4 md:px-16"
               >
                 Discard Changes
               </Button>
@@ -599,7 +609,7 @@ const PersonalInformationForm = () => {
                 type="submit"
                 className="h-[49px] bg-gradient-to-b from-[#DF1020] to-[#310000]
             hover:from-[#310000] hover:to-[#DF1020]
-            transition-all duration-300 text-[#F7F8FA] font-bold text-lg leading-[120%] rounded-[8px] px-12"
+            transition-all duration-300 text-[#F7F8FA] font-bold text-lg leading-[120%] rounded-[8px] px-4 md:px-12"
               >
                 {isPending ? "Saving..." : "Save Changes"}
               </Button>
