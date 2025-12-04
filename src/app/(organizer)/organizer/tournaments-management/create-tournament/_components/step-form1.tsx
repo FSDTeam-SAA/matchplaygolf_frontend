@@ -58,8 +58,7 @@ export default function Step1Form() {
   });
 
   const onSubmit = (data: z.infer<typeof formSchema>) => {
-    setStep1Data(data); // Saves to Zustand + localStorage automatically
-    // Step changes to 2 inside setStep1Data
+    setStep1Data(data); 
   };
 
   return (
@@ -265,7 +264,7 @@ export default function Step1Form() {
             transition-all duration-300 text-[#F7F8FA] font-bold text-lg leading-[120%] rounded-[8px] px-12"
           >
             {/* {isPending ? "Saving..." : "Save Changes"} */}
-            Continue to Billing
+            Continue
           </Button>
         </div>
       </form>
