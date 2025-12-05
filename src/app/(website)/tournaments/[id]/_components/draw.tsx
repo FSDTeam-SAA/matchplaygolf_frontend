@@ -1,6 +1,7 @@
-import React from "react";
+import React, { useState } from "react";
 import { Skeleton } from "@/components/ui/skeleton"; // Adjust import path based on your setup
 import Image from "next/image";
+import MomentsModal from "./moments-modal";
 
 interface Match {
   _id: string;
@@ -28,7 +29,15 @@ interface Props {
 }
 
 const Draw = ({ matches, isLoading }: Props) => {
-  console.log("matches", matches);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
+  const handleOpenModal = () => {
+    setIsModalOpen(true);
+  };
+
+  const handleCloseModal = () => {
+    setIsModalOpen(false);
+  };
 
   // Skeleton loader
   if (isLoading) {
@@ -221,7 +230,10 @@ const Draw = ({ matches, isLoading }: Props) => {
 
                   {item.status === "Completed" && (
                     <div>
-                      <button className="text-primary font-semibold text-sm">
+                      <button
+                        onClick={handleOpenModal}
+                        className="text-primary font-semibold text-sm"
+                      >
                         Moments
                       </button>
                     </div>
@@ -232,6 +244,13 @@ const Draw = ({ matches, isLoading }: Props) => {
           </div>
         );
       })}
+
+      {isModalOpen && (
+        <MomentsModal
+          isModalOpen={isModalOpen}
+          handleCloseModal={handleCloseModal}
+        />
+      )}
     </div>
   );
 };
