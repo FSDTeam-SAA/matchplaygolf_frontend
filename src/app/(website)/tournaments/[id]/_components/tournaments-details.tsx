@@ -2,6 +2,7 @@
 import { useQuery } from "@tanstack/react-query";
 import { useParams } from "next/navigation";
 import React, { useState } from "react";
+import Rules from "./rules";
 
 const TournamentsDetails = () => {
   const params = useParams();
@@ -25,9 +26,22 @@ const TournamentsDetails = () => {
   return (
     <div>
       <div className=" mb-8">
-        <h3 className="text-3xl font-hexco">Spring Championship 2025</h3>
+        <h3 className="text-3xl font-hexco">
+          {data?.tournament?.tournamentName}
+        </h3>
         <p className="text-gray-500 mt-2">
-          Matches to be played by Sept 25, 2025
+          Matches to be played by{" "}
+          {new Date(data?.tournament?.startDate).toLocaleDateString("en-US", {
+            month: "short",
+            day: "numeric",
+            year: "numeric",
+          })}{" "}
+          -{" "}
+          {new Date(data?.tournament?.endDate).toLocaleDateString("en-US", {
+            month: "short",
+            day: "numeric",
+            year: "numeric",
+          })}
         </p>
       </div>
 
@@ -66,7 +80,11 @@ const TournamentsDetails = () => {
 
         <div className="mt-8">
           {isActive === "draw" && <div>draw</div>}
-          {isActive === "rules" && <div>rules</div>}
+          {isActive === "rules" && (
+            <div>
+              <Rules rules={data?.tournament?.rules} isLoading={isLoading} />
+            </div>
+          )}
           {isActive === "details" && <div>details</div>}
         </div>
       </div>
