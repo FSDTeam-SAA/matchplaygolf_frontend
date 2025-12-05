@@ -2,7 +2,32 @@ import React from "react";
 import { Skeleton } from "@/components/ui/skeleton"; // Adjust import path based on your setup
 import Image from "next/image";
 
-const Draw = ({ matches, isLoading }) => {
+interface Match {
+  _id: string;
+  winnerColor: string;
+  winnerPlayerId: string;
+  player1Id: {
+    _id: string;
+    fullName: string;
+    profileImage: string;
+  };
+  player2Id: {
+    _id: string;
+    fullName: string;
+    profileImage: string;
+  };
+  player1Score: string;
+  player2Score: string;
+  date: string;
+  status: string;
+}
+
+interface Props {
+  matches: Match[];
+  isLoading: boolean;
+}
+
+const Draw = ({ matches, isLoading }: Props) => {
   console.log("matches", matches);
 
   // Skeleton loader
@@ -212,7 +237,7 @@ const Draw = ({ matches, isLoading }) => {
 };
 
 // Helper function for status styling
-const getStatusColor = (status) => {
+const getStatusColor = (status: string) => {
   switch (status?.toLowerCase()) {
     case "upcoming":
       return "bg-blue-100 text-blue-800";
