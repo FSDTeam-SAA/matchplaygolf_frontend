@@ -4,6 +4,7 @@ import { useParams } from "next/navigation";
 import React, { useState } from "react";
 import Rules from "./rules";
 import Details from "./details";
+import Draw from "./draw";
 
 const TournamentsDetails = () => {
   const params = useParams();
@@ -80,7 +81,12 @@ const TournamentsDetails = () => {
         </div>
 
         <div className="mt-8">
-          {isActive === "draw" && <div>draw</div>}
+          {isActive === "draw" && (
+            <div>
+              <Draw matches={data?.matches} isLoading={isLoading} />
+            </div>
+          )}
+
           {isActive === "rules" && (
             <div>
               <Rules rules={data?.tournament?.rules} isLoading={isLoading} />

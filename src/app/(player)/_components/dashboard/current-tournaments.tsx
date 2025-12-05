@@ -114,7 +114,7 @@ const CurrentTournaments = () => {
         </div>
 
         <div className="space-y-6">
-          {data.map((tournament) => (
+          {data?.map((tournament) => (
             <div
               key={tournament.id}
               className="p-4 border border-gray-200 rounded-lg hover:shadow-md transition-shadow"
