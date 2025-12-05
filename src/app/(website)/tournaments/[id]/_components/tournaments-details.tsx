@@ -3,6 +3,7 @@ import { useQuery } from "@tanstack/react-query";
 import { useParams } from "next/navigation";
 import React, { useState } from "react";
 import Rules from "./rules";
+import Details from "./details";
 
 const TournamentsDetails = () => {
   const params = useParams();
@@ -85,7 +86,11 @@ const TournamentsDetails = () => {
               <Rules rules={data?.tournament?.rules} isLoading={isLoading} />
             </div>
           )}
-          {isActive === "details" && <div>details</div>}
+          {isActive === "details" && (
+            <div>
+              <Details tournament={data?.tournament} isLoading={isLoading} />
+            </div>
+          )}
         </div>
       </div>
     </div>
