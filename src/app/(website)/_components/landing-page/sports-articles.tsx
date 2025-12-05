@@ -184,9 +184,12 @@ const SportsArticles = () => {
                 {article.title}
               </h3>
 
-              <p className="text-sm text-gray-600 mb-4 line-clamp-3">
-                {article.description.slice(0, 100)}...
-              </p>
+              <p
+                className="text-sm text-gray-600 mb-4 line-clamp-3"
+                dangerouslySetInnerHTML={{
+                  __html: `${article.description.slice(0, 100)}...`,
+                }}
+              ></p>
 
               {/* See Details Button */}
               <Button
