@@ -1,6 +1,7 @@
 "use client";
 import React from "react";
 import Banner from "../../_components/re-usable/banner";
+import TournamentsDetails from "./_components/tournaments-details";
 
 const page = () => {
   return (
@@ -12,6 +13,10 @@ const page = () => {
         buttonTitle="Join Tournament"
         buttonPath="/tournaments"
       />
+
+      <div className="container mx-auto">
+        <TournamentsDetails />
+      </div>
     </div>
   );
 };

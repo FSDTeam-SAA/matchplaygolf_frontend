@@ -1,0 +1,77 @@
+"use client";
+import { useQuery } from "@tanstack/react-query";
+import { useParams } from "next/navigation";
+import React, { useState } from "react";
+
+const TournamentsDetails = () => {
+  const params = useParams();
+  const id = params?.id;
+
+  const [isActive, setIsActive] = useState("draw");
+
+  const { data, isLoading } = useQuery({
+    queryKey: ["tournaments"],
+    queryFn: async () => {
+      const res = await fetch(
+        `${process.env.NEXT_PUBLIC_BACKEND_URL}/tournament/getAllMatches/${id}`
+      );
+
+      const data = await res.json();
+
+      return data?.data;
+    },
+  });
+
+  return (
+    <div>
+      <div className=" mb-8">
+        <h3 className="text-3xl font-hexco">Spring Championship 2025</h3>
+        <p className="text-gray-500 mt-2">
+          Matches to be played by Sept 25, 2025
+        </p>
+      </div>
+
+      {/* sub-pages */}
+      <div>
+        <div className="flex items-center gap-8 border-b-[1px] border-gray-300">
+          <button
+            className={`text-gray-500 py-2 px-4 rounded-t-lg ${
+              isActive === "draw" &&
+              "text-primary font-bold bg-primary/15 border-b-2 border-primary"
+            }`}
+            onClick={() => setIsActive("draw")}
+          >
+            Draw
+          </button>
+          <button
+            className={`text-gray-500 py-2 px-4 rounded-t-lg ${
+              isActive === "rules" &&
+              "text-primary font-bold bg-primary/15 border-b-2 border-primary"
+            }`}
+            onClick={() => setIsActive("rules")}
+          >
+            Rules
+          </button>
+
+          <button
+            className={`text-gray-500 py-2 px-4 rounded-t-lg ${
+              isActive === "details" &&
+              "text-primary font-bold bg-primary/15 border-b-2 border-primary"
+            }`}
+            onClick={() => setIsActive("details")}
+          >
+            Details
+          </button>
+        </div>
+
+        <div className="mt-8">
+          {isActive === "draw" && <div>draw</div>}
+          {isActive === "rules" && <div>rules</div>}
+          {isActive === "details" && <div>details</div>}
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export default TournamentsDetails;
