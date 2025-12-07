@@ -41,7 +41,7 @@ const items = [
     icon: Swords ,
   },
   {
-    title: "Pair Knockouts",
+    title: "Tournament Draw",
     url: "/organizer/pair-knockouts",
     icon: Brackets,
   },

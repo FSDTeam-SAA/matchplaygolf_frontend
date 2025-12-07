@@ -42,7 +42,7 @@ const Navbar = () => {
               alt="logo.png"
               width={1000}
               height={1000}
-              className="object-cover h-[48px] w-[112px]"
+              className="h-[60px] w-auto object-contain "
             />
           </Link>
         </div>

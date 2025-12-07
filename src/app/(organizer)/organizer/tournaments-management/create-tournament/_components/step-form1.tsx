@@ -32,6 +32,7 @@ const formSchema = z.object({
   drawFormat: z.string().min(1, "Please select draw format"),
   format: z.string().min(1, "Please select format"),
   totalDrawSize: z.string().min(1, "Please select draw size"),
+  // price: z.string().min(2, "Price is required"),
   terms: z.boolean().refine((v) => v === true, "You must accept terms"),
 });
 
@@ -51,13 +52,13 @@ export default function Step1Form() {
       drawFormat: "",
       format: "",
       totalDrawSize: "",
+      // price:"",
       terms: false,
     },
   });
 
   const onSubmit = (data: z.infer<typeof formSchema>) => {
-    setStep1Data(data); // Saves to Zustand + localStorage automatically
-    // Step changes to 2 inside setStep1Data
+    setStep1Data(data); 
   };
 
   return (
@@ -263,7 +264,7 @@ export default function Step1Form() {
             transition-all duration-300 text-[#F7F8FA] font-bold text-lg leading-[120%] rounded-[8px] px-12"
           >
             {/* {isPending ? "Saving..." : "Save Changes"} */}
-            Continue to Billing
+            Continue
           </Button>
         </div>
       </form>

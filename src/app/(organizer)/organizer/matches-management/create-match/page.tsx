@@ -1,11 +1,14 @@
 import React from 'react'
+import CreateMatchForm from './_components/create-match-form'
+import CreateMatchHeader from './_components/create-match-header'
 
-const CreateMatch = () => {
+const CreateMatchPage = () => {
   return (
     <div>
-      
+      <CreateMatchHeader/>
+      <CreateMatchForm/>
     </div>
   )
 }
 
-export default CreateMatch
+export default CreateMatchPage
