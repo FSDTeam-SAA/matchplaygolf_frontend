@@ -31,20 +31,6 @@ type ParticipantsByYearResponse = {
 };
 
 
-const chartData = [
-  { month: "January", desktop: 186 },
-  { month: "February", desktop: 305 },
-  { month: "March", desktop: 237 },
-  { month: "April", desktop: 73 },
-  { month: "May", desktop: 209 },
-  { month: "June", desktop: 214 },
-  { month: "July", desktop: 198 },
-  { month: "August", desktop: 256 },
-  { month: "September", desktop: 310 },
-  { month: "October", desktop: 275 },
-  { month: "November", desktop: 240 },
-  { month: "December", desktop: 320 },
-];
 
 const chartConfig = {
   desktop: {
