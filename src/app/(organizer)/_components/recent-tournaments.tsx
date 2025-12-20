@@ -1,31 +1,113 @@
+"use client"
 import { MapPin } from "lucide-react";
 import Link from "next/link";
 import React from "react";
 
+import moment from "moment";
+import { useQuery } from "@tanstack/react-query";
+import { useSession } from "next-auth/react";
+import TableSkeletonWrapper from "@/components/shared/TableSkeletonWrapper/TableSkeletonWrapper";
+import ErrorContainer from "@/components/shared/ErrorContainer/ErrorContainer";
+import NotFound from "@/components/shared/NotFound/NotFound";
+
+export type Tournament = {
+  _id: string;
+  tournamentName: string;
+  location: string;
+  players: number;
+  status: "upcoming" | "ongoing" | "completed"; // extend if needed
+  startDate: string; // ISO date string
+  endDate: string;   // ISO date string
+  createdAt: string; // ISO date string
+};
+
+export type OrganizerRecentTournamentsResponse = {
+  success: boolean;
+  data: Tournament[];
+  message: string;
+};
+
+
+
 const RecentTournaments = () => {
-  const tournaments = [
-    {
-      id: 1,
-      name: "Spring Championship 2023",
-      location: "Pine Valley Golf Club",
-      date: "May 15-20, 2023",
-      players: 48,
+
+    const session = useSession();
+  const token = (session?.data?.user as { accessToken: string })?.accessToken;
+  console.log(token);
+
+  // get tournament api
+  const { data, isLoading, isError, error } = useQuery<OrganizerRecentTournamentsResponse>({
+    queryKey: ["recent-tournaments"],
+    queryFn: async () => {
+      const res = await fetch(
+        `${process.env.NEXT_PUBLIC_BACKEND_URL}/organizer-dashboard/recent`,{
+          method: "GET",
+          headers: {
+            Authorization : `Bearer ${token}`
+          }
+        }
+      );
+      return res.json();
     },
-    {
-      id: 2,
-      name: "Spring Championship 2023",
-      location: "Pine Valley Golf Club",
-      date: "May 15-20, 2023",
-      players: 48,
-    },
-    {
-      id: 3,
-      name: "Spring Championship 2023",
-      location: "Pine Valley Golf Club",
-      date: "May 15-20, 2023",
-      players: 48,
-    },
-  ];
+    enabled: !!token
+  });
+
+  let content;
+
+  if (isLoading) {
+    content = (
+      <div className="pt-4">
+        <TableSkeletonWrapper count={3} />
+      </div>
+    );
+  } else if (isError) {
+    content = (
+      <div>
+        <ErrorContainer message={error?.message || "Something went wrong"} />
+      </div>
+    );
+  } else if (
+    data &&
+    data?.data &&
+    data?.data?.length === 0
+  ) {
+    content = (
+      <div>
+        <NotFound message="Oops! No data available. Modify your filters or check your internet connection." />
+      </div>
+    );
+  } else if (
+    data &&
+    data?.data &&
+    data?.data?.length > 0
+  ) {
+    content = (
+      <div>
+           {data?.data?.map((item) => {
+            return (
+              <div
+                key={item?._id}
+                className="w-full flex items-center justify-between border-b border-[#E6E6E8] p-6"
+              >
+                <h4 className="text-base font-semibold leading-[150%] text-[#181818]">
+                  {item?.tournamentName}
+                </h4>
+                <p className="flex items-center gap-2 text-sm font-normal leading-[150%] text-[#616161]">
+                  <MapPin className="w-4 h-4 " /> {item?.location}
+                </p>
+                <p className="text-sm font-normal leading-[150%] text-[#616161]">
+                  {item?.players}
+                </p>
+                <p className="text-sm font-normal leading-[150%] text-[#616161]">
+                 {moment(item?.startDate).format("MMM D, YYYY")}
+                </p>
+              </div>
+            );
+          })}
+      </div>
+    );
+  }
+
   return (
     <div className="px-6 pb-20 ">
       <div className="bg-white border border-[#E6E6E8] p-6 rounded-[12px]">
@@ -40,7 +122,8 @@ const RecentTournaments = () => {
           </Link>
         </div>
         <div>
-          {tournaments?.map((item) => {
+          {content}
+          {/* {tournaments?.map((item) => {
             return (
               <div
                 key={item?.id}
@@ -60,7 +143,7 @@ const RecentTournaments = () => {
                 </p>
               </div>
             );
-          })}
+          })} */}
         </div>
       </div>
     </div>
