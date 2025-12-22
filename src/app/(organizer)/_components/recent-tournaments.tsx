@@ -15,6 +15,7 @@ export type Tournament = {
   tournamentName: string;
   location: string;
   players: number;
+  drawSize: number;
   status: "upcoming" | "ongoing" | "completed"; // extend if needed
   startDate: string; // ISO date string
   endDate: string;   // ISO date string
@@ -40,7 +41,7 @@ const RecentTournaments = () => {
     queryKey: ["recent-tournaments"],
     queryFn: async () => {
       const res = await fetch(
-        `${process.env.NEXT_PUBLIC_BACKEND_URL}/organizer-dashboard/recent`,{
+        `${process.env.NEXT_PUBLIC_BACKEND_URL}/organizer-dashboard/recent?page=1&limit=6`,{
           method: "GET",
           headers: {
             Authorization : `Bearer ${token}`
@@ -89,14 +90,14 @@ const RecentTournaments = () => {
                 key={item?._id}
                 className="w-full flex items-center justify-between border-b border-[#E6E6E8] p-6"
               >
-                <h4 className="text-base font-semibold leading-[150%] text-[#181818]">
+                <h4 className="w-auto md:w-1/3 text-base font-semibold leading-[150%] text-[#181818]">
                   {item?.tournamentName}
                 </h4>
-                <p className="flex items-center gap-2 text-sm font-normal leading-[150%] text-[#616161]">
-                  <MapPin className="w-4 h-4 " /> {item?.location}
+                <p className="w-[369px] flex items-center gap-2 text-sm font-normal leading-[150%] text-[#616161]">
+                  <MapPin className="w-4 h-4 " /> {item?.location || "N/A"}
                 </p>
                 <p className="text-sm font-normal leading-[150%] text-[#616161]">
-                  {item?.players}
+                  {item?.drawSize}
                 </p>
                 <p className="text-sm font-normal leading-[150%] text-[#616161]">
                  {moment(item?.startDate).format("MMM D, YYYY")}
@@ -123,27 +124,6 @@ const RecentTournaments = () => {
         </div>
         <div>
           {content}
-          {/* {tournaments?.map((item) => {
-            return (
-              <div
-                key={item?.id}
-                className="w-full flex items-center justify-between border-b border-[#E6E6E8] p-6"
-              >
-                <h4 className="text-base font-semibold leading-[150%] text-[#181818]">
-                  {item?.name}
-                </h4>
-                <p className="flex items-center gap-2 text-sm font-normal leading-[150%] text-[#616161]">
-                  <MapPin className="w-4 h-4 " /> {item?.location}
-                </p>
-                <p className="text-sm font-normal leading-[150%] text-[#616161]">
-                  {item?.players}
-                </p>
-                <p className="text-sm font-normal leading-[150%] text-[#616161]">
-                  {item?.date}
-                </p>
-              </div>
-            );
-          })} */}
         </div>
       </div>
     </div>
