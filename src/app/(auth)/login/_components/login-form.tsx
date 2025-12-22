@@ -314,14 +314,7 @@ const LoginForm = () => {
             )}
           />
 
-          {/* CAPTCHA integration */}
-          <div className="flex justify-center">
-            <ReCAPTCHA
-              ref={recaptchaRef}
-              sitekey={process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY as string}
-              onChange={handleCaptchaChange}
-            />
-          </div>
+      
 
           <div className="flex items-center justify-end">
             <div>
@@ -359,6 +352,15 @@ const LoginForm = () => {
           </Link>
         </h3>
       </div>
+
+          {/* CAPTCHA integration */}
+          <div className="flex justify-start pt-4">
+            <ReCAPTCHA
+              ref={recaptchaRef}
+              sitekey={process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY as string}
+              onChange={handleCaptchaChange}
+            />
+          </div>
     </div>
   );
 };
