@@ -10,7 +10,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import moment from "moment";
-import { Eye, Plus, Trash } from "lucide-react";
+import { Eye, Plus, Trash, SquarePen } from "lucide-react";
 import MatchPlayGolfPagination from "@/components/ui/matchplaygolf-pagination";
 import { Input } from "@/components/ui/input";
 import DeleteModal from "@/components/modals/delete-modal";
@@ -145,6 +145,9 @@ const TournamentsManagementContainer = () => {
                     </button>
                   </TableCell>
                   <TableCell className="flex items-center justify-center gap-6 py-4">
+                  <button>
+                    <SquarePen className="cursor-pointer"/>
+                  </button>
                     <button
                       onClick={() => {
                         setViewTournament(true);
