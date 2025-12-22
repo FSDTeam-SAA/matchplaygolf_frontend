@@ -5,12 +5,14 @@ import React, { useState } from "react";
 import TournamentDetailsPage from "./tournament-details";
 import TournamentRulesPage from "./tournament-rules";
 import TournamentParticipantsPage from "./tournament-participants";
+import TournamentRounds from "./tournament-rounds";
+import TournamentDrawPage from "./tournament-draw";
 
 const TournamentsDetails = () => {
 //   const params = useParams();
 //   const id = params?.id;
 
-  const [isActive, setIsActive] = useState("draw");
+  const [isActive, setIsActive] = useState("details");
 
 //   const { data, isLoading } = useQuery({
 //     queryKey: ["tournaments"],
@@ -26,24 +28,19 @@ const TournamentsDetails = () => {
 //   });
 
   return (
-    <div>
-      <div className=" mb-8">
-        <h3 className="text-3xl font-hexco">
-          {/* {data?.tournament?.tournamentName} */}
-        </h3>
-      </div>
+    <div className="p-6">
 
       {/* sub-pages */}
       <div>
         <div className="flex items-center gap-8 border-b-[1px] border-gray-300">
           <button
             className={`text-gray-500 py-2 px-4 rounded-t-lg ${
-              isActive === "draw" &&
+              isActive === "details" &&
               "text-primary font-bold bg-primary/15 border-b-2 border-primary"
             }`}
-            onClick={() => setIsActive("draw")}
+            onClick={() => setIsActive("details")}
           >
-            Draw
+            Details
           </button>
           <button
             className={`text-gray-500 py-2 px-4 rounded-t-lg ${
@@ -57,17 +54,35 @@ const TournamentsDetails = () => {
 
           <button
             className={`text-gray-500 py-2 px-4 rounded-t-lg ${
-              isActive === "details" &&
+              isActive === "participants" &&
               "text-primary font-bold bg-primary/15 border-b-2 border-primary"
             }`}
-            onClick={() => setIsActive("details")}
+            onClick={() => setIsActive("participants")}
           >
-            Details
+            Participants
+          </button>
+           <button
+            className={`text-gray-500 py-2 px-4 rounded-t-lg ${
+              isActive === "rounds" &&
+              "text-primary font-bold bg-primary/15 border-b-2 border-primary"
+            }`}
+            onClick={() => setIsActive("rounds")}
+          >
+            Rounds
+          </button>
+           <button
+            className={`text-gray-500 py-2 px-4 rounded-t-lg ${
+              isActive === "draw" &&
+              "text-primary font-bold bg-primary/15 border-b-2 border-primary"
+            }`}
+            onClick={() => setIsActive("draw")}
+          >
+            Draw
           </button>
         </div>
 
         <div className="mt-8">
-          {isActive === "draw" && (
+          {isActive === "details" && (
             // <div>
             //   <TournamentDetailsPage matches={data?.matches} isLoading={isLoading} />
             // </div>
@@ -82,9 +97,19 @@ const TournamentsDetails = () => {
               <TournamentRulesPage   />
             </div>
           )}
-          {isActive === "details" && (
+          {isActive === "participants" && (
             <div>
               <TournamentParticipantsPage   />
+            </div>
+          )}
+            {isActive === "rounds" && (
+            <div>
+              <TournamentRounds   />
+            </div>
+          )}
+          {isActive === "draw" && (
+            <div>
+              <TournamentDrawPage   />
             </div>
           )}
         </div>

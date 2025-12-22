@@ -145,9 +145,11 @@ const TournamentsManagementContainer = () => {
                     </button>
                   </TableCell>
                   <TableCell className="flex items-center justify-center gap-6 py-4">
-                  <button>
-                    <SquarePen className="cursor-pointer"/>
+                 <Link href={`/organizer/tournaments-management/${item?._id}`}>
+                  <button className="mt-1">
+                    <SquarePen className="cursor-pointer h-5 w-5 text-[#181818]"/>
                   </button>
+                 </Link>
                     <button
                       onClick={() => {
                         setViewTournament(true);
