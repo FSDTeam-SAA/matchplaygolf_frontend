@@ -256,9 +256,13 @@ const SportsArticles = () => {
                   <h3 className="text-xl font-semibold mb-4 text-gray-800">
                     Article Description
                   </h3>
-                  <p className="text-gray-700 leading-relaxed whitespace-pre-line">
-                    {selectedArticle.description}
-                  </p>
+
+                  <p
+                    className="text-gray-700 leading-relaxed whitespace-pre-line"
+                    dangerouslySetInnerHTML={{
+                      __html: `${selectedArticle.description}`,
+                    }}
+                  ></p>
                 </div>
 
                 {/* Actions */}
