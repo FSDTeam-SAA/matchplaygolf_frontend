@@ -1,8 +1,14 @@
 import React from 'react'
+import TournamentsDetails from './_components/tournament-tabs'
+import TournamentsHeader from './_components/tournament-header'
 
-const TournamentDetailsPage = () => {
+const TournamentDetailsPage = ({params}:{params:{id:string}}) => {
+  console.log(params)
   return (
-    <div>TournamentDetailsPage</div>
+    <div>
+      <TournamentsHeader/>
+      <TournamentsDetails/>
+    </div>
   )
 }
 
