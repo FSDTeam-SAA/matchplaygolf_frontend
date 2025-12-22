@@ -6,6 +6,7 @@ import {
   Settings,
   Swords,
   Trophy,
+  Users
 } from "lucide-react";
 
 import {
@@ -34,6 +35,11 @@ const items = [
     title: "Tournaments Management",
     url: "/organizer/tournaments-management",
     icon: Trophy,
+  },
+    {
+    title: "Players Management",
+    url: "/organizer/players-management",
+    icon: Users,
   },
   {
     title: "Matches Management",

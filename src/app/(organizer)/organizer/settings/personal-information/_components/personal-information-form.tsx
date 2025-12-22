@@ -26,7 +26,7 @@ import { CalendarIcon, Upload, X } from "lucide-react";
 import Image from "next/image";
 import { useEffect, useState } from "react";
 import { ColorPicker } from "@/components/ui/color-picker";
-import { useMutation, useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { ProfileApiResponse } from "./personal-information-data-type";
 import { useSession } from "next-auth/react";
 import { toast } from "sonner";
@@ -65,6 +65,7 @@ const PersonalInformationForm = () => {
   const token = (session?.data?.user as { accessToken: string })?.accessToken;
   const [previewImage, setPreviewImage] = useState<string | null>(null);
   const [isDragOver, setIsDragOver] = useState(false);
+const queryClient = useQueryClient();
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -96,7 +97,7 @@ const PersonalInformationForm = () => {
           },
         }
       );
-      return await res.json();
+      return res.json();
     },
 
     enabled: !!token,
@@ -141,12 +142,15 @@ const PersonalInformationForm = () => {
       return await res.json();
     },
     onSuccess: (data) => {
-      if (!data?.status) {
+      if (!data?.success) {
         toast.error(data?.message || "Something went wrong");
         return;
       }
       toast.success(data?.message || "Personal Info updated successfull");
       form.reset();
+         queryClient.invalidateQueries({
+      queryKey: ["personal-info"],
+    });
     },
   });
 
@@ -200,7 +204,7 @@ const PersonalInformationForm = () => {
     formData?.append("handicap", values?.handicap);
     formData?.append("newsletterPreference", values?.newsletterPreference);
     if (values.organizerLogo && values.organizerLogo[0]) {
-      formData.append("organizerLogo", values.organizerLogo[0]);
+      formData.append("organizerLogo", values.organizerLogo);
     }
 
     mutate(formData);
@@ -236,14 +240,14 @@ const PersonalInformationForm = () => {
                     >
                       <FormItem className="flex items-center space-x-2">
                         <FormControl>
-                          <RadioGroupItem value="male" className="mt-2" />
+                          <RadioGroupItem value="Male" className="mt-2" />
                         </FormControl>
                         <FormLabel className="cursor-pointer">Male</FormLabel>
                       </FormItem>
 
                       <FormItem className="flex items-center space-x-2">
                         <FormControl>
-                          <RadioGroupItem value="female" className="mt-2" />
+                          <RadioGroupItem value="Female" className="mt-2" />
                         </FormControl>
                         <FormLabel className="cursor-pointer">Female</FormLabel>
                       </FormItem>
