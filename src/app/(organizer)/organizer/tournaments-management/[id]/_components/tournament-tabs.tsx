@@ -99,7 +99,7 @@ const TournamentsDetails = ({id}:{id:string}) => {
 
           {isActive === "rules" && (
             <div>
-              <TournamentRulesPage   />
+              <TournamentRulesPage  data={data?.data || {} as TournamentOrderData} />
             </div>
           )}
           {isActive === "participants" && (

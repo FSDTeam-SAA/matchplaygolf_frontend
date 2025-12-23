@@ -51,7 +51,7 @@ const formSchema = z.object({
   //   message: "Total Draw Size is required.",
   // }),
   numberOfSeeds: z.coerce.number().min(1),
-drawSize: z.coerce.number().min(1),
+  drawSize: z.coerce.number().min(1),
 
   drawFormat: z.string().min(1, {
     message: "Draw Format is required.",
@@ -62,7 +62,7 @@ drawSize: z.coerce.number().min(1),
   // startDate: z.date({ message: "Start Date is required" }),
   // endDate: z.date({ message: "End Date is required" }),
   startDate: z.date().nullable(),
-endDate: z.date().nullable(),
+  endDate: z.date().nullable(),
 
   location: z.string().optional(),
   terms: z.boolean().refine((val) => val === true, {
@@ -70,7 +70,7 @@ endDate: z.date().nullable(),
   }),
 })
 
-const TournamentDetailsPage = (data:{data:TournamentOrderData}) => {
+const TournamentDetailsPage = (data: { data: TournamentOrderData }) => {
   console.log(data)
   const tournamentId = data?.data?._id;
   const session = useSession();
@@ -87,10 +87,10 @@ const TournamentDetailsPage = (data:{data:TournamentOrderData}) => {
       format: "",
       // startDate: new Date(),
       // endDate: new Date(),
-       startDate: null,
-  endDate: null,
+      startDate: null,
+      endDate: null,
       numberOfSeeds: "",
-      location:"",
+      location: "",
       terms: false,
     },
   })
@@ -103,50 +103,50 @@ const TournamentDetailsPage = (data:{data:TournamentOrderData}) => {
 
 
 
-useEffect(() => {
-  if (!data?.data) return;
+  useEffect(() => {
+    if (!data?.data) return;
 
-  form.reset({
-    tournamentName: data.data.tournamentName ?? "",
-    sportName: data.data.sportName ?? "",
-    drawFormat: data.data.drawFormat?.toLowerCase(),
-    format: data.data.format?.toLowerCase(),
-    drawSize: String(data.data.drawSize),
-    location: data.data.location,
-    numberOfSeeds: String(data.data.totalRounds),
-    startDate: data.data.startDate
-      ? new Date(data.data.startDate)
-      : null,
-    endDate: data.data.endDate
-      ? new Date(data.data.endDate)
-      : null,
-    terms: false,
-  });
-}, [data, form]);
+    form.reset({
+      tournamentName: data.data.tournamentName ?? "",
+      sportName: data.data.sportName ?? "",
+      drawFormat: data.data.drawFormat?.toLowerCase(),
+      format: data.data.format?.toLowerCase(),
+      drawSize: String(data.data.drawSize),
+      location: data.data.location,
+      numberOfSeeds: String(data.data.totalRounds),
+      startDate: data.data.startDate
+        ? new Date(data.data.startDate)
+        : null,
+      endDate: data.data.endDate
+        ? new Date(data.data.endDate)
+        : null,
+      terms: false,
+    });
+  }, [data, form]);
 
 
-const {mutate, isPending} = useMutation({
-  mutationKey: ["tournament-details", tournamentId],
-  mutationFn: async (values: z.infer<typeof formSchema>)=>{
-    const res = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/tournament/${tournamentId}`,{
-      method: "PUT",
-      headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
-          },
-          body: JSON.stringify(values),
-    })
-    return res.json()
-  },
-  onSuccess: (data)=>{
-    if(!data?.success){
-      toast.error(data?.message || "Something went wrong");
-      return;
-    }
-    toast.success(data?.message || "Tournement updated successfully")
-    queryClient.invalidateQueries({queryKey: ["single-tournament"]})
-  },
-})
+  const { mutate, isPending } = useMutation({
+    mutationKey: ["tournament-details", tournamentId],
+    mutationFn: async (values: z.infer<typeof formSchema>) => {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/tournament/${tournamentId}`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify(values),
+      })
+      return res.json()
+    },
+    onSuccess: (data) => {
+      if (!data?.success) {
+        toast.error(data?.message || "Something went wrong");
+        return;
+      }
+      toast.success(data?.message || "Tournement updated successfully")
+      queryClient.invalidateQueries({ queryKey: ["single-tournament"] })
+    },
+  })
 
 
   // 2. Define a submit handler.
@@ -204,8 +204,8 @@ const {mutate, isPending} = useMutation({
                           type="button"
                           onClick={() => field.onChange(option.value)}
                           className={`py-3 px-4 rounded-[8px] border-2 text-base font-medium leading-[120%] transition-all duration-200 ${field.value === option.value
-                              ? "border-primary bg-[#F0FFFE] text-[#434C45]"
-                              : "border-[#C0C3C1] bg-white text-[#434C45] hover:border-primary"
+                            ? "border-primary bg-[#F0FFFE] text-[#434C45]"
+                            : "border-[#C0C3C1] bg-white text-[#434C45] hover:border-primary"
                             }`}
                         >
                           {option.label}
@@ -232,7 +232,7 @@ const {mutate, isPending} = useMutation({
                   <FormControl>
                     <Select
                       value={field.value}
-  onValueChange={field.onChange}
+                      onValueChange={field.onChange}
                     >
                       <SelectTrigger className="w-full h-[48px] py-2 px-3 rounded-[8px] border border-[#C0C3C1] text-base font-medium leading-[120%] text-[#434C45)]">
                         <SelectValue placeholder="Pairs" />
@@ -260,7 +260,7 @@ const {mutate, isPending} = useMutation({
                   <FormControl>
                     <Select
                       value={field.value}
-  onValueChange={field.onChange}
+                      onValueChange={field.onChange}
                     >
                       <SelectTrigger className="w-full h-[48px] py-2 px-3 rounded-[8px] border border-[#C0C3C1] text-base font-medium leading-[120%] text-[#434C45)]">
                         <SelectValue placeholder="Parallel Unique  Club" />
@@ -313,9 +313,9 @@ const {mutate, isPending} = useMutation({
                           {/* {field.value
                             ? format(field.value, "MMM dd, yyyy")
                             : "mm/dd/yyyy"} */}
-                            {field.value instanceof Date && !isNaN(field.value.getTime())
-  ? format(field.value, "MMM dd, yyyy")
-  : "mm/dd/yyyy"}
+                          {field.value instanceof Date && !isNaN(field.value.getTime())
+                            ? format(field.value, "MMM dd, yyyy")
+                            : "mm/dd/yyyy"}
 
                           <CalendarIcon className="ml-auto h-4 w-4" />
                         </Button>
@@ -329,11 +329,11 @@ const {mutate, isPending} = useMutation({
                         initialFocus
                       /> */}
                       <Calendar
-  mode="single"
-  selected={field.value ?? undefined}
-  onSelect={(date) => field.onChange(date ?? null)}
-  initialFocus
-/>
+                        mode="single"
+                        selected={field.value ?? undefined}
+                        onSelect={(date) => field.onChange(date ?? null)}
+                        initialFocus
+                      />
                     </PopoverContent>
                   </Popover>
                   <FormMessage />
@@ -359,9 +359,9 @@ const {mutate, isPending} = useMutation({
                           {/* {field.value
                             ? format(field.value, "MMM dd, yyyy")
                             : "mm/dd/yyyy"} */}
-                            {field.value instanceof Date && !isNaN(field.value.getTime())
-  ? format(field.value, "MMM dd, yyyy")
-  : "mm/dd/yyyy"}
+                          {field.value instanceof Date && !isNaN(field.value.getTime())
+                            ? format(field.value, "MMM dd, yyyy")
+                            : "mm/dd/yyyy"}
 
                           <CalendarIcon className="ml-auto h-4 w-4" />
                         </Button>
@@ -375,11 +375,11 @@ const {mutate, isPending} = useMutation({
                         initialFocus
                       /> */}
                       <Calendar
-  mode="single"
-  selected={field.value ?? undefined}
-  onSelect={(date) => field.onChange(date ?? null)}
-  initialFocus
-/>
+                        mode="single"
+                        selected={field.value ?? undefined}
+                        onSelect={(date) => field.onChange(date ?? null)}
+                        initialFocus
+                      />
                     </PopoverContent>
                   </Popover>
                   <FormMessage />
@@ -432,26 +432,26 @@ const {mutate, isPending} = useMutation({
               )}
             />
           </div>
-           {/* Buttons */}
-            <div className="flex justify-end gap-6 pt-6">
-              <Button
-                type="button"
-                variant="outline"
-                onClick={() => form.reset()}
-                className="h-[49px] text-[#F2415A] text-lg font-medium leading-[150%] border-[1px] border-[#F2415A] rounded-[8px] py-3 px-16"
-              >
-                Cancel
-              </Button>
-              <Button
-                  disabled={isPending}
-                type="submit"
-                className="h-[49px] bg-gradient-to-b from-[#DF1020] to-[#310000]
+          {/* Buttons */}
+          <div className="flex justify-end gap-6 pt-6">
+            <Button
+              type="button"
+              variant="outline"
+              onClick={() => form.reset()}
+              className="h-[49px] text-[#F2415A] text-lg font-medium leading-[150%] border-[1px] border-[#F2415A] rounded-[8px] py-3 px-16"
+            >
+              Cancel
+            </Button>
+            <Button
+              disabled={isPending}
+              type="submit"
+              className="h-[49px] bg-gradient-to-b from-[#DF1020] to-[#310000]
             hover:from-[#310000] hover:to-[#DF1020]
             transition-all duration-300 text-[#F7F8FA] font-bold text-lg leading-[120%] rounded-[8px] px-20"
-              >
-                {isPending ? "Adding..." : "Add"}
-              </Button>
-            </div>
+            >
+              {isPending ? "Adding..." : "Add"}
+            </Button>
+          </div>
         </form>
       </Form>
     </div>
