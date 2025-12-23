@@ -7,7 +7,7 @@ const TournamentDetailsPage = ({params}:{params:{id:string}}) => {
   return (
     <div>
       <TournamentsHeader/>
-      <TournamentsDetails/>
+      <TournamentsDetails id={params?.id}/>
     </div>
   )
 }

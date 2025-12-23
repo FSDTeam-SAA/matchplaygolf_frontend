@@ -1,5 +1,5 @@
 "use client";
-// import { useQuery } from "@tanstack/react-query";
+import { useQuery } from "@tanstack/react-query";
 // import { useParams } from "next/navigation";
 import React, { useState } from "react";
 import TournamentDetailsPage from "./tournament-details";
@@ -7,25 +7,33 @@ import TournamentRulesPage from "./tournament-rules";
 import TournamentParticipantsPage from "./tournament-participants";
 import TournamentRounds from "./tournament-rounds";
 import TournamentDrawPage from "./tournament-draw";
+import { useSession } from "next-auth/react";
+import { TournamentOrderData, TournamentOrderResponse } from "./single-tournament-data-type";
 
-const TournamentsDetails = () => {
-//   const params = useParams();
-//   const id = params?.id;
+const TournamentsDetails = ({id}:{id:string}) => {
+  const session = useSession();
+  const token = (session?.data?.user as { accessToken: string })?.accessToken;
 
   const [isActive, setIsActive] = useState("details");
 
-//   const { data, isLoading } = useQuery({
-//     queryKey: ["tournaments"],
-//     queryFn: async () => {
-//       const res = await fetch(
-//         `${process.env.NEXT_PUBLIC_BACKEND_URL}/tournament/getAllMatches/${id}`
-//       );
 
-//       const data = await res.json();
+  // get api call 
+  const { data } = useQuery<TournamentOrderResponse>({
+    queryKey: ["single-tournament", id],
+    queryFn: async () => {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/tournament/${id}`,{
+        method: 'GET',
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json',
+        },
+      })
+      return res.json();
+    },
+    enabled: !!token
+  })
 
-//       return data?.data;
-//     },
-//   });
+  console.log(data)
 
   return (
     <div className="p-6">
@@ -83,12 +91,9 @@ const TournamentsDetails = () => {
 
         <div className="mt-8">
           {isActive === "details" && (
-            // <div>
-            //   <TournamentDetailsPage matches={data?.matches} isLoading={isLoading} />
-            // </div>
 
               <div>
-              <TournamentDetailsPage  />
+              <TournamentDetailsPage  data={data?.data || {} as TournamentOrderData}/>
             </div>
           )}
 
