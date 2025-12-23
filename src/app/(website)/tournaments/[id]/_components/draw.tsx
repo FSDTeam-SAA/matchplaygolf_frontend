@@ -3,6 +3,25 @@ import { Skeleton } from "@/components/ui/skeleton"; // Adjust import path based
 import Image from "next/image";
 import MomentsModal from "./moments-modal";
 import VsModal from "./vs-modal";
+import PairCard from "./pair-card";
+
+interface PairId {
+  _id: string;
+  tournamentId: string;
+  teamName: string;
+  player1: {
+    _id: string;
+    fullName: string;
+    email: string;
+    profileImage: string;
+  };
+  player2: {
+    _id: string;
+    fullName: string;
+    email: string;
+    profileImage: string;
+  };
+}
 
 export interface Match {
   _id: string;
@@ -25,6 +44,8 @@ export interface Match {
   player2Score: string;
   date: string;
   status: string;
+  pair1Id: PairId;
+  pair2Id: PairId;
 }
 
 interface Props {
@@ -279,7 +300,15 @@ const Draw = ({ matches, isLoading }: Props) => {
                 </div>
               </div>
             ) : (
-              "Coming soon..."
+              // pair card
+              <PairCard
+                item={item as Match}
+                getStatusColor={getStatusColor}
+                handleOpenModal={handleOpenModal}
+                handleVsOpen={handleVsOpen}
+                index={index}
+                winner1={winner1}
+              />
             )}
           </div>
         );

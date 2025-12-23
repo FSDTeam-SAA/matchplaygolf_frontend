@@ -46,7 +46,7 @@ const VsModal = ({ isModalOpen, handleCloseModal, matchInfo }: Props) => {
             <div className="text-3xl md:text-4xl font-bold text-red-500">
               VS
             </div>
-          </div>
+d          </div>
 
           {/* Mobile VS */}
           <div className="md:hidden my-4">
