@@ -2,8 +2,9 @@ import React, { useState } from "react";
 import { Skeleton } from "@/components/ui/skeleton"; // Adjust import path based on your setup
 import Image from "next/image";
 import MomentsModal from "./moments-modal";
+import VsModal from "./vs-modal";
 
-interface Match {
+export interface Match {
   _id: string;
   winnerColor: string;
   winner: string;
@@ -12,11 +13,13 @@ interface Match {
     _id: string;
     fullName: string;
     profileImage: string;
+    email: string;
   };
   player2Id: {
     _id: string;
     fullName: string;
     profileImage: string;
+    email: string;
   };
   player1Score: string;
   player2Score: string;
@@ -31,13 +34,25 @@ interface Props {
 
 const Draw = ({ matches, isLoading }: Props) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isVsModalOpen, setIsVsModalOpen] = useState(false);
+  const [matchInfo, setMatchInfo] = useState<Match>();
 
-  const handleOpenModal = () => {
+  const handleOpenModal = (match: Match) => {
     setIsModalOpen(true);
+    setMatchInfo(match);
+  };
+
+  const handleVsOpen = (match: Match) => {
+    setIsVsModalOpen(true);
+    setMatchInfo(match);
   };
 
   const handleCloseModal = () => {
     setIsModalOpen(false);
+  };
+
+  const handleVsCloseModal = () => {
+    setIsVsModalOpen(false);
   };
 
   // Skeleton loader
@@ -149,8 +164,17 @@ const Draw = ({ matches, isLoading }: Props) => {
                     </div>
 
                     {/* vs button */}
-                    <div className={`px-8 flex items-center gap-2 ${winner1 && "flex-row-reverse"}`}>
-                      <div className="text-sm text-gray-500">VS</div>
+                    <div
+                      className={`px-8 flex items-center gap-2 ${
+                        winner1 && "flex-row-reverse"
+                      }`}
+                    >
+                      <div
+                        onClick={() => handleVsOpen(item)}
+                        className="text-sm text-gray-500 cursor-pointer"
+                      >
+                        VS
+                      </div>
                       {item.status === "completed" && (
                         <div className="text-sm font-medium text-gray-600">
                           <span className="text-red-700 font-bold text-xl flex">
@@ -243,7 +267,7 @@ const Draw = ({ matches, isLoading }: Props) => {
                       {item.status === "completed" && (
                         <div>
                           <button
-                            onClick={handleOpenModal}
+                            onClick={() => handleOpenModal(item)}
                             className="text-primary font-semibold text-sm"
                           >
                             Moments
@@ -265,6 +289,14 @@ const Draw = ({ matches, isLoading }: Props) => {
         <MomentsModal
           isModalOpen={isModalOpen}
           handleCloseModal={handleCloseModal}
+        />
+      )}
+
+      {isVsModalOpen && (
+        <VsModal
+          isModalOpen={isVsModalOpen}
+          handleCloseModal={handleVsCloseModal}
+          matchInfo={matchInfo as Match}
         />
       )}
     </div>
