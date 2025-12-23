@@ -62,8 +62,16 @@ interface ApiResponse {
   };
 }
 
+const filterItems = [
+  { id: 1, label: "All Draw", value: "" },
+  { id: 2, label: "Single Draw", value: "Single" },
+  { id: 3, label: "Pair Draw", value: "Pair" },
+  { id: 4, label: "Team Draw", value: "Team" },
+];
+
 const UpcomingTournaments = () => {
   const [currentPage, setCurrentPage] = useState(1);
+  const [tournamentType, setTournamentType] = useState("");
   const pathName = usePathname();
   const ITEMS_PER_PAGE = pathName === "/tournaments" ? 15 : 9;
 
@@ -72,10 +80,10 @@ const UpcomingTournaments = () => {
     isLoading,
     error,
   } = useQuery({
-    queryKey: ["tournaments", currentPage, ITEMS_PER_PAGE],
+    queryKey: ["tournaments", tournamentType, currentPage, ITEMS_PER_PAGE],
     queryFn: async () => {
       const res = await fetch(
-        `${process.env.NEXT_PUBLIC_BACKEND_URL}/tournament?status=scheduled&page=${currentPage}&limit=${ITEMS_PER_PAGE}`
+        `${process.env.NEXT_PUBLIC_BACKEND_URL}/tournament?status=scheduled&format=${tournamentType}&page=${currentPage}&limit=${ITEMS_PER_PAGE}`
       );
 
       if (!res.ok) {
@@ -127,6 +135,13 @@ const UpcomingTournaments = () => {
         <div className="text-center mb-10">
           <Skeleton className="h-10 w-64 mx-auto mb-2" />
           <Skeleton className="h-6 w-96 mx-auto" />
+        </div>
+
+        <div className="space-x-5 mt-8 flex items-center">
+          <Skeleton className="w-[120px] h-[40px] rounded-3xl" />
+          <Skeleton className="w-[120px] h-[40px] rounded-3xl" />
+          <Skeleton className="w-[120px] h-[40px] rounded-3xl" />
+          <Skeleton className="w-[120px] h-[40px] rounded-3xl" />
         </div>
 
         <div className="mt-10 grid grid-cols-1 md:grid-cols-3 gap-8">
@@ -209,6 +224,22 @@ const UpcomingTournaments = () => {
         <p className="text-gray-600 text-md mt-2">
           Join these exciting tournaments and test your skills
         </p>
+      </div>
+
+      <div className="space-x-5 mt-8">
+        {filterItems.map((item) => (
+          <Button
+            key={item.id}
+            onClick={() => setTournamentType(item?.value)}
+            className={`px-8 h-[40px] rounded-3xl ${
+              tournamentType === item.value
+                ? "bg-primary"
+                : "bg-inherit border border-primary text-primary hover:bg-inherit hover:text-primary"
+            }`}
+          >
+            {item.label}
+          </Button>
+        ))}
       </div>
 
       <div className="mt-10 grid grid-cols-1 md:grid-cols-3 gap-8">

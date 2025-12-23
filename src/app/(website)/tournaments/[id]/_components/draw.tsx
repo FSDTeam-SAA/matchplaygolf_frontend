@@ -6,7 +6,8 @@ import MomentsModal from "./moments-modal";
 interface Match {
   _id: string;
   winnerColor: string;
-  winnerPlayerId: string;
+  winner: string;
+  matchType: "Single" | "Pair" | "Team";
   player1Id: {
     _id: string;
     fullName: string;
@@ -104,143 +105,158 @@ const Draw = ({ matches, isLoading }: Props) => {
   return (
     <div className="space-y-6">
       {matches.map((item, index) => {
-        const winner1 = item?.winnerPlayerId === item?.player1Id?._id;
-        const winner2 = item?.winnerPlayerId === item?.player2Id?._id;
+        const winner1 = item?.winner === item?.player1Id?._id;
+        const winner2 = item?.winner === item?.player2Id?._id;
 
         return (
-          <div key={item._id} className="flex items-center gap-5 space-y-5">
-            <div className="font-medium text-gray-500 pt-5">
-              {index + 1 < 10 ? `0${index + 1}` : index + 1}
-            </div>
+          <div key={item._id}>
+            {item?.matchType === "Single" || item?.matchType === "Team" ? (
+              <div className="flex items-center gap-5 space-y-5">
+                <div className="font-medium text-gray-500 pt-5">
+                  {index + 1 < 10 ? `0${index + 1}` : index + 1}
+                </div>
 
-            <div className="flex-1 shadow-lg rounded-lg overflow-hidden border border-gray-200">
-              <div className="border-b border-b-gray-300 flex items-center">
-                <div
-                  className={`border-r border-gray-300 lg:w-1/2 p-6 ${
-                    winner1 ? `bg-[${item?.winnerColor}] text-white` : ""
-                  }`}
-                >
-                  <div className="flex items-center gap-3">
-                    <div className="h-12 w-12 rounded-full flex items-center justify-center overflow-hidden bg-gray-100">
-                      {item.player1Id?.profileImage ? (
-                        <Image
-                          src={item.player1Id.profileImage}
-                          alt={item.player1Id.fullName}
-                          width={1000}
-                          height={1000}
-                          className="h-full w-full rounded-full object-cover"
-                        />
-                      ) : (
-                        <span className="text-lg font-semibold text-red-800">
-                          {item.player1Id?.fullName?.charAt(0) || "P1"}
-                        </span>
+                <div className="flex-1 shadow-lg rounded-lg overflow-hidden border border-gray-200">
+                  <div className="border-b border-b-gray-300 flex items-center">
+                    {/* winner 1 card */}
+                    <div
+                      className={`border-r border-gray-300 lg:w-1/2 p-6 ${
+                        winner1 ? `bg-[#39674b] text-white` : ""
+                      }`}
+                    >
+                      <div className="flex items-center gap-3">
+                        <div className="h-12 w-12 rounded-full flex items-center justify-center overflow-hidden bg-gray-100">
+                          {item.player1Id?.profileImage ? (
+                            <Image
+                              src={item.player1Id.profileImage}
+                              alt={item.player1Id.fullName}
+                              width={1000}
+                              height={1000}
+                              className="h-full w-full rounded-full object-cover"
+                            />
+                          ) : (
+                            <span className="text-lg font-semibold text-red-800">
+                              {item.player1Id?.fullName?.charAt(0) || "P1"}
+                            </span>
+                          )}
+                        </div>
+                        <div>
+                          <h1 className="font-semibold">
+                            {item.player1Id?.fullName || "Player 1"}
+                          </h1>
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* vs button */}
+                    <div className={`px-8 flex items-center gap-2 ${winner1 && "flex-row-reverse"}`}>
+                      <div className="text-sm text-gray-500">VS</div>
+                      {item.status === "completed" && (
+                        <div className="text-sm font-medium text-gray-600">
+                          <span className="text-red-700 font-bold text-xl flex">
+                            <span>{item.player1Score}</span> <span> /</span>{" "}
+                            <span> {item.player2Score}</span>
+                          </span>
+                        </div>
                       )}
                     </div>
-                    <div>
-                      <h1 className="font-semibold">
-                        {item.player1Id?.fullName || "Player 1"}
-                      </h1>
-                    </div>
-                  </div>
-                </div>
 
-                <div className="px-8 flex items-center gap-2">
-                  <div className="text-sm text-gray-500">VS</div>
-                  {item.status === "Completed" && (
-                    <div className="text-sm font-medium text-gray-600">
-                      <span className="text-red-700 font-bold text-xl flex">
-                        <span>{item.player1Score}</span> <span> /</span>{" "}
-                        <span> {item.player2Score}</span>
-                      </span>
-                    </div>
-                  )}
-                </div>
-
-                <div
-                  className={`border-l border-gray-300 lg:w-1/2 flex justify-end p-6 ${
-                    winner2 && `bg-[${item?.winnerColor}] text-white`
-                  }`}
-                >
-                  <div className="flex items-center gap-3">
-                    <div className="text-right">
-                      <h1 className="font-semibold">
-                        {item.player2Id?.fullName || "Player 2"}
-                      </h1>
-                    </div>
-                    <div className="h-12 w-12 rounded-full flex items-center justify-center overflow-hidden bg-gray-100">
-                      {item.player2Id?.profileImage ? (
-                        <Image
-                          src={item.player2Id.profileImage}
-                          alt={item.player2Id.fullName}
-                          width={1000}
-                          height={1000}
-                          className="h-full w-full rounded-full object-cover"
-                        />
-                      ) : (
-                        <span className="text-lg font-semibold text-red-800">
-                          {item.player2Id?.fullName?.charAt(0) || "P2"}
-                        </span>
-                      )}
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-              <div className="bg-[#eaeaeecb] py-2 px-4">
-                <div
-                  className={`flex flex-col sm:flex-row ${
-                    item.status === "Completed"
-                      ? "justify-between"
-                      : "justify-center"
-                  } items-start sm:items-center gap-4`}
-                >
-                  <div></div>
-                  <div className="flex items-center gap-5">
-                    <div className="text-right">
-                      <span className="text-gray-700 text-sm">
-                        {item?.date
-                          ? new Date(item?.date).toLocaleDateString("en-US", {
-                              weekday: "short",
-                              month: "short",
-                              day: "numeric",
-                              year: "numeric",
-                            })
-                          : "Date not set"}
-                      </span>
-                      <span>, </span>
-                      <span className="text-gray-700 text-sm">
-                        {item?.date
-                          ? new Date(item?.date).toLocaleTimeString("en-US", {
-                              hour: "2-digit",
-                              minute: "2-digit",
-                            })
-                          : ""}
-                      </span>
-                    </div>
-                    <div className="flex items-center gap-3 justify-end">
-                      <div
-                        className={`text-sm font-medium px-3 py-1 rounded-full ${getStatusColor(
-                          item.status
-                        )}`}
-                      >
-                        {item.status || "Upcoming"}
+                    {/* winner 2 card */}
+                    <div
+                      className={`border-l border-gray-300 lg:w-1/2 flex justify-end p-6 ${
+                        winner2 && `bg-[#39674b] text-white`
+                      }`}
+                    >
+                      <div className="flex items-center gap-3">
+                        <div className="text-right">
+                          <h1 className="font-semibold">
+                            {item.player2Id?.fullName || "Player 2"}
+                          </h1>
+                        </div>
+                        <div className="h-12 w-12 rounded-full flex items-center justify-center overflow-hidden bg-gray-100">
+                          {item.player2Id?.profileImage ? (
+                            <Image
+                              src={item.player2Id.profileImage}
+                              alt={item.player2Id.fullName}
+                              width={1000}
+                              height={1000}
+                              className="h-full w-full rounded-full object-cover"
+                            />
+                          ) : (
+                            <span className="text-lg font-semibold text-red-800">
+                              {item.player2Id?.fullName?.charAt(0) || "P2"}
+                            </span>
+                          )}
+                        </div>
                       </div>
                     </div>
                   </div>
 
-                  {item.status === "Completed" && (
-                    <div>
-                      <button
-                        onClick={handleOpenModal}
-                        className="text-primary font-semibold text-sm"
-                      >
-                        Moments
-                      </button>
+                  <div className="bg-[#eaeaeecb] py-2 px-4">
+                    <div
+                      className={`flex flex-col sm:flex-row ${
+                        item.status === "completed"
+                          ? "justify-between"
+                          : "justify-center"
+                      } items-start sm:items-center gap-4`}
+                    >
+                      <div></div>
+                      <div className="flex items-center gap-5">
+                        <div className="text-right">
+                          <span className="text-gray-700 text-sm">
+                            {item?.date
+                              ? new Date(item?.date).toLocaleDateString(
+                                  "en-US",
+                                  {
+                                    weekday: "short",
+                                    month: "short",
+                                    day: "numeric",
+                                    year: "numeric",
+                                  }
+                                )
+                              : "Date not set"}
+                          </span>
+                          <span>, </span>
+                          <span className="text-gray-700 text-sm">
+                            {item?.date
+                              ? new Date(item?.date).toLocaleTimeString(
+                                  "en-US",
+                                  {
+                                    hour: "2-digit",
+                                    minute: "2-digit",
+                                  }
+                                )
+                              : ""}
+                          </span>
+                        </div>
+                        <div className="flex items-center gap-3 justify-end">
+                          <div
+                            className={`text-sm font-medium px-3 py-1 rounded-full ${getStatusColor(
+                              item.status
+                            )}`}
+                          >
+                            {item.status || "upcoming"}
+                          </div>
+                        </div>
+                      </div>
+
+                      {item.status === "completed" && (
+                        <div>
+                          <button
+                            onClick={handleOpenModal}
+                            className="text-primary font-semibold text-sm"
+                          >
+                            Moments
+                          </button>
+                        </div>
+                      )}
                     </div>
-                  )}
+                  </div>
                 </div>
               </div>
-            </div>
+            ) : (
+              "Coming soon..."
+            )}
           </div>
         );
       })}
