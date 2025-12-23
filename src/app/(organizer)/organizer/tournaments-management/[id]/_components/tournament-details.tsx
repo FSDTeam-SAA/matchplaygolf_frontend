@@ -44,12 +44,6 @@ const formSchema = z.object({
   sportName: z.string().min(2, {
     message: "Sport must be at least 2 characters.",
   }),
-  // numberOfSeeds: z.string().min(2, {
-  //   message: "Number Of Seeds must be at least 2 characters.",
-  // }),
-  // drawSize: z.string().min(1, {
-  //   message: "Total Draw Size is required.",
-  // }),
   numberOfSeeds: z.coerce.number().min(1),
   drawSize: z.coerce.number().min(1),
 
@@ -59,8 +53,6 @@ const formSchema = z.object({
   format: z.string().min(1, {
     message: "Format is required.",
   }),
-  // startDate: z.date({ message: "Start Date is required" }),
-  // endDate: z.date({ message: "End Date is required" }),
   startDate: z.date().nullable(),
   endDate: z.date().nullable(),
 
@@ -85,8 +77,6 @@ const TournamentDetailsPage = (data: { data: TournamentOrderData }) => {
       drawSize: "",
       drawFormat: "",
       format: "",
-      // startDate: new Date(),
-      // endDate: new Date(),
       startDate: null,
       endDate: null,
       numberOfSeeds: "",

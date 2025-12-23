@@ -109,7 +109,7 @@ const TournamentsDetails = ({id}:{id:string}) => {
           )}
             {isActive === "rounds" && (
             <div>
-              <TournamentRounds   />
+              <TournamentRounds  data={data?.data || {} as TournamentOrderData} />
             </div>
           )}
           {isActive === "draw" && (
