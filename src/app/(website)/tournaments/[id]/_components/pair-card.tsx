@@ -3,23 +3,23 @@ import React, { useState } from "react";
 import { Match } from "./draw";
 import Image from "next/image";
 import PairVsModal from "./pair-vs-modal";
+import MomentsModal from "./moments-modal";
 
 const PairCard = ({
   item,
   index,
-  handleOpenModal,
   getStatusColor,
 }: {
   item: Match;
   index: number;
-  handleOpenModal: (value: Match) => void;
   getStatusColor: (value: string) => void;
 }) => {
   const [isPairVsModalOpen, setIsPairVsModalOpen] = useState(false);
   const [matchInfo, setMatchInfo] = useState<Match>();
+  const [isModalOpen, setIsModalOpen] = useState<boolean>();
 
-  const winner1 = item?.winner === item?.pair1Id?._id;
-  const winner2 = item?.winner === item?.pair2Id?._id;
+  const pairWinner1 = item?.winner === item?.pair1Id?._id;
+  const pairWinner2 = item?.winner === item?.pair2Id?._id;
 
   const handlePairVsOpen = (match: Match) => {
     setIsPairVsModalOpen(true);
@@ -28,6 +28,15 @@ const PairCard = ({
 
   const handlePairCloseModal = () => {
     setIsPairVsModalOpen(false);
+  };
+
+  const handleOpenModal = (match: Match) => {
+    setIsModalOpen(true);
+    setMatchInfo(match);
+  };
+
+  const handleCloseModal = () => {
+    setIsModalOpen(false);
   };
 
   return (
@@ -41,7 +50,7 @@ const PairCard = ({
           {/* winner 1 card */}
           <div
             className={`border-r border-gray-300 lg:w-1/2 p-6 flex items-center gap-5 ${
-              winner1 ? `bg-[#39674b] text-white` : ""
+              pairWinner1 ? `bg-[#39674b] text-white` : ""
             }`}
           >
             <div className="flex items-center gap-3">
@@ -95,7 +104,7 @@ const PairCard = ({
           {/* vs button */}
           <div
             className={`px-8 flex items-center gap-2 ${
-              winner1 && "flex-row-reverse"
+              pairWinner1 && "flex-row-reverse"
             }`}
           >
             <div
@@ -117,7 +126,7 @@ const PairCard = ({
           {/* winner 2 card */}
           <div
             className={`border-l border-gray-300 lg:w-1/2 p-6 flex items-center gap-5 ${
-              winner2 ? `bg-[#39674b] text-white` : ""
+              pairWinner2 ? `bg-[#39674b] text-white` : ""
             }`}
           >
             <div className="flex items-center gap-3">
@@ -226,6 +235,15 @@ const PairCard = ({
               handleCloseModal={handlePairCloseModal}
               isModalOpen={isPairVsModalOpen}
               matchInfo={matchInfo as Match}
+            />
+          )}
+
+          {isModalOpen && (
+            <MomentsModal
+              isModalOpen={isModalOpen}
+              handleCloseModal={handleCloseModal}
+              match={matchInfo as Match}
+              pairWinner1={pairWinner1}
             />
           )}
         </div>

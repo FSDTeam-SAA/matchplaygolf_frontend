@@ -48,6 +48,8 @@ export interface Match {
   status: string;
   pair1Id: PairId;
   pair2Id: PairId;
+  comments: string;
+  matchPhoto: string[]
 }
 
 interface Props {
@@ -306,7 +308,6 @@ const Draw = ({ matches, isLoading }: Props) => {
               <PairCard
                 item={item as Match}
                 getStatusColor={getStatusColor}
-                handleOpenModal={handleOpenModal}
                 index={index}
               />
             )}
@@ -318,6 +319,7 @@ const Draw = ({ matches, isLoading }: Props) => {
         <MomentsModal
           isModalOpen={isModalOpen}
           handleCloseModal={handleCloseModal}
+          match={matchInfo as Match}
         />
       )}
 
