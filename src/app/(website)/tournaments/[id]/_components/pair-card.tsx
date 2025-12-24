@@ -7,18 +7,19 @@ import PairVsModal from "./pair-vs-modal";
 const PairCard = ({
   item,
   index,
-  winner1,
   handleOpenModal,
   getStatusColor,
 }: {
   item: Match;
   index: number;
-  winner1: boolean;
   handleOpenModal: (value: Match) => void;
   getStatusColor: (value: string) => void;
 }) => {
   const [isPairVsModalOpen, setIsPairVsModalOpen] = useState(false);
   const [matchInfo, setMatchInfo] = useState<Match>();
+
+  const winner1 = item?.winner === item?.pair1Id?._id;
+  const winner2 = item?.winner === item?.pair2Id?._id;
 
   const handlePairVsOpen = (match: Match) => {
     setIsPairVsModalOpen(true);
@@ -106,8 +107,8 @@ const PairCard = ({
             {item.status === "completed" && (
               <div className="text-sm font-medium text-gray-600">
                 <span className="text-red-700 font-bold text-xl flex">
-                  <span>{item.player1Score}</span> <span> /</span>{" "}
-                  <span> {item.player2Score}</span>
+                  <span>{item.pair1Score}</span> <span> /</span>{" "}
+                  <span> {item.pair2Score}</span>
                 </span>
               </div>
             )}
@@ -116,7 +117,7 @@ const PairCard = ({
           {/* winner 2 card */}
           <div
             className={`border-l border-gray-300 lg:w-1/2 p-6 flex items-center gap-5 ${
-              winner1 ? `bg-[#39674b] text-white` : ""
+              winner2 ? `bg-[#39674b] text-white` : ""
             }`}
           >
             <div className="flex items-center gap-3">

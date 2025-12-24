@@ -42,6 +42,8 @@ export interface Match {
   };
   player1Score: string;
   player2Score: string;
+  pair1Score: string;
+  pair2Score: string;
   date: string;
   status: string;
   pair1Id: PairId;
@@ -306,7 +308,6 @@ const Draw = ({ matches, isLoading }: Props) => {
                 getStatusColor={getStatusColor}
                 handleOpenModal={handleOpenModal}
                 index={index}
-                winner1={winner1}
               />
             )}
           </div>
