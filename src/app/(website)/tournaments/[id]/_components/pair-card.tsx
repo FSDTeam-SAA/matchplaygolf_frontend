@@ -86,7 +86,7 @@ const PairCard = ({
                 )}
               </div>
             </div>
-            <div className="flex items-center gap-3">
+            <div>
               <div>
                 <h1 className="font-semibold">
                   {item.pair1Id?.player1?.fullName || "Player 1"}
@@ -162,7 +162,7 @@ const PairCard = ({
                 )}
               </div>
             </div>
-            <div className="flex items-center gap-3">
+            <div>
               <div>
                 <h1 className="font-semibold">
                   {item.pair2Id?.player1?.fullName || "Player 1"}
