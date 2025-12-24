@@ -1,6 +1,5 @@
 "use client";
 import { useQuery } from "@tanstack/react-query";
-// import { useParams } from "next/navigation";
 import React, { useState } from "react";
 import TournamentDetailsPage from "./tournament-details";
 import TournamentRulesPage from "./tournament-rules";
@@ -8,7 +7,7 @@ import TournamentParticipantsPage from "./tournament-participants";
 import TournamentRounds from "./tournament-rounds";
 import TournamentDrawPage from "./tournament-draw";
 import { useSession } from "next-auth/react";
-import { TournamentApiResponse, TournamentResponseData} from "./single-tournament-data-type";
+import { Tournament, TournamentApiResponse, TournamentResponseData} from "./single-tournament-data-type";
 
 const TournamentsDetails = ({id}:{id:string}) => {
   const session = useSession();
@@ -93,7 +92,7 @@ const TournamentsDetails = ({id}:{id:string}) => {
           {isActive === "details" && (
 
               <div>
-              <TournamentDetailsPage  data={data?.data || {} as TournamentResponseData}/>
+              <TournamentDetailsPage  data={data?.data as unknown as Tournament}/>
             </div>
           )}
 

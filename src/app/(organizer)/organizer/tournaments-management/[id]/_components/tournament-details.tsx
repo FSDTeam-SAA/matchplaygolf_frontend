@@ -35,7 +35,7 @@ import { CalendarIcon } from "lucide-react"
 import { Calendar } from "@/components/ui/calendar"
 import { format } from "date-fns"
 import { useEffect } from "react"
-import { TournamentResponseData } from "./single-tournament-data-type";
+import { Tournament } from "./single-tournament-data-type";
 
 const formSchema = z.object({
   tournamentName: z.string().min(2, {
@@ -62,8 +62,8 @@ const formSchema = z.object({
   }),
 })
 
-const TournamentDetailsPage = (data: { data: TournamentResponseData }) => {
-  console.log(data?.data)
+const TournamentDetailsPage = (data: { data: Tournament }) => {
+  console.log(data)
   const tournamentId = (data?.data as unknown as {_id:string})?._id;
   const session = useSession();
   const token = (session?.data?.user as { accessToken: string })?.accessToken;

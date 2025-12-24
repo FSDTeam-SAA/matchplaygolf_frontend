@@ -44,7 +44,7 @@ const formSchema = z.object({
 });
 
 
-const TournamentRounds = (data: { data: TournamentResponseData }) => {
+const TournamentRounds = (data: { data: TournamentResponseData & { rememberEmail?: number; totalRounds?: number } }) => {
    const tournamentId = (data?.data as unknown as {_id:string})?._id;
 
    console.log(data?.data)
@@ -71,10 +71,11 @@ useEffect(() => {
   if (!data?.data) return;
 
   const totalRounds = data.data.totalRounds ?? 0;
+  //eslint-disable-next-line @typescript-eslint/no-unused-vars
   const existingRounds = data.data.rounds ?? [];
 
   form.reset({
-    rememberEmail: Number(data.data.rememberEmail ?? 5).toString(),
+    rememberEmail: Number(data?.data?.rememberEmail ?? 5).toString(),
     rounds: Array.from({ length: totalRounds }, (_, index) => ({
       date: existingRounds[index]?.date
         ? new Date(existingRounds[index].date)

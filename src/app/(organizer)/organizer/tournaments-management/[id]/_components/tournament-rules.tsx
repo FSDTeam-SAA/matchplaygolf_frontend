@@ -51,9 +51,9 @@ const TournamentRulesPage = ({ data }: { data: TournamentResponseData }) => {
     if (!data) return
 
     form.reset({
-      entryConditions: data?.entryConditions || ["", "", ""],
-      range: data?.range || ["", "", ""],
-      rules: data?.rules || "",
+      entryConditions: (data as unknown as { entryConditions?: string[] })?.entryConditions || ["", "", ""],
+      range: (data as unknown as { range?: string[] })?.range || ["", "", ""],
+      rules: (data as unknown as { rules?: string })?.rules || "",
     })
   }, [data, form])
 

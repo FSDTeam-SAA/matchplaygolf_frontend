@@ -143,5 +143,11 @@ export interface Round {
   _id: string
   createdAt: string
   updatedAt: string
+  rounds?: Array<{
+    date: string | Date;
+    roundName?: string;
+  }>;
+  totalRounds?: number;
+  rememberEmail?: number;
 }
 
