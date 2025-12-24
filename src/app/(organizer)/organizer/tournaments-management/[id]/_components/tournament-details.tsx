@@ -34,8 +34,8 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { CalendarIcon } from "lucide-react"
 import { Calendar } from "@/components/ui/calendar"
 import { format } from "date-fns"
-import { TournamentOrderData } from "./single-tournament-data-type"
 import { useEffect } from "react"
+import { TournamentResponseData } from "./single-tournament-data-type";
 
 const formSchema = z.object({
   tournamentName: z.string().min(2, {
@@ -44,8 +44,8 @@ const formSchema = z.object({
   sportName: z.string().min(2, {
     message: "Sport must be at least 2 characters.",
   }),
-  numberOfSeeds: z.coerce.number().min(1),
-  drawSize: z.coerce.number().min(1),
+  numberOfSeeds: z.coerce.number().pipe(z.number().min(1).int()),
+  drawSize: z.coerce.number().pipe(z.number().min(1).int()),
 
   drawFormat: z.string().min(1, {
     message: "Draw Format is required.",
@@ -62,24 +62,24 @@ const formSchema = z.object({
   }),
 })
 
-const TournamentDetailsPage = (data: { data: TournamentOrderData }) => {
-  console.log(data)
-  const tournamentId = data?.data?._id;
+const TournamentDetailsPage = (data: { data: TournamentResponseData }) => {
+  console.log(data?.data)
+  const tournamentId = (data?.data as unknown as {_id:string})?._id;
   const session = useSession();
   const token = (session?.data?.user as { accessToken: string })?.accessToken;
   console.log(token)
   const queryClient = useQueryClient();
-  const form = useForm<z.infer<typeof formSchema>>({
+  const form = useForm({
     resolver: zodResolver(formSchema),
     defaultValues: {
       tournamentName: "",
       sportName: "",
-      drawSize: "",
+      drawSize: 8,
       drawFormat: "",
       format: "",
       startDate: null,
       endDate: null,
-      numberOfSeeds: "",
+      numberOfSeeds: 1,
       location: "",
       terms: false,
     },
@@ -97,18 +97,18 @@ const TournamentDetailsPage = (data: { data: TournamentOrderData }) => {
     if (!data?.data) return;
 
     form.reset({
-      tournamentName: data.data.tournamentName ?? "",
-      sportName: data.data.sportName ?? "",
-      drawFormat: data.data.drawFormat?.toLowerCase(),
-      format: data.data.format?.toLowerCase(),
-      drawSize: String(data.data.drawSize),
-      location: data.data.location,
-      numberOfSeeds: String(data.data.totalRounds),
-      startDate: data.data.startDate
-        ? new Date(data.data.startDate)
+      tournamentName: data?.data?.tournamentName ?? "",
+      sportName: data?.data?.sportName ?? "",
+      drawFormat: data?.data?.drawFormat?.toLowerCase(),
+      format: data?.data?.format?.toLowerCase(),
+      drawSize: Number(data?.data?.drawSize),
+      location: data?.data?.location,
+      numberOfSeeds: Number(data?.data?.totalRounds),
+      startDate: data?.data?.startDate
+        ? new Date(data?.data?.startDate)
         : null,
-      endDate: data.data.endDate
-        ? new Date(data.data.endDate)
+      endDate: data?.data?.endDate
+        ? new Date(data?.data?.endDate)
         : null,
       terms: false,
     });
@@ -249,8 +249,8 @@ const TournamentDetailsPage = (data: { data: TournamentOrderData }) => {
                   </FormLabel>
                   <FormControl>
                     <Select
-                      value={field.value}
-                      onValueChange={field.onChange}
+                      value={String(field.value)}
+                      onValueChange={(value) => field.onChange(Number(value))}
                     >
                       <SelectTrigger className="w-full h-[48px] py-2 px-3 rounded-[8px] border border-[#C0C3C1] text-base font-medium leading-[120%] text-[#434C45)]">
                         <SelectValue placeholder="Parallel Unique  Club" />
@@ -275,7 +275,7 @@ const TournamentDetailsPage = (data: { data: TournamentOrderData }) => {
                 <FormItem>
                   <FormLabel className="text-base text-[#343A40] leading-[150%] font-medium">Number of Seeds *</FormLabel>
                   <FormControl>
-                    <Input className="w-full h-[48px] py-2 px-3 rounded-[8px] border border-[#C0C3C1] text-base font-medium leading-[120%] text-[#434C45)]" placeholder="Completed" {...field} />
+                    <Input className="w-full h-[48px] py-2 px-3 rounded-[8px] border border-[#C0C3C1] text-base font-medium leading-[120%] text-[#434C45)]" placeholder="Completed" value={String(field.value)} onChange={(e) => field.onChange(Number(e.target.value))} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>

@@ -18,8 +18,8 @@ import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea" // Added for rules
 import { useSession } from "next-auth/react"
 import { useMutation, useQueryClient } from "@tanstack/react-query"
-import { TournamentOrderData } from "./single-tournament-data-type"
 import { useEffect } from "react"
+import { TournamentResponseData } from "./single-tournament-data-type"
 
 // Updated schema to match actual data structure
 const formSchema = z.object({
@@ -30,8 +30,9 @@ const formSchema = z.object({
 
 type FormValues = z.infer<typeof formSchema>
 
-const TournamentRulesPage = ({ data }: { data: TournamentOrderData }) => {
-  const tournamentId = data?._id
+const TournamentRulesPage = ({ data }: { data: TournamentResponseData }) => {
+  const tournamentId = (data as unknown as {_id:string})?._id;
+  console.log(data)
   const { data: session } = useSession()
   const token = (session?.user as { accessToken: string })?.accessToken
   const queryClient = useQueryClient()
@@ -50,9 +51,9 @@ const TournamentRulesPage = ({ data }: { data: TournamentOrderData }) => {
     if (!data) return
 
     form.reset({
-      entryConditions: data.entryConditions || ["", "", ""],
-      range: data.range || ["", "", ""],
-      rules: data.rules || "",
+      entryConditions: data?.entryConditions || ["", "", ""],
+      range: data?.range || ["", "", ""],
+      rules: data?.rules || "",
     })
   }, [data, form])
 

@@ -8,7 +8,7 @@ import TournamentParticipantsPage from "./tournament-participants";
 import TournamentRounds from "./tournament-rounds";
 import TournamentDrawPage from "./tournament-draw";
 import { useSession } from "next-auth/react";
-import { TournamentOrderData, TournamentOrderResponse } from "./single-tournament-data-type";
+import { TournamentApiResponse, TournamentResponseData} from "./single-tournament-data-type";
 
 const TournamentsDetails = ({id}:{id:string}) => {
   const session = useSession();
@@ -18,7 +18,7 @@ const TournamentsDetails = ({id}:{id:string}) => {
 
 
   // get api call 
-  const { data } = useQuery<TournamentOrderResponse>({
+  const { data } = useQuery<TournamentApiResponse>({
     queryKey: ["single-tournament", id],
     queryFn: async () => {
       const res = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/tournament/${id}`,{
@@ -93,13 +93,13 @@ const TournamentsDetails = ({id}:{id:string}) => {
           {isActive === "details" && (
 
               <div>
-              <TournamentDetailsPage  data={data?.data || {} as TournamentOrderData}/>
+              <TournamentDetailsPage  data={data?.data || {} as TournamentResponseData}/>
             </div>
           )}
 
           {isActive === "rules" && (
             <div>
-              <TournamentRulesPage  data={data?.data || {} as TournamentOrderData} />
+              <TournamentRulesPage  data={data?.data || {} as TournamentResponseData} />
             </div>
           )}
           {isActive === "participants" && (
@@ -109,7 +109,7 @@ const TournamentsDetails = ({id}:{id:string}) => {
           )}
             {isActive === "rounds" && (
             <div>
-              <TournamentRounds  data={data?.data || {} as TournamentOrderData} />
+              <TournamentRounds  data={data?.data || {} as TournamentResponseData} />
             </div>
           )}
           {isActive === "draw" && (

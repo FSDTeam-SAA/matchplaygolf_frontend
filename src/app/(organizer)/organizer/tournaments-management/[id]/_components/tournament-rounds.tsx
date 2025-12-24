@@ -15,7 +15,7 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form"
-import { TournamentOrderData } from "./single-tournament-data-type"
+import { TournamentResponseData } from "./single-tournament-data-type"
 import { CalendarIcon } from "lucide-react"
 import { Calendar } from "@/components/ui/calendar"
 import { format } from "date-fns"
@@ -33,7 +33,6 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-// import { Input } from "@/components/ui/input"
 
 const formSchema = z.object({
   rememberEmail: z.string().optional(),
@@ -45,39 +44,45 @@ const formSchema = z.object({
 });
 
 
-const TournamentRounds = (data: { data: TournamentOrderData }) => {
-  const tournamentId = data?.data?._id;
+const TournamentRounds = (data: { data: TournamentResponseData }) => {
+   const tournamentId = (data?.data as unknown as {_id:string})?._id;
+
+   console.log(data?.data)
     const session = useSession();
   const token = (session?.data?.user as { accessToken: string })?.accessToken;
   console.log(token)
   const queryClient = useQueryClient();
-const totalRound = data?.data?.totalRounds ?? 0;
+
 
 const form = useForm<z.infer<typeof formSchema>>({
   resolver: zodResolver(formSchema),
   defaultValues: {
     rememberEmail: "",
-    rounds: Array.from({ length: totalRound }, () => ({
-      date: null,
-    })),
+    rounds: [],
   },
 });
 
 
+
   console.log(data?.data)
 
-  console.log(totalRound)
 
 useEffect(() => {
-  if (!data?.data?.rounds) return;
+  if (!data?.data) return;
+
+  const totalRounds = data.data.totalRounds ?? 0;
+  const existingRounds = data.data.rounds ?? [];
 
   form.reset({
-    rememberEmail: data.data.rememberEmail || "",
-    rounds: data.data.rounds.map((round) => ({
-      date: round.date ? new Date(round.date) : null,
+    rememberEmail: Number(data.data.rememberEmail ?? 5).toString(),
+    rounds: Array.from({ length: totalRounds }, (_, index) => ({
+      date: existingRounds[index]?.date
+        ? new Date(existingRounds[index].date)
+        : null,
     })),
   });
 }, [data, form]);
+
 
 
 const { mutate, isPending } = useMutation({
@@ -107,10 +112,9 @@ const { mutate, isPending } = useMutation({
 });
 
 
-  // 2. Define a submit handler.
 function onSubmit(values: z.infer<typeof formSchema>) {
   const payload = {
-    rememberEmail: values.rememberEmail,
+    rememberEmail: values.rememberEmail || "",
     rounds: values.rounds.map((round, index) => ({
       roundName: `Round ${index + 1}`,
       date: round.date ? format(round.date, "yyyy-MM-dd") : null,
@@ -119,6 +123,7 @@ function onSubmit(values: z.infer<typeof formSchema>) {
 
   mutate(payload);
 }
+
 
   return (
     <div>
@@ -168,21 +173,6 @@ function onSubmit(values: z.infer<typeof formSchema>) {
 
               {form.watch("rounds")?.map((_, index) => (
                 <div key={index} className="space-y-4 py-4">
-
-                  {/* Round Name */}
-                  {/* <FormField
-                    control={form.control}
-                    name={`rounds.${index}.roundName`}
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>Round Name</FormLabel>
-                        <FormControl>
-                          <Input placeholder="Enter round name" {...field} />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  /> */}
 
                   {/* Deadline Date */}
                   <FormField
