@@ -42,10 +42,14 @@ export interface Match {
   };
   player1Score: string;
   player2Score: string;
+  pair1Score: string;
+  pair2Score: string;
   date: string;
   status: string;
   pair1Id: PairId;
   pair2Id: PairId;
+  comments: string;
+  matchPhoto: string[];
 }
 
 interface Props {
@@ -57,10 +61,12 @@ const Draw = ({ matches, isLoading }: Props) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isVsModalOpen, setIsVsModalOpen] = useState(false);
   const [matchInfo, setMatchInfo] = useState<Match>();
+  const [winner1, setWinner1] = useState<boolean>();
 
-  const handleOpenModal = (match: Match) => {
+  const handleOpenModal = (match: Match, winner1: boolean) => {
     setIsModalOpen(true);
     setMatchInfo(match);
+    setWinner1(winner1);
   };
 
   const handleVsOpen = (match: Match) => {
@@ -288,7 +294,7 @@ const Draw = ({ matches, isLoading }: Props) => {
                       {item.status === "completed" && (
                         <div>
                           <button
-                            onClick={() => handleOpenModal(item)}
+                            onClick={() => handleOpenModal(item, winner1)}
                             className="text-primary font-semibold text-sm"
                           >
                             Moments
@@ -304,10 +310,7 @@ const Draw = ({ matches, isLoading }: Props) => {
               <PairCard
                 item={item as Match}
                 getStatusColor={getStatusColor}
-                handleOpenModal={handleOpenModal}
-                handleVsOpen={handleVsOpen}
                 index={index}
-                winner1={winner1}
               />
             )}
           </div>
@@ -318,6 +321,8 @@ const Draw = ({ matches, isLoading }: Props) => {
         <MomentsModal
           isModalOpen={isModalOpen}
           handleCloseModal={handleCloseModal}
+          match={matchInfo as Match}
+          winner1={winner1 as boolean}
         />
       )}
 
