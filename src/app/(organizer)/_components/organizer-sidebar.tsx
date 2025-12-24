@@ -1,6 +1,5 @@
 "use client";
 import {
-  Brackets,
   LayoutDashboard,
   LogOut,
   Settings,
@@ -45,11 +44,6 @@ const items = [
     title: "Matches Management",
     url: "/organizer/matches-management",
     icon: Swords ,
-  },
-  {
-    title: "Tournament Draw",
-    url: "/organizer/pair-knockouts",
-    icon: Brackets,
   },
   {
     title: "Settings",
