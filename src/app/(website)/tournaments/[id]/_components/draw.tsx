@@ -305,7 +305,6 @@ const Draw = ({ matches, isLoading }: Props) => {
                 item={item as Match}
                 getStatusColor={getStatusColor}
                 handleOpenModal={handleOpenModal}
-                handleVsOpen={handleVsOpen}
                 index={index}
                 winner1={winner1}
               />

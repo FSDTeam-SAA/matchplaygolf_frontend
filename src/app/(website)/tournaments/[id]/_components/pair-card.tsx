@@ -1,22 +1,34 @@
-import React from "react";
+"use client";
+import React, { useState } from "react";
 import { Match } from "./draw";
 import Image from "next/image";
+import PairVsModal from "./pair-vs-modal";
 
 const PairCard = ({
   item,
   index,
   winner1,
-  handleVsOpen,
   handleOpenModal,
   getStatusColor,
 }: {
   item: Match;
   index: number;
   winner1: boolean;
-  handleVsOpen: (value: Match) => void;
   handleOpenModal: (value: Match) => void;
   getStatusColor: (value: string) => void;
 }) => {
+  const [isPairVsModalOpen, setIsPairVsModalOpen] = useState(false);
+  const [matchInfo, setMatchInfo] = useState<Match>();
+
+  const handlePairVsOpen = (match: Match) => {
+    setIsPairVsModalOpen(true);
+    setMatchInfo(match);
+  };
+
+  const handlePairCloseModal = () => {
+    setIsPairVsModalOpen(false);
+  };
+
   return (
     <div className="flex items-center gap-5 space-y-5">
       <div className="font-medium text-gray-500 pt-5">
@@ -85,7 +97,7 @@ const PairCard = ({
             }`}
           >
             <div
-              onClick={() => handleVsOpen(item)}
+              onClick={() => handlePairVsOpen(item)}
               className="text-sm text-gray-500 cursor-pointer"
             >
               VS
@@ -205,6 +217,14 @@ const PairCard = ({
               </div>
             )}
           </div>
+
+          {isPairVsModalOpen && (
+            <PairVsModal
+              handleCloseModal={handlePairCloseModal}
+              isModalOpen={isPairVsModalOpen}
+              matchInfo={matchInfo as Match}
+            />
+          )}
         </div>
       </div>
     </div>
