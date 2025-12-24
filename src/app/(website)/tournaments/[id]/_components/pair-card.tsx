@@ -39,11 +39,10 @@ const PairCard = ({
         <div className="border-b border-b-gray-300 flex items-center">
           {/* winner 1 card */}
           <div
-            className={`border-r border-gray-300 lg:w-1/2 p-6 space-y-2 ${
+            className={`border-r border-gray-300 lg:w-1/2 p-6 flex items-center gap-5 ${
               winner1 ? `bg-[#39674b] text-white` : ""
             }`}
           >
-            <h1 className="text-xl font-semibold">{item?.pair1Id?.teamName}</h1>
             <div className="flex items-center gap-3">
               <div className="h-12 w-12 rounded-full flex items-center justify-center overflow-hidden bg-gray-100">
                 {item.pair1Id?.player1?.profileImage ? (
@@ -60,13 +59,7 @@ const PairCard = ({
                   </span>
                 )}
               </div>
-              <div>
-                <h1 className="font-semibold">
-                  {item.pair1Id?.player1?.fullName || "Player 1"}
-                </h1>
-              </div>
-            </div>
-            <div className="flex items-center gap-3">
+
               <div className="h-12 w-12 rounded-full flex items-center justify-center overflow-hidden bg-gray-100">
                 {item.pair1Id?.player2?.profileImage ? (
                   <Image
@@ -82,6 +75,14 @@ const PairCard = ({
                   </span>
                 )}
               </div>
+            </div>
+            <div className="flex items-center gap-3">
+              <div>
+                <h1 className="font-semibold">
+                  {item.pair1Id?.player1?.fullName || "Player 1"}
+                </h1>
+              </div>
+
               <div>
                 <h1 className="font-semibold">
                   {item.pair1Id?.player2?.fullName || "Player 2"}
@@ -114,11 +115,10 @@ const PairCard = ({
 
           {/* winner 2 card */}
           <div
-            className={`border-l border-gray-300 lg:w-1/2 p-6 space-y-2 ${
+            className={`border-l border-gray-300 lg:w-1/2 p-6 flex items-center gap-5 ${
               winner1 ? `bg-[#39674b] text-white` : ""
             }`}
           >
-            <h1 className="text-xl font-semibold">{item?.pair2Id?.teamName}</h1>
             <div className="flex items-center gap-3">
               <div className="h-12 w-12 rounded-full flex items-center justify-center overflow-hidden bg-gray-100">
                 {item.pair2Id?.player1?.profileImage ? (
@@ -135,13 +135,7 @@ const PairCard = ({
                   </span>
                 )}
               </div>
-              <div>
-                <h1 className="font-semibold">
-                  {item.pair2Id?.player1?.fullName || "Player 1"}
-                </h1>
-              </div>
-            </div>
-            <div className="flex items-center gap-3">
+
               <div className="h-12 w-12 rounded-full flex items-center justify-center overflow-hidden bg-gray-100">
                 {item.pair2Id?.player2?.profileImage ? (
                   <Image
@@ -157,6 +151,14 @@ const PairCard = ({
                   </span>
                 )}
               </div>
+            </div>
+            <div className="flex items-center gap-3">
+              <div>
+                <h1 className="font-semibold">
+                  {item.pair2Id?.player1?.fullName || "Player 1"}
+                </h1>
+              </div>
+
               <div>
                 <h1 className="font-semibold">
                   {item.pair2Id?.player2?.fullName || "Player 2"}
