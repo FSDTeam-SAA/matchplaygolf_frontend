@@ -79,7 +79,6 @@ const CurrentTournaments = () => {
     });
   };
 
-  // শুধু loading state জন্য skeleton return করব
   if (status === "loading" || isLoading || isFetching) {
     return (
       <div className="space-y-8">
