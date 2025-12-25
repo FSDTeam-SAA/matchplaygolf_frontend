@@ -17,7 +17,7 @@ const VsModal = ({ isModalOpen, handleCloseModal, matchInfo }: Props) => {
           {/* Player 1 */}
           <div className="flex flex-col items-center text-center w-full md:w-1/3">
             <h1 className="text-xl md:text-2xl font-bold text-gray-800 mb-4">
-              Player 1
+              {matchInfo?.matchType === "Team" ? "Team 1" : "Player 1"}
             </h1>
 
             <div className="h-24 w-24 md:h-32 md:w-32 rounded-full mb-4 overflow-hidden border-2 border-gray-200">
@@ -56,7 +56,7 @@ const VsModal = ({ isModalOpen, handleCloseModal, matchInfo }: Props) => {
           {/* Player 2 */}
           <div className="flex flex-col items-center text-center w-full md:w-1/3">
             <h1 className="text-xl md:text-2xl font-bold text-gray-800 mb-4">
-              Player 2
+              {matchInfo?.matchType === "Team" ? "Team 2" : "Player 2"}
             </h1>
 
             <div className="h-24 w-24 md:h-32 md:w-32 rounded-full mb-4 overflow-hidden border-2 border-gray-200">
