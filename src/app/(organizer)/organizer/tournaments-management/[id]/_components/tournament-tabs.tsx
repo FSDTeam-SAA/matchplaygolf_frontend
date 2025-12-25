@@ -103,7 +103,7 @@ const TournamentsDetails = ({id}:{id:string}) => {
           )}
           {isActive === "participants" && (
             <div>
-              <TournamentParticipantsPage   />
+              <TournamentParticipantsPage  data={data?.data as unknown as Tournament}  />
             </div>
           )}
             {isActive === "rounds" && (
