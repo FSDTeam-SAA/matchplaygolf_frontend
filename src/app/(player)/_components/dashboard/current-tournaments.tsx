@@ -6,6 +6,7 @@ import React, { useState } from "react";
 import { usePathname } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import TournamentSkeleton from "./tournament-skeleton";
+import Link from "next/link";
 
 interface Tournament {
   _id: string;
@@ -255,9 +256,12 @@ const CurrentTournaments = () => {
                   </div>
 
                   <div className="mt-3">
-                    <button className="underline text-sm">
-                      View Tournaments
-                    </button>
+                    <Link href={`/player/match-schedule/${tournament?._id}`}>
+                      {" "}
+                      <button className="underline text-sm">
+                        View Tournaments
+                      </button>
+                    </Link>
                   </div>
                 </div>
               ))}
