@@ -173,7 +173,7 @@ function onSubmit(values: z.infer<typeof formSchema>) {
               </h4>
 
               {form.watch("rounds")?.map((_, index) => (
-                <div key={index} className="space-y-4 py-4">
+                <div key={index} className="space-y-2 py-2">
 
                   {/* Deadline Date */}
                   <FormField
