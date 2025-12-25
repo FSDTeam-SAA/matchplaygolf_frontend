@@ -4,7 +4,6 @@ import {
   LayoutDashboard,
   LogOut,
   Settings,
-  Trophy,
 } from "lucide-react";
 
 import {
@@ -33,11 +32,6 @@ const items = [
     title: "Match Schedule",
     url: "/player/match-schedule",
     icon: BookAudio,
-  },
-  {
-    title: "Tournament Draw",
-    url: "/player/tournament-draw",
-    icon: Trophy,
   },
   {
     title: "Settings",

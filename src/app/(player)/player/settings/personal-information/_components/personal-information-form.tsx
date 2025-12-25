@@ -119,7 +119,7 @@ const PersonalInformationForm = () => {
       return await res.json();
     },
     onSuccess: (data) => {
-      if (!data?.status) {
+      if (!data?.success) {
         toast.error(data?.message || "Something went wrong");
         return;
       }
