@@ -43,7 +43,7 @@ const MatchesManagementContainer = () => {
     queryKey: ["matches", currentPage, debouncedSearch],
     queryFn: async () => {
       const res = await fetch(
-        `${process.env.NEXT_PUBLIC_BACKEND_URL}/match?page=${currentPage}&limit=10&roundName=${debouncedSearch}`
+        `${process.env.NEXT_PUBLIC_BACKEND_URL}/match?page=${currentPage}&limit=8&tournamentName=${debouncedSearch}`
       );
       return res.json();
     },
@@ -236,7 +236,7 @@ const MatchesManagementContainer = () => {
           data?.data?.pagination?.totalPages > 1 && (
             <div className="w-full flex items-center justify-between py-6">
               <p className="text-base font-normal text-[#68706A] leading-[150%]">
-                Showing {currentPage} to 10 of {data?.data?.pagination?.total}{" "}
+                Showing {currentPage} to 8 of {data?.data?.pagination?.total}{" "}
                 results
               </p>
               <div>
