@@ -6,35 +6,37 @@ import React from "react";
 import { Skeleton } from "@/components/ui/skeleton";
 
 interface Tournament {
-  id: string;
+  _id: string;
   tournamentName: string;
   status: string;
   startDate: string;
   endDate: string;
-  currentRound: {
-    roundName: string;
-    roundNumber: number;
-    status: string;
-    date: string;
-  };
-  nextMatch: {
-    id: string;
-    status: string;
-    date: string;
-    matchType: string;
-    round: {
-      id: string;
-      roundName: string;
-      roundNumber: number;
-      date: string;
-    };
-    opponent: string;
+  format?: string;
+  drawSize?: number;
+  totalRounds?: number;
+  location?: string;
+  // Add other fields from your API response
+  drawFormat?: string;
+  sportName?: string;
+  price?: string;
+  paymentStatus?: string;
+  totalParticipants?: number;
+  numberOfSeeds?: number;
+}
+
+interface ApiResponseData {
+  tournaments: Tournament[];
+  pagination: {
+    page: number | null;
+    limit: number;
+    total: number;
+    totalPages: number;
   };
 }
 
 interface ApiResponse {
   success: boolean;
-  data: Tournament[];
+  data: ApiResponseData;
   message: string;
 }
 
@@ -43,11 +45,11 @@ const CurrentTournaments = () => {
   const token = session?.data?.user?.accessToken;
   const status = session?.status;
 
-  const { data, isLoading, isFetching } = useQuery<Tournament[]>({
+  const { data, isLoading, isFetching } = useQuery<ApiResponseData>({
     queryKey: ["tournaments"],
     queryFn: async () => {
       const res = await fetch(
-        `${process.env.NEXT_PUBLIC_BACKEND_URL}/user-dashboard/tournaments`,
+        `${process.env.NEXT_PUBLIC_BACKEND_URL}/user-dashboard/user-tournaments`,
         {
           method: "GET",
           headers: {
@@ -58,7 +60,7 @@ const CurrentTournaments = () => {
       );
 
       const data: ApiResponse = await res.json();
-      return data.data; // This returns Tournament[]
+      return data.data; // This returns ApiResponseData
     },
     enabled: !!token,
     retry: 2,
@@ -78,7 +80,7 @@ const CurrentTournaments = () => {
     return <TournamentSkeleton />;
   }
 
-  if (!data || data.length === 0) {
+  if (!data || !data?.tournaments || data?.tournaments?.length === 0) {
     return (
       <div className="bg-white px-5 py-10 rounded-lg shadow-[0px_4px_6px_0px_#0000001A]">
         <div className="flex items-center gap-2">
@@ -109,35 +111,40 @@ const CurrentTournaments = () => {
           />
           <h1 className="font-bold text-xl">Current Tournaments</h1>
           <span className="bg-primary text-white text-xs px-2 py-1 rounded-full">
-            {data.length}
+            {data?.tournaments?.length}
           </span>
         </div>
 
         <div className="space-y-6">
-          {data?.map((tournament) => (
+          {data?.tournaments?.map((tournament) => (
             <div
-              key={tournament.id}
+              key={tournament?._id}
               className="p-4 border border-gray-200 rounded-lg hover:shadow-md transition-shadow"
             >
               <div className="flex justify-between items-start">
                 <div>
                   <h3 className="font-bold text-lg text-gray-800">
-                    {tournament.tournamentName}
+                    {tournament?.tournamentName}
                   </h3>
                   <div className="flex items-center gap-4 mt-2">
                     <span
                       className={`px-3 py-1 rounded-full text-xs font-medium ${
-                        tournament.status === "upcoming"
+                        tournament?.status === "upcoming"
                           ? "bg-blue-100 text-blue-800"
-                          : tournament.status === "in progress"
-                          ? "bg-green-100 text-green-800"
-                          : "bg-gray-100 text-gray-800"
+                          : tournament?.status === "in progress"
+                          ? "bg-orange-100 text-orange-800"
+                          : tournament?.status === "scheduled"
+                          ? "bg-gray-100 text-gray-800"
+                          : tournament?.status === "cancelled"
+                          ? "bg-red-100 text-red-800"
+                          : "bg-green-100 text-green-800"
                       }`}
                     >
-                      {tournament.status}
+                      {tournament?.status}
                     </span>
                     <span className="text-sm text-gray-500">
-                      {tournament.startDate && formatDate(tournament.startDate)}
+                      {tournament?.startDate && formatDate(tournament?.startDate)}{" "}
+                      - {tournament?.endDate && formatDate(tournament?.endDate)}
                     </span>
                   </div>
                 </div>
@@ -145,34 +152,32 @@ const CurrentTournaments = () => {
 
               <div className="mt-4 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4">
                 <div>
-                  <p className="text-sm text-gray-500">Current Round</p>
+                  <p className="text-sm text-gray-500">Format</p>
+                  <p className="font-medium">{tournament?.format || "N/A"}</p>
+                </div>
+
+                <div>
+                  <p className="text-sm text-gray-500">Draw Size</p>
+                  <p className="font-medium">{tournament?.drawSize || "N/A"}</p>
+                </div>
+
+                <div>
+                  <p className="text-sm text-gray-500">Total Rounds</p>
                   <p className="font-medium">
-                    {tournament.currentRound?.roundName || "N/A"}
+                    {tournament?.totalRounds || "N/A"}
                   </p>
                 </div>
 
                 <div>
-                  <p className="text-sm text-gray-500">Next Match</p>
-                  <p className="font-medium">
-                    {tournament.nextMatch?.date
-                      ? formatDate(tournament.nextMatch.date)
-                      : "N/A"}
-                  </p>
-                </div>
-
-                <div>
-                  <p className="text-sm text-gray-500">Opponent</p>
-                  <p className="font-medium">
-                    {tournament.nextMatch?.opponent || "N/A"}
-                  </p>
-                </div>
-
-                <div>
-                  <p className="text-sm text-gray-500">Match Type</p>
+                  <p className="text-sm text-gray-500">Location</p>
                   <p className="font-medium capitalize">
-                    {tournament.nextMatch?.matchType || "N/A"}
+                    {tournament?.location || "N/A"}
                   </p>
                 </div>
+              </div>
+
+              <div className="mt-3">
+                <button className="underline text-sm">View Tournaments</button>
               </div>
             </div>
           ))}
