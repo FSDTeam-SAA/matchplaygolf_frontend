@@ -149,7 +149,7 @@ const CreateMatchForm = () => {
   const { mutate, isPending } = useMutation({
   mutationKey: ["add-match"],
   mutationFn: async (values: z.infer<typeof formSchema>) => {
-    let payload: any = {
+    const payload: Record<string, string | Date | undefined> = {
       ...values,
       date:
         values.date instanceof Date
