@@ -29,9 +29,7 @@ const TournamentsManagementContainer = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [search, setSearch] = useState("");
   const [deleteModalOpen, setDeleteModalOpen] = useState(false);
-  // const [viewTournament, setViewTournament] = useState(false);
   const [tournementId, setTournamentId] = useState("");
-  // const [selectedTournament, setSelectedTournament] = useState<Tournament | null>(null);
     const debouncedSearch = useDebounce(search, 500);
 
   const queryClient = useQueryClient();
@@ -149,15 +147,6 @@ const TournamentsManagementContainer = () => {
                     <SquarePen className="cursor-pointer h-5 w-5 text-[#181818]"/>
                   </button>
                  </Link>
-                    {/* <button
-                      onClick={() => {
-                        setViewTournament(true);
-                        setSelectedTournament(item);
-                      }}
-                      className="cursor-pointer"
-                    >
-                      <Eye className="h-6 w-6 text-[#181818]" />
-                    </button> */}
                     <Link href={`/organizer/tournaments-management/tournament-details/${item?._id}`}>
                     <button
                       className="cursor-pointer"
@@ -271,17 +260,6 @@ const TournamentsManagementContainer = () => {
             desc="Are you sure you want to delete this tournaments?"
           />
         )}
-
-        {/* tournament view modal  */}
-        {/* <div>
-          {viewTournament && (
-            <TournamentView
-              open={viewTournament}
-              onOpenChange={(open: boolean) => setViewTournament(open)}
-              tournamentData={selectedTournament}
-            />
-          )}
-        </div> */}
       </div>
     </div>
   );
