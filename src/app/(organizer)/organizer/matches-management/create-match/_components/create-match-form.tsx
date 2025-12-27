@@ -3,7 +3,7 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
-import {  useQuery } from "@tanstack/react-query";
+import { useQuery } from "@tanstack/react-query";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -35,6 +35,7 @@ import { CalendarIcon } from "lucide-react";
 import { TournamentListApiResponse } from "./tournament-data-type";
 import { TournamentPlayersRoundApiResponse } from "./round-tournament-data-type";
 import { toast } from "sonner";
+import { useRouter } from "next/navigation";
 
 const formSchema = z.object({
   matchType: z.string().min(1, {
@@ -60,8 +61,9 @@ const formSchema = z.object({
 });
 
 const CreateMatchForm = () => {
+  const router = useRouter();
   const session = useSession();
-  const token = (session?.data?.user as {accessToken: string})?.accessToken;
+  const token = (session?.data?.user as { accessToken: string })?.accessToken;
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -78,7 +80,7 @@ const CreateMatchForm = () => {
   });
 
 
-    /* -------------------- Watch tournament -------------------- */
+  /* -------------------- Watch tournament -------------------- */
   const selectedTournamentId = form.watch("tournamentId");
 
   /* -------------------- Tournament list -------------------- */
@@ -89,17 +91,17 @@ const CreateMatchForm = () => {
     queryKey: ["tournaments"],
     queryFn: async () => {
       const res = await fetch(
-        `${process.env.NEXT_PUBLIC_BACKEND_URL}/tournament`,{
-          method: "GET",
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
+        `${process.env.NEXT_PUBLIC_BACKEND_URL}/tournament`, {
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
       );
       if (!res.ok) throw new Error("Failed to fetch tournaments");
       return res.json();
     },
-      enabled: !!token,
+    enabled: !!token,
   });
 
   /* -------------------- Tournament details (rounds + players) -------------------- */
@@ -110,18 +112,18 @@ const CreateMatchForm = () => {
     queryKey: ["tournament-details", selectedTournamentId],
     queryFn: async () => {
       const res = await fetch(
-        `${process.env.NEXT_PUBLIC_BACKEND_URL}/tournament/findplayer/${selectedTournamentId}`,{
-          method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
-          },
-        }
+        `${process.env.NEXT_PUBLIC_BACKEND_URL}/tournament/findplayer/${selectedTournamentId}`, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      }
       );
       if (!res.ok) throw new Error("Failed to fetch tournament details");
       return res.json();
     },
-      enabled: !!selectedTournamentId && !!token,
+    enabled: !!selectedTournamentId && !!token,
   });
 
   /* -------------------- Dropdown options -------------------- */
@@ -139,50 +141,70 @@ const CreateMatchForm = () => {
 
   const playerOptions =
     tournamentDetails?.data?.map((item) => ({
-      value: item?.pairId?._id ,
+      value: item?.pairId?._id,
       label: item?.pairId?.teamName,
     })) ?? [];
 
-    const {mutate, isPending} = useMutation({
-      mutationKey: ["add-match"],
-      mutationFn: async (values: z.infer<typeof formSchema>)=>{
-            const payload = {
+
+  const { mutate, isPending } = useMutation({
+  mutationKey: ["add-match"],
+  mutationFn: async (values: z.infer<typeof formSchema>) => {
+    let payload: any = {
       ...values,
       date:
         values.date instanceof Date
           ? values.date.toISOString()
           : values.date,
     };
-        const res = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/match`,  {
-          method: "POST",
-          headers: {
-  "Content-Type": "application/json",
-  Authorization: `Bearer ${token}`,
-},
 
-          body: JSON.stringify(payload),
-        });
-        return res.json();
+    // Use pair1Id/pair2Id if matchType is Pair
+    if (values.matchType === "Pair") {
+      payload.pair1Id = values.player1Id;
+      payload.pair2Id = values.player2Id;
+      delete payload.player1Id;
+      delete payload.player2Id;
+    }
+
+    const res = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/match`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
       },
-      onSuccess: (data)=>{
-        if(!data?.success){
-          toast.error(data?.message || "Something went wrong");
-          return;
-        }
-        toast.success(data?.message || "Match Created successfull");
-        form.reset();
-      }
-    })
+      body: JSON.stringify(payload),
+    });
 
-  // 2. Define a submit handler.
-  function onSubmit(values: z.infer<typeof formSchema>) {
-    console.log(values);
-      if (values?.player1Id === values?.player2Id) {
+    return res.json();
+  },
+  onSuccess: (data) => {
+    if (!data?.success) {
+      toast.error(data?.message || "Something went wrong");
+      return;
+    }
+    toast.success(data?.message || "Match created successfully");
+    form.reset();
+    router.push("/organizer/matches-management")
+  },
+});
+
+// Submit handler
+function onSubmit(values: z.infer<typeof formSchema>) {
+  // Check if players are same
+  if (values.player1Id === values.player2Id) {
     alert("Player 1 and Player 2 cannot be same");
-    return; 
+    return;
   }
-    mutate(values)
+
+  // If matchType is Pair, check pair IDs
+  if (values.matchType === "Pair" && values.player1Id === values.player2Id) {
+    alert("Pair 1 and Pair 2 cannot be same");
+    return;
   }
+
+  mutate(values);
+}
+
+  
   return (
     <div className="p-6">
       <div>
@@ -217,155 +239,155 @@ const CreateMatchForm = () => {
                 )}
               />
 
-         
-          {/* Tournament */}
-            <FormField
-              control={form.control}
-              name="tournamentId"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Tournament ID</FormLabel>
-                  <Select
-                    value={field.value}
-                    onValueChange={(val) => {
-                      field.onChange(val);
-                      form.setValue("roundId", "");
-                      form.setValue("player1Id", "");
-                      form.setValue("player2Id", "");
-                    }}
-                    disabled={tournamentLoading}
-                  >
-                     <SelectTrigger className="w-full h-[48px] py-2 px-3 rounded-[8px] border border-[#C0C3C1] text-base font-medium leading-[120%] text-[#434C45)]">
-                      <SelectValue placeholder="Select tournament" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      {tournamentOptions.map((t) => (
-                        <SelectItem key={t.value} value={t.value}>
-                          {t.label}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
 
-            {/* Round ID */}
-            <FormField
-              control={form.control}
-              name="roundId"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Round ID</FormLabel>
-                  <Select
-                    value={field.value}
-                    onValueChange={field.onChange}
-                    disabled={!selectedTournamentId || detailsLoading}
-                  >
-                     <SelectTrigger className="w-full h-[48px] py-2 px-3 rounded-[8px] border border-[#C0C3C1] text-base font-medium leading-[120%] text-[#434C45)]">
-                      <SelectValue
-                        placeholder={
-                          !selectedTournamentId
-                            ? "Select tournament first"
-                            : "Select round"
-                        }
-                      />
-                    </SelectTrigger>
-                    <SelectContent>
-                      {roundOptions.map((r) => (
-                        <SelectItem key={r.value} value={r.value}>
-                          {r.label}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
+              {/* Tournament */}
+              <FormField
+                control={form.control}
+                name="tournamentId"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Tournament ID</FormLabel>
+                    <Select
+                      value={field.value}
+                      onValueChange={(val) => {
+                        field.onChange(val);
+                        form.setValue("roundId", "");
+                        form.setValue("player1Id", "");
+                        form.setValue("player2Id", "");
+                      }}
+                      disabled={tournamentLoading}
+                    >
+                      <SelectTrigger className="w-full h-[48px] py-2 px-3 rounded-[8px] border border-[#C0C3C1] text-base font-medium leading-[120%] text-[#434C45)]">
+                        <SelectValue placeholder="Select tournament" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {tournamentOptions.map((t) => (
+                          <SelectItem key={t.value} value={t.value}>
+                            {t.label}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              {/* Round ID */}
+              <FormField
+                control={form.control}
+                name="roundId"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Round ID</FormLabel>
+                    <Select
+                      value={field.value}
+                      onValueChange={field.onChange}
+                      disabled={!selectedTournamentId || detailsLoading}
+                    >
+                      <SelectTrigger className="w-full h-[48px] py-2 px-3 rounded-[8px] border border-[#C0C3C1] text-base font-medium leading-[120%] text-[#434C45)]">
+                        <SelectValue
+                          placeholder={
+                            !selectedTournamentId
+                              ? "Select tournament first"
+                              : "Select round"
+                          }
+                        />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {roundOptions.map((r) => (
+                          <SelectItem key={r.value} value={r.value}>
+                            {r.label}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
 
               <FormField
-              control={form.control}
-              name="roundName"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Round Name</FormLabel>
-                  <Select
-                    value={field.value}
-                    onValueChange={field.onChange}
-                    disabled={!selectedTournamentId || detailsLoading}
-                  >
-                     <SelectTrigger className="w-full h-[48px] py-2 px-3 rounded-[8px] border border-[#C0C3C1] text-base font-medium leading-[120%] text-[#434C45)]">
-                      <SelectValue
-                        placeholder={
-                          !selectedTournamentId
-                            ? "Select tournament first"
-                            : "Select round"
-                        }
-                      />
-                    </SelectTrigger>
-                    <SelectContent>
-                      {roundOptions.map((r) => (
-                        <SelectItem key={r.value} value={r.label}>
-                          {r.label}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-           
-           <FormField
-              control={form.control}
-              name="player1Id"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Player 1</FormLabel>
-                  <Select value={field.value} onValueChange={field.onChange}  disabled={!selectedTournamentId || detailsLoading}>
-                     <SelectTrigger className="w-full h-[48px] py-2 px-3 rounded-[8px] border border-[#C0C3C1] text-base font-medium leading-[120%] text-[#434C45)]">
-                      <SelectValue placeholder="Select player" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      {playerOptions.map((p) => (
-                        <SelectItem key={p.value} value={p.value}>
-                          {p.label}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
+                control={form.control}
+                name="roundName"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Round Name</FormLabel>
+                    <Select
+                      value={field.value}
+                      onValueChange={field.onChange}
+                      disabled={!selectedTournamentId || detailsLoading}
+                    >
+                      <SelectTrigger className="w-full h-[48px] py-2 px-3 rounded-[8px] border border-[#C0C3C1] text-base font-medium leading-[120%] text-[#434C45)]">
+                        <SelectValue
+                          placeholder={
+                            !selectedTournamentId
+                              ? "Select tournament first"
+                              : "Select round"
+                          }
+                        />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {roundOptions.map((r) => (
+                          <SelectItem key={r.value} value={r.label}>
+                            {r.label}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
 
-            <FormField
-              control={form.control}
-              name="player2Id"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Player 2</FormLabel>
-                  <Select value={field.value} onValueChange={field.onChange}  disabled={!selectedTournamentId || detailsLoading}>
-                    <SelectTrigger className="w-full h-[48px] py-2 px-3 rounded-[8px] border border-[#C0C3C1] text-base font-medium leading-[120%] text-[#434C45)]">
-                      <SelectValue placeholder="Select player" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      {playerOptions.map((p) => (
-                        <SelectItem key={p.value} value={p.value}>
-                          {p.label}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
+              <FormField
+                control={form.control}
+                name="player1Id"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Player 1</FormLabel>
+                    <Select value={field.value} onValueChange={field.onChange} disabled={!selectedTournamentId || detailsLoading}>
+                      <SelectTrigger className="w-full h-[48px] py-2 px-3 rounded-[8px] border border-[#C0C3C1] text-base font-medium leading-[120%] text-[#434C45)]">
+                        <SelectValue placeholder="Select player" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {playerOptions.map((p) => (
+                          <SelectItem key={p.value} value={p.value}>
+                            {p.label}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              <FormField
+                control={form.control}
+                name="player2Id"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Player 2</FormLabel>
+                    <Select value={field.value} onValueChange={field.onChange} disabled={!selectedTournamentId || detailsLoading}>
+                      <SelectTrigger className="w-full h-[48px] py-2 px-3 rounded-[8px] border border-[#C0C3C1] text-base font-medium leading-[120%] text-[#434C45)]">
+                        <SelectValue placeholder="Select player" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {playerOptions.map((p) => (
+                          <SelectItem key={p.value} value={p.value}>
+                            {p.label}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -382,9 +404,8 @@ const CreateMatchForm = () => {
                         <FormControl>
                           <Button
                             variant="outline"
-                            className={`w-full justify-start text-left h-12 ${
-                              !field.value && "text-muted-foreground"
-                            }`}
+                            className={`w-full justify-start text-left h-12 ${!field.value && "text-muted-foreground"
+                              }`}
                           >
                             {field.value
                               ? format(field.value, "MMM dd, yyyy")
@@ -451,7 +472,7 @@ const CreateMatchForm = () => {
                 Cancel
               </Button>
               <Button
-                  disabled={isPending}
+                disabled={isPending}
                 type="submit"
                 className="h-[49px] bg-gradient-to-b from-[#DF1020] to-[#310000]
             hover:from-[#310000] hover:to-[#DF1020]
