@@ -113,7 +113,7 @@ const TournamentsDetails = ({id}:{id:string}) => {
           )}
           {isActive === "draw" && (
             <div>
-              <TournamentDrawPage   />
+              <TournamentDrawPage  data={data?.data || {} as TournamentResponseData} />
             </div>
           )}
         </div>

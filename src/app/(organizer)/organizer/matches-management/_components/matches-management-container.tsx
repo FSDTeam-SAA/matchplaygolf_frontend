@@ -242,7 +242,7 @@ const MatchesManagementContainer = () => {
               <div>
                 <MatchPlayGolfPagination
                   currentPage={currentPage}
-                  totalPages={data?.data?.pagination?.total}
+                  totalPages={data?.data?.pagination?.totalPages}
                   onPageChange={(page) => setCurrentPage(page)}
                 />
               </div>
