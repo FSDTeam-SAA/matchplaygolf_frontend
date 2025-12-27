@@ -14,7 +14,7 @@ import { Eye, Plus, Trash, SquarePen } from "lucide-react";
 import MatchPlayGolfPagination from "@/components/ui/matchplaygolf-pagination";
 import { Input } from "@/components/ui/input";
 import DeleteModal from "@/components/modals/delete-modal";
-import TournamentView from "./tournament-view";
+// import TournamentView from "./tournament-view";
 import Link from "next/link";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useSession } from "next-auth/react";
@@ -23,16 +23,15 @@ import NotFound from "@/components/shared/NotFound/NotFound";
 import ErrorContainer from "@/components/shared/ErrorContainer/ErrorContainer";
 import TableSkeletonWrapper from "@/components/shared/TableSkeletonWrapper/TableSkeletonWrapper";
 import { useDebounce } from "@/hooks/useDebounce";
-import { Tournament, TournamentApiResponse } from "./tournament-data-type";
+import { TournamentApiResponse } from "./tournament-data-type";
 
 const TournamentsManagementContainer = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [search, setSearch] = useState("");
   const [deleteModalOpen, setDeleteModalOpen] = useState(false);
-  const [viewTournament, setViewTournament] = useState(false);
+  // const [viewTournament, setViewTournament] = useState(false);
   const [tournementId, setTournamentId] = useState("");
-  const [selectedTournament, setSelectedTournament] =
-    useState<Tournament | null>(null);
+  // const [selectedTournament, setSelectedTournament] = useState<Tournament | null>(null);
     const debouncedSearch = useDebounce(search, 500);
 
   const queryClient = useQueryClient();
@@ -150,7 +149,7 @@ const TournamentsManagementContainer = () => {
                     <SquarePen className="cursor-pointer h-5 w-5 text-[#181818]"/>
                   </button>
                  </Link>
-                    <button
+                    {/* <button
                       onClick={() => {
                         setViewTournament(true);
                         setSelectedTournament(item);
@@ -158,7 +157,13 @@ const TournamentsManagementContainer = () => {
                       className="cursor-pointer"
                     >
                       <Eye className="h-6 w-6 text-[#181818]" />
-                    </button>
+                    </button> */}
+                    <Link href={`/organizer/tournaments-management/tournament-details/${item?._id}`}>
+                    <button
+                      className="cursor-pointer"
+                    >
+                      <Eye className="h-6 w-6 text-[#181818]" />
+                    </button></Link>
                     <button
                       onClick={() => {
                         setDeleteModalOpen(true);
@@ -268,7 +273,7 @@ const TournamentsManagementContainer = () => {
         )}
 
         {/* tournament view modal  */}
-        <div>
+        {/* <div>
           {viewTournament && (
             <TournamentView
               open={viewTournament}
@@ -276,7 +281,7 @@ const TournamentsManagementContainer = () => {
               tournamentData={selectedTournament}
             />
           )}
-        </div>
+        </div> */}
       </div>
     </div>
   );
