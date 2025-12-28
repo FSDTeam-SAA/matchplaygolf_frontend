@@ -347,7 +347,7 @@ export default function Step2Form() {
             />
           </div>
 
-          <div className="flex justify-between pt-6">
+          <div className="flex items-center justify-center gap-10 pt-6">
             <Button
               type="button"
               variant="outline"
