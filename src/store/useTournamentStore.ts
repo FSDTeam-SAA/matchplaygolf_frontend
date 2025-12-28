@@ -9,7 +9,7 @@ export interface TournamentStep1 {
   format: string;
   totalDrawSize: string; // keep as string from form
   terms: boolean;
-    price?: number; 
+  price?: number;
 }
 
 export interface BillingData {
@@ -31,6 +31,7 @@ interface TournamentStore {
   setStep: (step: 1 | 2) => void;
   setStep1Data: (data: TournamentStep1) => void;
   reset: () => void;
+  clearStorage: () => void;
 }
 
 export const useTournamentStore = create<TournamentStore>()(
@@ -42,6 +43,10 @@ export const useTournamentStore = create<TournamentStore>()(
       setStep: (step) => set({ step }),
       setStep1Data: (data) => set({ step1Data: data, step: 2 }),
       reset: () => set({ step: 1, step1Data: null }),
+      clearStorage: () => {
+        set({ step: 1, step1Data: null });
+        localStorage.removeItem("tournament-storage");
+      },
     }),
     {
       name: "tournament-storage",
