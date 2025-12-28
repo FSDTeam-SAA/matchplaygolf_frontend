@@ -73,7 +73,7 @@ export const schema = z.object({
 // });
 
 export default function Step2Form() {
-  const { step1Data, setStep } = useTournamentStore();
+  const { step1Data, setStep, clearStorage } = useTournamentStore();
   const [isLoading, setIsLoading] = useState(false);
   const session = useSession();
   const token = (session?.data?.user as { accessToken: string })?.accessToken;
@@ -138,11 +138,12 @@ export default function Step2Form() {
       const result = await res.json();
 
       if (result.success && result.paymentDetails?.checkoutUrl) {
+          clearStorage();
         // Redirect to Stripe Checkout
         window.location.href = result.paymentDetails.checkoutUrl;
       } else {
-        alert("Something went wrong. Please try again.");
-        console.error(result);
+        // alert("Something went wrong. Please try again.");
+        console.log(result);
       }
     } catch (err) {
       console.error(err);
@@ -346,7 +347,7 @@ export default function Step2Form() {
             />
           </div>
 
-          <div className="flex justify-between pt-6">
+          <div className="flex items-center justify-center gap-10 pt-6">
             <Button
               type="button"
               variant="outline"
@@ -355,6 +356,17 @@ export default function Step2Form() {
             >
               Back
             </Button>
+            <Button
+              type="button"
+              variant="outline"
+              onClick={() => {
+                form.reset();
+                useTournamentStore.getState().clearStorage();
+              }}
+            >
+              Cancel
+            </Button>
+
             <Button
               type="submit"
               disabled={isLoading}

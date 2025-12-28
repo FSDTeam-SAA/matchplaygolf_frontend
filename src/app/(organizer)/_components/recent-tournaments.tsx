@@ -41,7 +41,7 @@ const RecentTournaments = () => {
     queryKey: ["recent-tournaments"],
     queryFn: async () => {
       const res = await fetch(
-        `${process.env.NEXT_PUBLIC_BACKEND_URL}/organizer-dashboard/recent?page=1&limit=6`,{
+        `${process.env.NEXT_PUBLIC_BACKEND_URL}/organizer-dashboard/recent?page=1&limit=3`,{
           method: "GET",
           headers: {
             Authorization : `Bearer ${token}`

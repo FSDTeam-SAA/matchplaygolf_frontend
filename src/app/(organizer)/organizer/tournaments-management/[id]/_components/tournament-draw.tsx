@@ -14,13 +14,13 @@ const TournamentDrawPage = ({ data }: { data: TournamentResponseData }) => {
 
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
-  const [error, setError] = useState<string | null>(null);
+  // const [error, setError] = useState<string | null>(null);
 
   const handleSendEmails = async () => {
     if (!tournamentId || !token) return;
 
     setLoading(true);
-    setError(null);
+    // setError(null);
 
     try {
       const res = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/tournament/${tournamentId}`, {
@@ -34,13 +34,14 @@ const TournamentDrawPage = ({ data }: { data: TournamentResponseData }) => {
 
       if (!res.ok) {
         const errorData = await res.json();
-        throw new Error(errorData.message || "Something went wrong");
+        toast.error(errorData.message || "Something went wrong")
+        return;
       }
 
       setSuccess(true);
       toast.success("Emails sent successfully!");
     } catch (err: any) {
-      setError(err.message);
+      // setError(err.message);
       toast.error(err);
     } finally {
       setLoading(false);
@@ -76,7 +77,7 @@ const TournamentDrawPage = ({ data }: { data: TournamentResponseData }) => {
         >
           {loading ? "Sending..." : success ? "Emails Sent!" : "Participant Invite Emails Sent"}
         </Button>
-        {error && <p className="text-red-500 mt-2">{error}</p>}
+        {/* {error && <p className="text-red-500 mt-2">{error}</p>} */}
       </div>
 
       {/* Buttons */}

@@ -1,20 +1,21 @@
-import React from "react";
-import { Skeleton } from "@/components/ui/skeleton"; // Assuming you have shadcn skeleton installed
+'use client'
+import React from 'react'
+import { Skeleton } from '@/components/ui/skeleton' // Assuming you have shadcn skeleton installed
 
 interface Tournament {
-  tournamentName: string;
-  sportName: string;
-  format?: string;
-  drawFormat?: string;
-  drawSize?: number;
-  startDate?: string;
-  endDate?: string;
-  location?: string;
+  tournamentName: string
+  sportName: string
+  format?: string
+  drawFormat?: string
+  drawSize?: number
+  startDate?: string
+  endDate?: string
+  location?: string
 }
 
 interface DetailsProps {
-  tournament?: Tournament;
-  isLoading: boolean;
+  tournament?: Tournament
+  isLoading: boolean
 }
 
 const Details = ({ tournament, isLoading }: DetailsProps) => {
@@ -31,8 +32,10 @@ const Details = ({ tournament, isLoading }: DetailsProps) => {
           ))}
         </div>
       </div>
-    );
+    )
   }
+
+  // console.log('tournaments details', tournament)
 
   if (!tournament) {
     return (
@@ -40,9 +43,11 @@ const Details = ({ tournament, isLoading }: DetailsProps) => {
         <h4 className="mb-6 text-2xl font-semibold text-gray-800">
           Event Details
         </h4>
-        <p className="text-center text-gray-500">No tournament data available</p>
+        <p className="text-center text-gray-500">
+          No tournament data available
+        </p>
       </div>
-    );
+    )
   }
 
   return (
@@ -60,18 +65,20 @@ const Details = ({ tournament, isLoading }: DetailsProps) => {
         <DetailItem label="Sport" value={tournament.sportName} />
         <DetailItem label="Format" value={tournament.format} />
         <DetailItem label="Competition Type" value={tournament.drawFormat} />
-        <DetailItem 
-          label="Draw Size" 
-          value={tournament.drawSize ? tournament.drawSize.toString() : undefined} 
+        <DetailItem
+          label="Draw Size"
+          value={
+            tournament.drawSize ? tournament.drawSize.toString() : undefined
+          }
         />
         <DetailItem
           label="Start Date"
           value={
             tournament.startDate
-              ? new Date(tournament.startDate).toLocaleDateString("en-US", {
-                  year: "numeric",
-                  month: "long",
-                  day: "numeric",
+              ? new Date(tournament.startDate).toLocaleDateString('en-US', {
+                  year: 'numeric',
+                  month: 'long',
+                  day: 'numeric',
                 })
               : undefined
           }
@@ -80,10 +87,10 @@ const Details = ({ tournament, isLoading }: DetailsProps) => {
           label="End Date"
           value={
             tournament.endDate
-              ? new Date(tournament.endDate).toLocaleDateString("en-US", {
-                  year: "numeric",
-                  month: "long",
-                  day: "numeric",
+              ? new Date(tournament.endDate).toLocaleDateString('en-US', {
+                  year: 'numeric',
+                  month: 'long',
+                  day: 'numeric',
                 })
               : undefined
           }
@@ -92,13 +99,13 @@ const Details = ({ tournament, isLoading }: DetailsProps) => {
         <DetailItem label="Hold Each Round" value="" />
       </div>
     </div>
-  );
-};
+  )
+}
 
 interface DetailItemProps {
-  label: string;
-  value?: string;
-  highlight?: boolean;
+  label: string
+  value?: string
+  highlight?: boolean
 }
 
 const DetailItem = ({ label, value, highlight }: DetailItemProps) => (
@@ -107,15 +114,15 @@ const DetailItem = ({ label, value, highlight }: DetailItemProps) => (
     <span
       className={`text-right text-sm ${
         highlight
-          ? "font-semibold text-gray-900"
+          ? 'font-semibold text-gray-900'
           : value
-          ? "text-gray-800"
-          : "text-gray-400"
+          ? 'text-gray-800'
+          : 'text-gray-400'
       }`}
     >
-      {value || "Not specified"}
+      {value || 'Not specified'}
     </span>
   </div>
-);
+)
 
-export default Details;
+export default Details

@@ -1,5 +1,5 @@
-import React from "react";
-import TournamentsDetails from "./_components/tournaments-details";
+import React from 'react'
+import TournamentsDetails from './_components/tournaments-details'
 import TournamentViewHeader from "./_components/tournament-view-header";
 
 const page = () => {
@@ -11,7 +11,7 @@ const page = () => {
         <TournamentsDetails />
       </div>
     </div>
-  );
-};
+  )
+}
 
-export default page;
+export default page

@@ -41,6 +41,14 @@ const DRAW_FORMAT_OPTIONS = [
   { value: "teams", label: "Teams ?" },
 ];
 
+const DRAW_SIZE_PRICE_MAP: Record<string, number> = {
+  "8": 10,
+  "16": 10,
+  "32": 15,
+  "64": 25,
+  "128": 30,
+};
+
 export default function Step1Form() {
   const { setStep1Data, step1Data } = useTournamentStore();
 
@@ -57,8 +65,16 @@ export default function Step1Form() {
     },
   });
 
+  const selectedDrawSize = form.watch("totalDrawSize");
+  const totalPrice =
+    DRAW_SIZE_PRICE_MAP[selectedDrawSize] ?? 0;
+
   const onSubmit = (data: z.infer<typeof formSchema>) => {
-    setStep1Data(data); 
+     const price = DRAW_SIZE_PRICE_MAP[data.totalDrawSize] ?? 0;
+    setStep1Data({
+    ...data,
+    price,
+  });
   };
 
   return (
@@ -155,7 +171,7 @@ export default function Step1Form() {
                   </SelectTrigger>
                   <SelectContent>
                     <SelectItem value="single">Single</SelectItem>
-                    <SelectItem value="pairs">Pairs</SelectItem>
+                    <SelectItem value="pair">Pair</SelectItem>
                     <SelectItem value="team">Team</SelectItem>
                   </SelectContent>
                 </Select>
@@ -196,7 +212,7 @@ export default function Step1Form() {
         />
 
         <div className="w-full h-[100px] flex items-center justify-start pl-8 text-xl font-bold text-[#343A40] leading-[120%] bg-[#E6E7E6] rounded-[6px]">
-          Total : $ 15
+          Total : $ {totalPrice}
         </div>
 
         <div>
