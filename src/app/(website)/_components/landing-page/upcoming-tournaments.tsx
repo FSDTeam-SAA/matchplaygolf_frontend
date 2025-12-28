@@ -226,7 +226,7 @@ const UpcomingTournaments = () => {
         </p>
       </div>
 
-      <div className="space-x-5 mt-8">
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-5 mt-8 lg:max-w-[600px]">
         {filterItems.map((item) => (
           <Button
             key={item.id}
