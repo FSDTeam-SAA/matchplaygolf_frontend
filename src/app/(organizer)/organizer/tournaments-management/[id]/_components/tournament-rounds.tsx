@@ -75,7 +75,8 @@ useEffect(() => {
   const existingRounds = data.data.rounds ?? [];
 
   form.reset({
-    rememberEmail: Number(data?.data?.rememberEmail ?? 5).toString(),
+    // rememberEmail: Number(data?.data?.rememberEmail ?? 5).toString(),
+    rememberEmail: data?.data?.rememberEmail ? data?.data?.rememberEmail.toString() : "",
     rounds: Array.from({ length: totalRounds }, (_, index) => ({
       date: existingRounds[index]?.date
         ? new Date(existingRounds[index].date)
