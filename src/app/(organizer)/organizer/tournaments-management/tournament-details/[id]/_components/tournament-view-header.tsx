@@ -1,5 +1,5 @@
-import React from "react";
-import Link from  'next/link';
+import React from 'react'
+import Link from 'next/link'
 
 const TournamentViewHeader = () => {
   return (
@@ -7,7 +7,7 @@ const TournamentViewHeader = () => {
       {/* Header */}
       <div className="bg-white p-6 ">
         <h1 className="flex items-center gap-2 text-2xl lg:text-3xl font-bold text-[#181818] leading-[150%]">
-               <Link href="/organizer/tournaments-management">
+          <Link href="/organizer/tournaments-management">
             <svg
               xmlns="http://www.w3.org/2000/svg"
               width="24"
@@ -23,14 +23,15 @@ const TournamentViewHeader = () => {
                 stroke-linejoin="round"
               />
             </svg>
-          </Link> Spring Championship 2025
+          </Link>{' '}
+          Spring Championship 2025
         </h1>
         <p className="text-sm font-normal text-[#424242] leading-[150%]">
           View tournament bracket progression
         </p>
       </div>
     </div>
-  );
-};
+  )
+}
 
-export default TournamentViewHeader;
+export default TournamentViewHeader
