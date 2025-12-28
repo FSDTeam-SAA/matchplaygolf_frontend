@@ -44,7 +44,13 @@ const formSchema = z.object({
   sportName: z.string().min(2, {
     message: "Sport must be at least 2 characters.",
   }),
-  numberOfSeeds: z.coerce.number().pipe(z.number().min(1).int()),
+  numberOfSeeds: z
+  .coerce
+  .number()
+  .int()
+  .min(1)
+  .optional(),
+
   drawSize: z.coerce.number().pipe(z.number().min(1).int()),
 
   drawFormat: z.string().min(1, {
@@ -188,7 +194,7 @@ const TournamentDetailsPage = (data: { data: Tournament }) => {
                   </FormLabel>
                   <FormControl>
                     <div className="grid grid-cols-2 gap-6">
-                      {DRAW_FORMAT_OPTIONS.map((option) => (
+                      {DRAW_FORMAT_OPTIONS?.map((option) => (
                         <button
                           key={option.id}
                           type="button"
@@ -229,7 +235,7 @@ const TournamentDetailsPage = (data: { data: Tournament }) => {
                       </SelectTrigger>
                       <SelectContent>
                         <SelectItem value="single">Single</SelectItem>
-                        <SelectItem value="pairs">Pairs</SelectItem>
+                        <SelectItem value="pair">Pair</SelectItem>
                         <SelectItem value="team">Team</SelectItem>
                       </SelectContent>
                     </Select>

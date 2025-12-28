@@ -9,6 +9,7 @@ export interface TournamentStep1 {
   format: string;
   totalDrawSize: string; // keep as string from form
   terms: boolean;
+    price?: number; 
 }
 
 export interface BillingData {

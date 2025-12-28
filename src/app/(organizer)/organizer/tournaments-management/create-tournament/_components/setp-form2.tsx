@@ -141,8 +141,8 @@ export default function Step2Form() {
         // Redirect to Stripe Checkout
         window.location.href = result.paymentDetails.checkoutUrl;
       } else {
-        alert("Something went wrong. Please try again.");
-        console.error(result);
+        // alert("Something went wrong. Please try again.");
+        console.log(result);
       }
     } catch (err) {
       console.error(err);
