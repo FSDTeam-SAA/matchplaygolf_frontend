@@ -30,48 +30,6 @@ export const schema = z.object({
   phone: z.string().min(9, "Phone must be at least 9 digits"),
 });
 
-// export const schema = z.object({
-//   fullName: z
-//     .string()
-//     .min(2, { message: "Full Name must be at least 2 characters." })
-//     .max(100, { message: "Full Name cannot exceed 100 characters." }),
-
-//   email: z
-//     .string()
-//     .email({ message: "Please provide a valid email address." }),
-
-//   companyName: z
-//     .string()
-//     .max(150, { message: "Company Name cannot exceed 150 characters." })
-//     .optional(),
-
-//   country: z
-//     .string()
-//     .min(2, { message: "Country name must be at least 2 characters." }),
-
-//   streetAddress: z
-//     .string()
-//     .min(2, { message: "Street Address must be at least 2 characters." }),
-
-//   city: z
-//     .string()
-//     .min(2, { message: "Town/City name must be at least 2 characters." }),
-
-//   district: z
-//     .string()
-//     .max(100, { message: "District cannot exceed 100 characters." })
-//     .optional(),
-
-//   zipcode: z
-//     .string()
-//     .min(3, { message: "Postcode must be at least 3 characters." }),
-
-//   phone: z
-//     .string()
-//     .min(9, { message: "Phone Number must be at least 9 digits." })
-//     .max(15, { message: "Phone Number cannot exceed 15 digits." }),
-// });
-
 export default function Step2Form() {
   const { step1Data, setStep, clearStorage } = useTournamentStore();
   const [isLoading, setIsLoading] = useState(false);
@@ -138,7 +96,7 @@ export default function Step2Form() {
       const result = await res.json();
 
       if (result.success && result.paymentDetails?.checkoutUrl) {
-          clearStorage();
+        clearStorage();
         // Redirect to Stripe Checkout
         window.location.href = result.paymentDetails.checkoutUrl;
       } else {
@@ -349,6 +307,7 @@ export default function Step2Form() {
 
           <div className="flex items-center justify-center gap-10 pt-6">
             <Button
+              className="h-[48px] px-10 text-base font-semibold leading-[120%] text-black"
               type="button"
               variant="outline"
               onClick={() => setStep(1)}
@@ -357,6 +316,7 @@ export default function Step2Form() {
               Back
             </Button>
             <Button
+              className="h-[48px] px-10 text-base font-semibold leading-[120%] text-black"
               type="button"
               variant="outline"
               onClick={() => {
@@ -370,7 +330,9 @@ export default function Step2Form() {
             <Button
               type="submit"
               disabled={isLoading}
-              className="bg-red-600 hover:bg-red-700 text-white px-12"
+              className="h-[48px] bg-gradient-to-b from-[#DF1020] to-[#310000]
+  hover:bg-gradient-to-b hover:from-[#FF2A3A] hover:to-[#4A0000]
+  transition-all duration-300 text-base font-semibold leading-[120%] text-white px-12"
             >
               {isLoading ? "Processing..." : "Place Order"}
             </Button>

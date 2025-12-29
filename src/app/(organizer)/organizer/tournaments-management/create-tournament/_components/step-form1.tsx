@@ -44,9 +44,11 @@ const DRAW_FORMAT_OPTIONS = [
 const DRAW_SIZE_PRICE_MAP: Record<string, number> = {
   "8": 10,
   "16": 10,
-  "32": 15,
-  "64": 25,
-  "128": 30,
+  "32": 20,
+  "64": 20,
+  "128": 35,
+  "256": 50,
+  "512": 50,
 };
 
 export default function Step1Form() {
@@ -203,6 +205,8 @@ export default function Step1Form() {
                     <SelectItem value="32">32</SelectItem>
                     <SelectItem value="64">64</SelectItem>
                     <SelectItem value="128">128</SelectItem>
+                    <SelectItem value="256">256</SelectItem>
+                    <SelectItem value="512">512</SelectItem>
                   </SelectContent>
                 </Select>
               </FormControl>
@@ -212,7 +216,7 @@ export default function Step1Form() {
         />
 
         <div className="w-full h-[100px] flex items-center justify-start pl-8 text-xl font-bold text-[#343A40] leading-[120%] bg-[#E6E7E6] rounded-[6px]">
-          Total : $ {totalPrice}
+          Total : £ {totalPrice}
         </div>
 
         <div>
