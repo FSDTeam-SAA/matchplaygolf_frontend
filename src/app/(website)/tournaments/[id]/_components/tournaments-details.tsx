@@ -9,7 +9,7 @@ import { Button } from "@/components/ui/button";
 
 interface Round {
   _id: string;
-  roundNumber: string;
+  roundNumber: number;
   roundName: string;
 }
 
@@ -18,7 +18,7 @@ const TournamentsDetails = () => {
   const id = params?.id;
 
   const [isActive, setIsActive] = useState("draw");
-  const [roundNumber, setRoundNumber] = useState("");
+  const [roundNumber, setRoundNumber] = useState(1);
 
   const { data, isLoading } = useQuery({
     queryKey: ["tournaments", roundNumber],
@@ -90,10 +90,6 @@ const TournamentsDetails = () => {
 
         <div className="mt-8 space-x-5">
           {data?.rounds?.map((item: Round) => {
-            console.log("item?.roundNumber: ", item?.roundNumber);
-
-            console.log(roundNumber === item?.roundNumber);
-
             return (
               <Button
                 key={item?._id}
