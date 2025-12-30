@@ -5,18 +5,26 @@ import React, { useState } from "react";
 import Rules from "./rules";
 import Details from "./details";
 import Draw from "./draw";
+import { Button } from "@/components/ui/button";
+
+interface Round {
+  _id: string;
+  roundNumber: number;
+  roundName: string;
+}
 
 const TournamentsDetails = () => {
   const params = useParams();
   const id = params?.id;
 
   const [isActive, setIsActive] = useState("draw");
+  const [roundNumber, setRoundNumber] = useState(1);
 
   const { data, isLoading } = useQuery({
-    queryKey: ["tournaments"],
+    queryKey: ["tournaments", roundNumber],
     queryFn: async () => {
       const res = await fetch(
-        `${process.env.NEXT_PUBLIC_BACKEND_URL}/tournament/getAllMatches/${id}`
+        `${process.env.NEXT_PUBLIC_BACKEND_URL}/tournament/getAllMatches/${id}?roundNumber=${roundNumber}`
       );
 
       const data = await res.json();
@@ -78,6 +86,24 @@ const TournamentsDetails = () => {
           >
             Details
           </button>
+        </div>
+
+        <div className="mt-8 space-x-5">
+          {data?.rounds?.map((item: Round) => {
+            return (
+              <Button
+                key={item?._id}
+                onClick={() => setRoundNumber(item?.roundNumber)}
+                className={`h-[45px] w-[130px] rounded-3xl hover:text-white  ${
+                  roundNumber === item?.roundNumber
+                    ? "bg-primary text-white"
+                    : "bg-inherit border border-primary text-primary"
+                }`}
+              >
+                {item?.roundName}
+              </Button>
+            );
+          })}
         </div>
 
         <div className="mt-8">
