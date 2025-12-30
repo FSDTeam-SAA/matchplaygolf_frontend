@@ -35,7 +35,7 @@ import {
 } from "@/components/ui/select";
 
 const formSchema = z.object({
-  rememberEmail: z.string().optional(),
+  rememberEmail: z.number().optional(),
   rounds: z.array(
     z.object({
       date: z.date().nullable(),
@@ -57,7 +57,7 @@ const TournamentRounds = (data: { data: TournamentResponseData & { rememberEmail
 const form = useForm<z.infer<typeof formSchema>>({
   resolver: zodResolver(formSchema),
   defaultValues: {
-    rememberEmail: "",
+    rememberEmail: undefined,
     rounds: [],
   },
 });
@@ -71,12 +71,10 @@ useEffect(() => {
   if (!data?.data) return;
 
   const totalRounds = data.data.totalRounds ?? 0;
-  //eslint-disable-next-line @typescript-eslint/no-unused-vars
   const existingRounds = data.data.rounds ?? [];
 
   form.reset({
-    // rememberEmail: Number(data?.data?.rememberEmail ?? 5).toString(),
-    rememberEmail: data?.data?.rememberEmail ? data?.data?.rememberEmail.toString() : "",
+    rememberEmail: data?.data?.rememberEmail ?? undefined,
     rounds: Array.from({ length: totalRounds }, (_, index) => ({
       date: existingRounds[index]?.date
         ? new Date(existingRounds[index].date)
@@ -87,9 +85,10 @@ useEffect(() => {
 
 
 
+
 const { mutate, isPending } = useMutation({
   mutationKey: ["tournament-details", tournamentId],
-  mutationFn: async (payload: {rememberEmail: string, rounds: { roundName: string; date: string | null }[] }) => {
+  mutationFn: async (payload: {rememberEmail: number, rounds: { roundName: string; date: string | null }[] }) => {
     const res = await fetch(
       `${process.env.NEXT_PUBLIC_BACKEND_URL}/tournament/${tournamentId}`,
       {
@@ -116,7 +115,7 @@ const { mutate, isPending } = useMutation({
 
 function onSubmit(values: z.infer<typeof formSchema>) {
   const payload = {
-    rememberEmail: values.rememberEmail || "",
+    rememberEmail: (values.rememberEmail ?? 0),
     rounds: values.rounds.map((round, index) => ({
       roundName: `Round ${index + 1}`,
       date: round.date ? format(round.date, "yyyy-MM-dd") : null,
@@ -125,6 +124,7 @@ function onSubmit(values: z.infer<typeof formSchema>) {
 
   mutate(payload);
 }
+
 
 
   return (
@@ -146,8 +146,9 @@ function onSubmit(values: z.infer<typeof formSchema>) {
                   </FormLabel>
                   <FormControl>
                     <Select
-                      value={field.value}
-                      onValueChange={field.onChange}
+                        key={field.value} 
+          value={field.value !== undefined ? String(field.value) : undefined}
+          onValueChange={(value) => field.onChange(Number(value))}
                     >
                       <SelectTrigger className="w-full h-[48px] py-2 px-3 rounded-[8px] border border-[#C0C3C1] text-base font-medium leading-[120%] text-[#434C45)]">
                         <SelectValue placeholder="5 Days Later" />
