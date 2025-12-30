@@ -9,7 +9,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { Plus, Trash } from "lucide-react";
+import { Plus, Trash, SquarePen } from "lucide-react";
 import MatchPlayGolfPagination from "@/components/ui/matchplaygolf-pagination";
 import { Input } from "@/components/ui/input";
 import DeleteModal from "@/components/modals/delete-modal";
@@ -148,6 +148,11 @@ const MatchesManagementContainer = () => {
                     </button>
                   </TableCell>
                   <TableCell className="flex items-center justify-center gap-6 py-4">
+                    <Link href={`/organizer/matches-management/${item?._id}`}>
+                    <button className="cursor-pointer">
+                      <SquarePen />
+                    </button>
+                    </Link>
                     <button
                       onClick={() => {
                         setDeleteModalOpen(true);
