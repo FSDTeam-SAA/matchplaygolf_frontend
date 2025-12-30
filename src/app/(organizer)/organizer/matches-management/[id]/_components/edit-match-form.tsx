@@ -32,10 +32,10 @@ import {
 import { Calendar } from "@/components/ui/calendar";
 import { format } from "date-fns";
 import { CalendarIcon } from "lucide-react";
-import { TournamentListApiResponse } from "./tournament-data-type";
-import { TournamentPlayersRoundApiResponse } from "./round-tournament-data-type";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
+import { TournamentListApiResponse } from "../../create-match/_components/tournament-data-type";
+import { TournamentPlayersRoundApiResponse } from "../../create-match/_components/round-tournament-data-type";
 
 const formSchema = z.object({
   matchType: z.string().min(1, {
@@ -60,7 +60,10 @@ const formSchema = z.object({
   date: z.union([z.date(), z.string()]),
 });
 
-const CreateMatchForm = () => {
+const EditMatchForm = ({id}:{id:string}) => {
+    console.log(id)
+
+    
   const router = useRouter();
   const session = useSession();
   const token = (session?.data?.user as { accessToken: string })?.accessToken;
@@ -190,10 +193,10 @@ const CreateMatchForm = () => {
 // Submit handler
 function onSubmit(values: z.infer<typeof formSchema>) {
   // Check if players are same
-  // if (values.player1Id === values.player2Id) {
-  //   alert("Player 1 and Player 2 cannot be same");
-  //   return;
-  // }
+  if (values.player1Id === values.player2Id) {
+    alert("Player 1 and Player 2 cannot be same");
+    return;
+  }
 
   // If matchType is Pair, check pair IDs
   if (values.matchType === "Pair" && values.player1Id === values.player2Id) {
@@ -488,4 +491,4 @@ function onSubmit(values: z.infer<typeof formSchema>) {
   );
 };
 
-export default CreateMatchForm;
+export default EditMatchForm;
