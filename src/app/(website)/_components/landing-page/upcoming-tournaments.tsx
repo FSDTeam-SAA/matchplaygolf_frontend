@@ -83,7 +83,7 @@ const UpcomingTournaments = () => {
     queryKey: ["tournaments", tournamentType, currentPage, ITEMS_PER_PAGE],
     queryFn: async () => {
       const res = await fetch(
-        `${process.env.NEXT_PUBLIC_BACKEND_URL}/tournament?status=scheduled&format=${tournamentType}&page=${currentPage}&limit=${ITEMS_PER_PAGE}`
+        `${process.env.NEXT_PUBLIC_BACKEND_URL}/tournament?status=in progress&format=${tournamentType}&page=${currentPage}&limit=${ITEMS_PER_PAGE}`
       );
 
       if (!res.ok) {
