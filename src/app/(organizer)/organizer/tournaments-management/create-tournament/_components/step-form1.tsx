@@ -169,7 +169,7 @@ export default function Step1Form() {
                   defaultValue={field.value}
                 >
                   <SelectTrigger className="w-full h-[48px] py-2 px-3 rounded-[8px] border border-[#C0C3C1] text-base font-medium leading-[120%] text-[#434C45)]">
-                    <SelectValue placeholder="Pairs" />
+                    <SelectValue placeholder="Pair" />
                   </SelectTrigger>
                   <SelectContent>
                     <SelectItem value="single">Single</SelectItem>
