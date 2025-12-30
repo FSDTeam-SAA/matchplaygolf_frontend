@@ -190,10 +190,10 @@ const CreateMatchForm = () => {
 // Submit handler
 function onSubmit(values: z.infer<typeof formSchema>) {
   // Check if players are same
-  if (values.player1Id === values.player2Id) {
-    alert("Player 1 and Player 2 cannot be same");
-    return;
-  }
+  // if (values.player1Id === values.player2Id) {
+  //   alert("Player 1 and Player 2 cannot be same");
+  //   return;
+  // }
 
   // If matchType is Pair, check pair IDs
   if (values.matchType === "Pair" && values.player1Id === values.player2Id) {
