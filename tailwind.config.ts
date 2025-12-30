@@ -1,6 +1,5 @@
 import type { Config } from "tailwindcss";
-import scrollbarHide from 'tailwind-scrollbar-hide'
-
+import scrollbarHide from "tailwind-scrollbar-hide";
 
 const config: Config = {
   darkMode: ["class"],
@@ -18,10 +17,10 @@ const config: Config = {
       },
       screens: {
         sm: "640px",
-        md: "1300px",
-        lg: "1500px",
-        xl: "1500px",
-        "2xl": "1500px",
+        md: "768px",
+        lg: "1024px",
+        xl: "1280px",
+        "2xl": "1536px",
       },
     },
     extend: {
