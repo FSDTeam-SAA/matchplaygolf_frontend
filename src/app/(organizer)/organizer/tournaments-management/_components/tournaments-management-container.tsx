@@ -126,7 +126,7 @@ const TournamentsManagementContainer = () => {
                     {moment(item?.endDate).format("MMM DD, YYYY")}
                   </TableCell>
                   <TableCell className="text-base font-medium text-[#343A40] leading-[150%] text-center py-4">
-                    {0}
+                    {item?.playerCount || 0}
                   </TableCell>
                   <TableCell className="text-base font-medium text-[#68706A] leading-[150%] text-center py-4">
                     <button
