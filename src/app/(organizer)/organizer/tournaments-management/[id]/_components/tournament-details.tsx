@@ -48,7 +48,6 @@ const formSchema = z.object({
     .coerce
     .number()
     .int()
-    .min(1)
     .optional(),
 
   drawSize: z.coerce.number().pipe(z.number().min(1).int()),
