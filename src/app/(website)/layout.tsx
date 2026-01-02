@@ -8,7 +8,7 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
       <header className="sticky top-0 bg-white z-50">
         <Navbar />
       </header>
-      <div>{children}</div>
+      <div className="min-h-[calc(100vh-350px)]">{children}</div>
       <footer>
         <Footer />
       </footer>
