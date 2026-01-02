@@ -1,3 +1,4 @@
+"use client";
 import React from "react";
 import {
   DropdownMenu,
@@ -11,11 +12,31 @@ import Image from "next/image";
 import Link from "next/link";
 import { LayoutDashboard, LogOut, User } from "lucide-react";
 import { signOut, useSession } from "next-auth/react";
+import { useQuery } from "@tanstack/react-query";
 
 const NavDropdown = () => {
   const session = useSession();
+  const token = session?.data?.user?.accessToken;
   const role = session?.data?.user?.role;
-  const profileImage = session?.data?.user?.profileImage;
+
+  const { data } = useQuery({
+    queryKey: ["user-profile"],
+    queryFn: async () => {
+      const res = await fetch(
+        `${process.env.NEXT_PUBLIC_BACKEND_URL}/user/profile`,
+        {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
+      const data = await res.json();
+
+      return data?.data;
+    },
+  });
 
   return (
     <div>
@@ -23,11 +44,11 @@ const NavDropdown = () => {
         <DropdownMenuTrigger className="focus-visible:outline-none">
           <div className="h-12 w-12 rounded-full">
             <Image
-              src={profileImage || "/images/common/user_placeholder.png"}
+              src={data?.profileImage || "/images/common/user_placeholder.png"}
               alt="img.png"
               width={1000}
               height={1000}
-              className="h-full w-full rounded-full"
+              className="h-full w-full object-cover rounded-full"
             />
           </div>
         </DropdownMenuTrigger>

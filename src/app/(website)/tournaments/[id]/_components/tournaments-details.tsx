@@ -5,13 +5,6 @@ import React, { useState } from "react";
 import Rules from "./rules";
 import Details from "./details";
 import Draw from "./draw";
-import { Button } from "@/components/ui/button";
-
-interface Round {
-  _id: string;
-  roundNumber: number;
-  roundName: string;
-}
 
 const TournamentsDetails = () => {
   const params = useParams();
@@ -88,28 +81,16 @@ const TournamentsDetails = () => {
           </button>
         </div>
 
-        <div className="mt-8 space-x-5">
-          {data?.rounds?.map((item: Round) => {
-            return (
-              <Button
-                key={item?._id}
-                onClick={() => setRoundNumber(item?.roundNumber)}
-                className={`h-[45px] w-[130px] rounded-3xl hover:text-white  ${
-                  roundNumber === item?.roundNumber
-                    ? "bg-primary text-white"
-                    : "bg-inherit border border-primary text-primary"
-                }`}
-              >
-                {item?.roundName}
-              </Button>
-            );
-          })}
-        </div>
-
         <div className="mt-8">
           {isActive === "draw" && (
             <div>
-              <Draw matches={data?.matches} isLoading={isLoading} />
+              <Draw
+                data={data}
+                roundNumber={roundNumber}
+                setRoundNumber={setRoundNumber}
+                matches={data?.matches}
+                isLoading={isLoading}
+              />
             </div>
           )}
 
