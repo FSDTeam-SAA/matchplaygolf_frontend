@@ -94,8 +94,8 @@ const SetPasswordForm = () => {
     }
     return (
         <div className="container">
-            <Form {...form}>
-                <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+            <Form {...form} >
+                <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6 w-full md:w-2/3">
                     <FormField
                         control={form.control}
                         name="password"
