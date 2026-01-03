@@ -108,7 +108,7 @@ const TournamentDetailsPage = (data: { data: Tournament }) => {
       format: data?.data?.format?.toLowerCase(),
       drawSize: Number(data?.data?.drawSize),
       location: data?.data?.location,
-      numberOfSeeds: Number(data?.data?.totalRounds),
+      numberOfSeeds: Number(data?.data?.numberOfSeeds),
       startDate: data?.data?.startDate
         ? new Date(data?.data?.startDate)
         : null,

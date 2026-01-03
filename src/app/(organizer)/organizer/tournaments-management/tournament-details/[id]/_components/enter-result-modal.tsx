@@ -96,7 +96,7 @@ export default function EnterResultModal({
             Authorization: `Bearer ${token}`,
           },
           body: formData,
-        }
+        },
       )
 
       const data = await res.json()
@@ -111,7 +111,7 @@ export default function EnterResultModal({
       toast.success('Match result saved successfully!')
 
       // Invalidate matches queries to refetch data
-      queryClient.invalidateQueries({ queryKey: ['matches'] })
+      queryClient.invalidateQueries({ queryKey: ['tournaments'] })
       queryClient.invalidateQueries({ queryKey: ['match', match?._id] })
 
       onSuccess?.()
@@ -141,26 +141,26 @@ export default function EnterResultModal({
   }
 
   const addPhotos = (newFiles: File[]) => {
-    const validFiles = newFiles.filter((file) => file.type.startsWith('image/'))
+    const validFiles = newFiles.filter(file => file.type.startsWith('image/'))
 
-    setPhotos((prev) => [...prev, ...validFiles])
+    setPhotos(prev => [...prev, ...validFiles])
 
-    validFiles.forEach((file) => {
+    validFiles.forEach(file => {
       const reader = new FileReader()
       reader.onloadend = () => {
-        setPhotoPreviews((prev) => [...prev, reader.result as string])
+        setPhotoPreviews(prev => [...prev, reader.result as string])
       }
       reader.readAsDataURL(file)
     })
   }
 
   const removePhoto = (index: number) => {
-    setPhotos((prev) => prev.filter((_, i) => i !== index))
-    setPhotoPreviews((prev) => prev.filter((_, i) => i !== index))
+    setPhotos(prev => prev.filter((_, i) => i !== index))
+    setPhotoPreviews(prev => prev.filter((_, i) => i !== index))
   }
 
   const removeExistingPhoto = (index: number) => {
-    setExistingPhotos((prev) => prev.filter((_, i) => i !== index))
+    setExistingPhotos(prev => prev.filter((_, i) => i !== index))
   }
 
   const handleDragOver = (e: React.DragEvent) => {
@@ -170,7 +170,7 @@ export default function EnterResultModal({
   const handleDrop = (e: React.DragEvent) => {
     e.preventDefault()
     const files = Array.from(e.dataTransfer.files)
-    const imageFiles = files.filter((file) => file.type.startsWith('image/'))
+    const imageFiles = files.filter(file => file.type.startsWith('image/'))
     if (imageFiles.length > 0) {
       addPhotos(imageFiles)
     }
@@ -225,7 +225,7 @@ export default function EnterResultModal({
     if (comments) formData.append('comments', comments)
 
     // Append all new photos to matchPhotos field
-    photos.forEach((photo) => {
+    photos.forEach(photo => {
       formData.append('matchPhotos', photo)
     })
 
@@ -265,99 +265,109 @@ export default function EnterResultModal({
           {/* Content */}
           <div className="p-6 space-y-6">
             {/* Select Winner */}
-            <div>
-              <label className="block text-sm font-semibold text-gray-900 mb-3">
-                Select Winner
-              </label>
-              <div className="space-y-3">
-                {/* Player 1 */}
-                <div
-                  onClick={() => setSelectedWinner(match?.player1Id?._id || '')}
-                  className={`flex items-center gap-3 p-4 border-2 rounded-lg cursor-pointer transition-all ${
-                    selectedWinner === match?.player1Id?._id
-                      ? 'border-green-600 bg-green-50'
-                      : 'border-gray-300 hover:border-gray-400'
-                  }`}
-                >
-                  <div
-                    className={`w-5 h-5 rounded-full border-2 flex items-center justify-center ${
-                      selectedWinner === match?.player1Id?._id
-                        ? 'border-green-600 bg-green-600'
-                        : 'border-gray-300'
-                    }`}
-                  >
-                    {selectedWinner === match?.player1Id?._id && (
-                      <div className="w-2 h-2 bg-white rounded-full" />
-                    )}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+              {/* LEFT COLUMN */}
+              <div className="space-y-6">
+                {/* Select Winner */}
+                <div>
+                  <label className="block text-sm font-semibold text-gray-900 mb-3">
+                    Select Winner
+                  </label>
+
+                  <div className="space-y-3">
+                    {/* Player 1 */}
+                    <div
+                      onClick={() =>
+                        setSelectedWinner(match?.player1Id?._id || '')
+                      }
+                      className={`flex items-center gap-3 p-4 border-2 rounded-lg cursor-pointer transition-all ${
+                        selectedWinner === match?.player1Id?._id
+                          ? 'border-green-600 bg-green-50'
+                          : 'border-gray-300 hover:border-gray-400'
+                      }`}
+                    >
+                      <div
+                        className={`w-5 h-5 rounded-full border-2 flex items-center justify-center ${
+                          selectedWinner === match?.player1Id?._id
+                            ? 'border-green-600 bg-green-600'
+                            : 'border-gray-300'
+                        }`}
+                      >
+                        {selectedWinner === match?.player1Id?._id && (
+                          <div className="w-2 h-2 bg-white rounded-full" />
+                        )}
+                      </div>
+                      <span className="font-medium text-gray-900">
+                        {match?.player1Id?.fullName || 'Player 1'}
+                      </span>
+                    </div>
+
+                    {/* Player 2 */}
+                    <div
+                      onClick={() =>
+                        setSelectedWinner(match?.player2Id?._id || '')
+                      }
+                      className={`flex items-center gap-3 p-4 border-2 rounded-lg cursor-pointer transition-all ${
+                        selectedWinner === match?.player2Id?._id
+                          ? 'border-green-600 bg-green-50'
+                          : 'border-gray-300 hover:border-gray-400'
+                      }`}
+                    >
+                      <div
+                        className={`w-5 h-5 rounded-full border-2 flex items-center justify-center ${
+                          selectedWinner === match?.player2Id?._id
+                            ? 'border-green-600 bg-green-600'
+                            : 'border-gray-300'
+                        }`}
+                      >
+                        {selectedWinner === match?.player2Id?._id && (
+                          <div className="w-2 h-2 bg-white rounded-full" />
+                        )}
+                      </div>
+                      <span className="font-medium text-gray-900">
+                        {match?.player2Id?.fullName || 'Player 2'}
+                      </span>
+                    </div>
                   </div>
+                </div>
+              </div>
+
+              {/* RIGHT COLUMN */}
+              <div className="space-y-3">
+                <label className="block text-sm font-semibold text-gray-900 ">
+                  Score
+                </label>
+                {/* Player 1 Score */}
+                <div className="flex items-center justify-between gap-2 p-2 bg-gray-50 rounded-lg">
                   <span className="font-medium text-gray-900">
                     {match?.player1Id?.fullName || 'Player 1'}
                   </span>
+                  <input
+                    type="number"
+                    min="0"
+                    value={player1Score}
+                    onChange={e => setPlayer1Score(e.target.value)}
+                    className="w-24 px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500 text-center font-semibold"
+                    placeholder="0"
+                    required
+                  />
                 </div>
 
-                {/* Player 2 */}
-                <div
-                  onClick={() => setSelectedWinner(match?.player2Id?._id || '')}
-                  className={`flex items-center gap-3 p-4 border-2 rounded-lg cursor-pointer transition-all ${
-                    selectedWinner === match?.player2Id?._id
-                      ? 'border-green-600 bg-green-50'
-                      : 'border-gray-300 hover:border-gray-400'
-                  }`}
-                >
-                  <div
-                    className={`w-5 h-5 rounded-full border-2 flex items-center justify-center ${
-                      selectedWinner === match?.player2Id?._id
-                        ? 'border-green-600 bg-green-600'
-                        : 'border-gray-300'
-                    }`}
-                  >
-                    {selectedWinner === match?.player2Id?._id && (
-                      <div className="w-2 h-2 bg-white rounded-full" />
-                    )}
-                  </div>
+                {/* Player 2 Score */}
+                <div className="flex items-center justify-between gap-4 p-2 bg-gray-50 rounded-lg">
                   <span className="font-medium text-gray-900">
                     {match?.player2Id?.fullName || 'Player 2'}
                   </span>
+                  <input
+                    type="number"
+                    min="0"
+                    value={player2Score}
+                    onChange={e => setPlayer2Score(e.target.value)}
+                    className="w-24 px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500 text-center font-semibold"
+                    placeholder="0"
+                    required
+                  />
                 </div>
-              </div>
-            </div>
-
-            {/* Scores - Updated Layout */}
-            <div className="space-y-4">
-              <label className="block text-sm font-semibold text-gray-900 mb-3">
-                Match Scores
-              </label>
-
-              {/* Player 1 Score */}
-              <div className="flex items-center justify-between gap-4 p-4 bg-gray-50 rounded-lg">
-                <span className="font-medium text-gray-900 flex-1">
-                  {match?.player1Id?.fullName || 'Player 1'}
-                </span>
-                <input
-                  type="number"
-                  min="0"
-                  value={player1Score}
-                  onChange={(e) => setPlayer1Score(e.target.value)}
-                  className="w-24 px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500 text-center font-semibold"
-                  placeholder="0"
-                  required
-                />
-              </div>
-
-              {/* Player 2 Score */}
-              <div className="flex items-center justify-between gap-4 p-4 bg-gray-50 rounded-lg">
-                <span className="font-medium text-gray-900 flex-1">
-                  {match?.player2Id?.fullName || 'Player 2'}
-                </span>
-                <input
-                  type="number"
-                  min="0"
-                  value={player2Score}
-                  onChange={(e) => setPlayer2Score(e.target.value)}
-                  className="w-24 px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500 text-center font-semibold"
-                  placeholder="0"
-                  required
-                />
               </div>
             </div>
 
@@ -370,7 +380,7 @@ export default function EnterResultModal({
                 <input
                   type="text"
                   value={location}
-                  onChange={(e) => setLocation(e.target.value)}
+                  onChange={e => setLocation(e.target.value)}
                   className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500"
                   placeholder="Collingtree Park GC"
                 />
@@ -382,7 +392,7 @@ export default function EnterResultModal({
                 <input
                   type="datetime-local"
                   value={dateTime}
-                  onChange={(e) => setDateTime(e.target.value)}
+                  onChange={e => setDateTime(e.target.value)}
                   className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500"
                 />
               </div>
@@ -395,7 +405,7 @@ export default function EnterResultModal({
               </label>
               <textarea
                 value={comments}
-                onChange={(e) => setComments(e.target.value)}
+                onChange={e => setComments(e.target.value)}
                 rows={3}
                 className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500 resize-none"
                 placeholder="Very Close match played against 2 great players"
