@@ -27,6 +27,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+// import { useSession } from "next-auth/react";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Skeleton } from "@/components/ui/skeleton";
 
@@ -65,8 +66,11 @@ interface Match {
 const UpdateMatch = () => {
   const searchParams = useSearchParams();
   const token = searchParams.get("token") || "";
+  console.log(token, "kongkon")
   const { id } = useParams();
   const queryClient = useQueryClient();
+  // const session = useSession();
+  // const token = (session?.data?.user as {accessToken:string})?.accessToken;
 
   const [photos, setPhotos] = useState<File[]>([]);
   const [photoPreviews, setPhotoPreviews] = useState<string[]>([]);
@@ -132,7 +136,7 @@ const UpdateMatch = () => {
   const updateMatchMutation = useMutation({
     mutationFn: async (formData: FormData) => {
       const res = await fetch(
-        `${process.env.NEXT_PUBLIC_BACKEND_URL}/match/${id}`,
+        `${process.env.NEXT_PUBLIC_BACKEND_URL}/match/${id}?verifyToken=${token}`,
         {
           method: "PUT",
           headers: {
@@ -228,6 +232,7 @@ const UpdateMatch = () => {
 
     // Prepare FormData
     const formData = new FormData();
+    formData.append("verifyToken", token); 
     formData.append("player1Score", values.player1Score);
     formData.append("player2Score", values.player2Score);
     formData.append("winner", values.winner);

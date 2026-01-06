@@ -452,9 +452,11 @@ function onSubmit(values: z.infer<typeof formSchema>) {
                           <SelectValue placeholder="Completed" />
                         </SelectTrigger>
                         <SelectContent>
+                          <SelectItem value="upcoming">Upcoming</SelectItem>
+                          <SelectItem value="in progress">In Progress</SelectItem>
                           <SelectItem value="completed">Completed</SelectItem>
-                          <SelectItem value="scheduled">scheduled</SelectItem>
-                          <SelectItem value="pending">Pending</SelectItem>
+                          <SelectItem value="cancelled">Cancelled</SelectItem>
+                          <SelectItem value="scheduled">Scheduled</SelectItem>
                         </SelectContent>
                       </Select>
                     </FormControl>

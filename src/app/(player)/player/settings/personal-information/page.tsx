@@ -1,7 +1,7 @@
 import React from "react";
 import SettingsHeader from "../_components/settings-header";
 import ProfilePicture from "./_components/profile-picture";
-import YourTournamentStats from "./_components/your-tournament-stats";
+// import YourTournamentStats from "./_components/your-tournament-stats";
 import PersonalInformationForm from "./_components/personal-information-form";
 
 const PersonalInformationPage = () => {
@@ -12,9 +12,9 @@ const PersonalInformationPage = () => {
         <div className="md:col-span-1">
           <ProfilePicture/>
         </div>
-        <div className="md:col-span-3">
+        {/* <div className="md:col-span-3">
           <YourTournamentStats/>
-        </div>
+        </div> */}
       </div>
       <PersonalInformationForm />
     </div>

@@ -91,7 +91,7 @@ const CreateMatchForm = () => {
     queryKey: ["tournaments"],
     queryFn: async () => {
       const res = await fetch(
-        `${process.env.NEXT_PUBLIC_BACKEND_URL}/tournament`, {
+        `${process.env.NEXT_PUBLIC_BACKEND_URL}/tournament?limit=1000`, {
         method: "GET",
         headers: {
           Authorization: `Bearer ${token}`,
@@ -144,6 +144,8 @@ const CreateMatchForm = () => {
       value: item?.pairId?._id,
       label: item?.pairId?.teamName,
     })) ?? [];
+
+    console.log(playerOptions , "dfdf")
 
 
   const { mutate, isPending } = useMutation({
@@ -260,7 +262,7 @@ function onSubmit(values: z.infer<typeof formSchema>) {
                       <SelectTrigger className="w-full h-[48px] py-2 px-3 rounded-[8px] border border-[#C0C3C1] text-base font-medium leading-[120%] text-[#434C45)]">
                         <SelectValue placeholder="Select tournament" />
                       </SelectTrigger>
-                      <SelectContent>
+                      <SelectContent className="h-[250px] overflow-y-auto">
                         {tournamentOptions.map((t) => (
                           <SelectItem key={t.value} value={t.value}>
                             {t.label}
@@ -350,11 +352,11 @@ function onSubmit(values: z.infer<typeof formSchema>) {
                   <FormItem>
                     <FormLabel>Player 1</FormLabel>
                     <Select value={field.value} onValueChange={field.onChange} disabled={!selectedTournamentId || detailsLoading}>
-                      <SelectTrigger className="w-full h-[48px] py-2 px-3 rounded-[8px] border border-[#C0C3C1] text-base font-medium leading-[120%] text-[#434C45)]">
+                      <SelectTrigger className="w-full h-[48px] py-2 px-3 rounded-[8px] border border-[#C0C3C1] text-base font-medium leading-[120%] text-[#434C45]">
                         <SelectValue placeholder="Select player" />
                       </SelectTrigger>
                       <SelectContent>
-                        {playerOptions.map((p) => (
+                        {playerOptions?.map((p) => (
                           <SelectItem key={p.value} value={p.value}>
                             {p.label}
                           </SelectItem>
@@ -373,12 +375,12 @@ function onSubmit(values: z.infer<typeof formSchema>) {
                   <FormItem>
                     <FormLabel>Player 2</FormLabel>
                     <Select value={field.value} onValueChange={field.onChange} disabled={!selectedTournamentId || detailsLoading}>
-                      <SelectTrigger className="w-full h-[48px] py-2 px-3 rounded-[8px] border border-[#C0C3C1] text-base font-medium leading-[120%] text-[#434C45)]">
+                      <SelectTrigger className="w-full h-[48px] py-2 px-3 rounded-[8px] border border-[#C0C3C1] text-base font-medium leading-[120%] text-[#434C45]">
                         <SelectValue placeholder="Select player" />
                       </SelectTrigger>
-                      <SelectContent>
-                        {playerOptions.map((p) => (
-                          <SelectItem key={p.value} value={p.value}>
+                      <SelectContent >
+                        {playerOptions?.map((p) => (
+                          <SelectItem key={p.value} value={p.value} className="text-black">
                             {p.label}
                           </SelectItem>
                         ))}
@@ -448,10 +450,12 @@ function onSubmit(values: z.infer<typeof formSchema>) {
                         <SelectTrigger className="w-full h-[48px] py-2 px-3 rounded-[8px] border border-[#C0C3C1] text-base font-medium leading-[120%] text-[#434C45)]">
                           <SelectValue placeholder="Completed" />
                         </SelectTrigger>
-                        <SelectContent>
+                      <SelectContent>
+                          <SelectItem value="upcoming">Upcoming</SelectItem>
+                          <SelectItem value="in progress">In Progress</SelectItem>
                           <SelectItem value="completed">Completed</SelectItem>
-                          <SelectItem value="scheduled">scheduled</SelectItem>
-                          <SelectItem value="pending">Pending</SelectItem>
+                          <SelectItem value="cancelled">Cancelled</SelectItem>
+                          <SelectItem value="scheduled">Scheduled</SelectItem>
                         </SelectContent>
                       </Select>
                     </FormControl>
