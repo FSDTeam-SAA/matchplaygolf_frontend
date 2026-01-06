@@ -49,8 +49,8 @@ const formSchema = z.object({
 
 const DRAW_FORMAT_OPTIONS = [
   // { id: "matrix", label: "Matrix 2", value: "matrix" },
-  { id: "knockout", label: "Knockout ?", value: "knockout" },
-  { id: "teams", label: "Teams ?", value: "teams" },
+  { id: "Knockout", label: "Knockout ?", value: "Knockout" },
+  { id: "Teams", label: "Teams ?", value: "Teams" },
 ]
 
 const CreateTournament = () => {

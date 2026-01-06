@@ -141,7 +141,7 @@ const TournamentDrawPage = ({ data }: { data: TournamentResponseData }) => {
           variant="outline"
           onClick={handleSendEmails}
           disabled={emailLoading}
-          className="h-[49px] bg-[#343A40] hover:bg-black/60 text-[#F8F9FA] border-none rounded-[8px]"
+          className="w-[250px] h-[49px] bg-[#343A40] hover:bg-black/60 text-[#F8F9FA] hover:text-white border-none rounded-[8px]"
         >
           {emailLoading
             ? "Sending..."

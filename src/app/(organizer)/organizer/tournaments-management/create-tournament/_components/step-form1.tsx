@@ -37,8 +37,8 @@ const formSchema = z.object({
 });
 
 const DRAW_FORMAT_OPTIONS = [
-  { value: "knockout", label: "Knockout ?" },
-  { value: "teams", label: "Teams ?" },
+  { value: "Knockout", label: "Knockout ?" },
+  { value: "Teams", label: "Teams ?" },
 ];
 
 const DRAW_SIZE_PRICE_MAP: Record<string, number> = {

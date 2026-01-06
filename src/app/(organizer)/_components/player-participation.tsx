@@ -2,7 +2,7 @@
 "use client";
 
 import { Area, AreaChart, CartesianGrid, XAxis, YAxis } from "recharts";
-
+import { useState } from 'react'
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import {
   ChartConfig,
@@ -10,7 +10,7 @@ import {
   ChartTooltip,
   ChartTooltipContent,
 } from "@/components/ui/chart";
-import { CircleAlert } from "lucide-react";
+import { CircleAlert, Calendar } from "lucide-react";
 import { useSession } from "next-auth/react";
 import { useQuery } from "@tanstack/react-query";
 import TableSkeletonWrapper from "@/components/shared/TableSkeletonWrapper/TableSkeletonWrapper";
@@ -39,15 +39,29 @@ const chartConfig = {
   },
 } satisfies ChartConfig;
 
+  const generateYearOptions = () => {
+  const currentYear = new Date().getFullYear()
+  const years = []
+  for (let i = 0; i < 6; i++) {
+    years.push(currentYear - i)
+  }
+  return years
+}
+
 export function PlayerParticipation() {
 
   const session = useSession();
   const token = (session?.data?.user as { accessToken: string })?.accessToken;
 
+    const [selectedYear, setSelectedYear] = useState(new Date().getFullYear())
+  const yearOptions = generateYearOptions()
+
+
+
   const {data, isLoading, isError, error} = useQuery<ParticipantsByYearResponse>({
-    queryKey: ["participants-by-year"],
+    queryKey: ["participants-by-year", selectedYear],
     queryFn: async () =>{
-      const res = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/organizer-dashboard/participants?year=2025`,{
+      const res = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/organizer-dashboard/participants?year=${selectedYear}`,{
         method: "GET",
         headers: {
           Authorization : `Bearer ${token}`
@@ -90,11 +104,29 @@ export function PlayerParticipation() {
     content = (
       <div>
            <Card className="">
-        <CardHeader>
-          <CardTitle className="flex items-center gap-2 text-xl font-semibold leading-[150%] text-[#343A40] font-hexco">
-            Player Participation <CircleAlert />
-          </CardTitle>
-        </CardHeader>
+         <CardHeader>
+           <div className="flex items-center justify-between">
+             <CardTitle className="flex items-center gap-2 text-xl font-semibold leading-[150%] text-[#343A40] font-hexco">
+               Player Participation<CircleAlert className="w-5 h-5" />
+             </CardTitle>
+
+             {/* Year Filter Dropdown */}
+             <div className="relative">
+               <select
+                 value={selectedYear}
+                 onChange={e => setSelectedYear(Number(e.target.value))}
+                 className="appearance-none bg-white border border-[#E6E6E8] rounded-lg px-4 py-2 pr-10 text-sm font-medium text-[#343A40] cursor-pointer hover:border-[#DF1020] focus:outline-none focus:ring-2 focus:ring-[#DF1020] focus:ring-opacity-20 transition-all"
+               >
+                 {yearOptions.map(year => (
+                   <option key={year} value={year}>
+                     {year}
+                  </option>
+                 ))}
+               </select>
+               <Calendar className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-[#616161] pointer-events-none" />
+             </div>
+           </div>
+         </CardHeader>
         <CardContent>
           <ChartContainer config={chartConfig} className="w-full max-h-[373px]">
             <AreaChart
@@ -135,3 +167,4 @@ export function PlayerParticipation() {
     </div>
   );
 }
+

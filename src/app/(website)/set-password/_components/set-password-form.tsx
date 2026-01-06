@@ -3,6 +3,7 @@
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm } from "react-hook-form"
 import { z } from "zod"
+import { useRouter } from "next/navigation";
 
 import { Button } from "@/components/ui/button"
 import {
@@ -44,6 +45,7 @@ const formSchema = z
 const SetPasswordForm = () => {
     const [showPassword, setShowPassword] = useState(false);
     const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+    const router = useRouter();
     const searchParams = useSearchParams();
     const token = searchParams.get("token");
     console.log(token)
@@ -75,6 +77,7 @@ const SetPasswordForm = () => {
             }
             toast.success(data?.message || "set password Successfully");
             form.reset()
+            router.push('/login')
         }
     })
 
@@ -95,7 +98,7 @@ const SetPasswordForm = () => {
     return (
         <div className="container">
             <Form {...form} >
-                <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6 w-full md:w-2/3">
+                <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6 w-full md:w-2/3 mx-auto">
                     <FormField
                         control={form.control}
                         name="password"
@@ -129,7 +132,7 @@ const SetPasswordForm = () => {
                             </FormItem>
                         )}
                     />
-                  <div className="w-full flex items-center justify-end pt-4">
+                  <div className="w-full flex items-center justify-center pt-4">
                       <Button className="h-[52px] px-10 rounded-[10px] text-base leading-[120%] font-medium" disabled={isPending} type="submit">{isPending ? "Changing...." : "Change Password"}</Button>
                   </div>
                 </form>
