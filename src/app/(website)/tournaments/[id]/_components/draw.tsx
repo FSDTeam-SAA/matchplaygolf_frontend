@@ -15,12 +15,16 @@ interface PairId {
     fullName: string;
     email: string;
     profileImage: string;
+    handicap: string;
+    clubName: string;
   };
   player2: {
     _id: string;
     fullName: string;
     email: string;
     profileImage: string;
+    handicap: string;
+    clubName: string;
   };
 }
 
