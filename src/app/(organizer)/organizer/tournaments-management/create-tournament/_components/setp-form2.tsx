@@ -62,11 +62,11 @@ export default function Step2Form() {
     const payload = {
       tournamentName: step1Data.tournamentName,
       sportName: step1Data.sportName,
-      drawFormat: step1Data.drawFormat === "knockout" ? "Knockout" : "Teams",
+      drawFormat: step1Data.drawFormat === "Knockout" ? "Knockout" : "Teams",
       format:
-        step1Data.format.charAt(0).toUpperCase() + step1Data.format.slice(1), // Single / Pairs / Team
+        step1Data.format.charAt(0).toUpperCase() + step1Data.format.slice(1),
       drawSize: parseInt(step1Data.totalDrawSize),
-      price: "5000", // or make dynamic later
+      price: step1Data.price, // or make dynamic later
       billingAddress: {
         fullName: data?.fullName,
         email: data.email,
