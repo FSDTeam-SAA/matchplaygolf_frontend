@@ -15,7 +15,7 @@ const VsModal = ({ isModalOpen, handleCloseModal, matchInfo }: Props) => {
       <DialogContent className="bg-white lg:max-w-2xl max-w-[95vw] sm:max-w-lg md:max-w-xl">
         <div className="flex flex-col md:flex-row items-center justify-between gap-6 md:gap-8 p-4 md:p-6">
           {/* Player 1 */}
-          <div className="flex flex-col items-center text-center w-full md:w-1/3">
+          <div className="flex flex-col items-center text-center w-full md:w-1/2">
             <h1 className="text-xl md:text-2xl font-bold text-gray-800 mb-4">
               {matchInfo?.matchType === "Team" ? "Team 1" : "Player 1"}
             </h1>
@@ -34,10 +34,18 @@ const VsModal = ({ isModalOpen, handleCloseModal, matchInfo }: Props) => {
             </div>
 
             <h1 className="text-lg md:text-xl font-semibold text-gray-800 mt-2 line-clamp-2">
-              {matchInfo?.player1Id?.fullName || "N/A"}
+              Name: {matchInfo?.player1Id?.fullName || "N/A"}
             </h1>
-            <p className="text-sm md:text-base text-gray-600 mt-1 break-words max-w-full">
-              {matchInfo?.player1Id?.email || "No email"}
+            <p className="text-sm md:text-base text-gray-600 mt-1 max-w-full">
+              Email: {matchInfo?.player1Id?.email || "No email"}
+            </p>
+
+            <p className="text-sm md:text-base text-gray-600 mt-1">
+              Handicap: {matchInfo?.player1Id?.handicap || "Not Updated"}
+            </p>
+
+            <p className="text-sm md:text-base text-gray-600 mt-1">
+              Club Name: {matchInfo?.player1Id?.clubName || "Not Updated"}
             </p>
           </div>
 
@@ -54,7 +62,7 @@ const VsModal = ({ isModalOpen, handleCloseModal, matchInfo }: Props) => {
           </div>
 
           {/* Player 2 */}
-          <div className="flex flex-col items-center text-center w-full md:w-1/3">
+          <div className="flex flex-col items-center text-center w-full md:w-1/2">
             <h1 className="text-xl md:text-2xl font-bold text-gray-800 mb-4">
               {matchInfo?.matchType === "Team" ? "Team 2" : "Player 2"}
             </h1>
@@ -73,10 +81,18 @@ const VsModal = ({ isModalOpen, handleCloseModal, matchInfo }: Props) => {
             </div>
 
             <h1 className="text-lg md:text-xl font-semibold text-gray-800 mt-2 line-clamp-2">
-              {matchInfo?.player2Id?.fullName || "N/A"}
+              Name: {matchInfo?.player2Id?.fullName || "N/A"}
             </h1>
             <p className="text-sm md:text-base text-gray-600 mt-1 break-words max-w-full">
-              {matchInfo?.player2Id?.email || "No email"}
+              Email: {matchInfo?.player2Id?.email || "No email"}
+            </p>
+
+            <p className="text-sm md:text-base text-gray-600 mt-1 break-words max-w-full">
+              Handicap: {matchInfo?.player2Id?.handicap || "Not Updated"}
+            </p>
+
+            <p className="text-sm md:text-base text-gray-600 mt-1 break-words max-w-full">
+              Club Name: {matchInfo?.player2Id?.clubName || "Not Updated"}
             </p>
           </div>
         </div>

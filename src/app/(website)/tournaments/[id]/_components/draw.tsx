@@ -34,12 +34,16 @@ export interface Match {
     fullName: string;
     profileImage: string;
     email: string;
+    handicap: string;
+    clubName: string;
   };
   player2Id: {
     _id: string;
     fullName: string;
     profileImage: string;
     email: string;
+    handicap: string;
+    clubName: string;
   };
   player1Score: string;
   player2Score: string;
