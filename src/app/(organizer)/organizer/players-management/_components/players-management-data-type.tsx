@@ -22,6 +22,7 @@ export interface Filters {
 export interface TournamentPlayerItem {
   playerDetails: PlayerDetails
   tournamentDetails: TournamentDetails
+  playerId: string
 }
 
 

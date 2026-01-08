@@ -166,7 +166,7 @@ const PlayersManagementContainer = () => {
                     <button
                       onClick={() => {
                         setDeleteModalOpen(true);
-                        setPlayerId(item?.playerDetails?._id);
+                        setPlayerId(item?.playerId);
                       }}
                       className="cursor-pointer"
                     >
