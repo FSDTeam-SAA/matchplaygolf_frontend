@@ -92,12 +92,6 @@ const MatchesManagementContainer = () => {
                 Round
               </TableHead>
               <TableHead className="text-sm font-normal leading-[150%] text-[#343A40] text-center py-4 ">
-                Player 1
-              </TableHead>
-              <TableHead className="text-sm font-normal leading-[150%] text-[#343A40] text-center py-4 ">
-                Player 2
-              </TableHead>
-              <TableHead className="text-sm font-normal leading-[150%] text-[#343A40] text-center py-4 ">
                 Score
               </TableHead>
               <TableHead className="text-sm font-normal leading-[150%] text-[#343A40] text-center py-4 ">
@@ -119,16 +113,10 @@ const MatchesManagementContainer = () => {
                     {item?.tournamentId?.tournamentName}
                   </TableCell>
                   <TableCell className="text-base font-normal text-[#68706A] leading-[150%] text-center py-4">
-                    {item?.roundId?.roundName}
+                    {item?.round}
                   </TableCell>
                   <TableCell className="text-base font-normal text-[#68706A] leading-[150%] text-center py-4">
-                    {item?.player1Id?.fullName}
-                  </TableCell>
-                  <TableCell className="text-base font-medium text-[#343A40] leading-[150%] text-center py-4">
-                    {item?.player2Id?.fullName}
-                  </TableCell>
-                  <TableCell className="text-base font-normal text-[#68706A] leading-[150%] text-center py-4">
-                    {item?.score}
+                    {item?.matchType === "Pair" ? <div><span>{item?.pair1Score}</span> / {item?.pair2Score}</div> : <div><span>{item?.player1Score}</span> / {item?.player2Score}</div> }
                   </TableCell>
                   <TableCell className="text-base font-medium text-[#343A40] leading-[150%] text-center py-4">
                     {moment(item?.createdAt).format("MMM DD YYYY")}
@@ -136,13 +124,12 @@ const MatchesManagementContainer = () => {
 
                   <TableCell className="text-base font-medium text-[#68706A] leading-[150%] text-center py-4">
                     <button
-                      className={`w-[140px] h-[40px] ${
-                        item?.status === "Ongoing"
+                      className={`w-[140px] h-[40px] ${item?.status === "Ongoing"
                           ? "bg-[#E6FAEE] text-[#27BE69] py-2 px-4"
                           : item?.status === "Upcoming"
-                          ? "bg-[#EFF6FF] text-[#2563EB] py-2 px-4"
-                          : "bg-[#E8E8E8] text-[#6C757D] py-2 px-4"
-                      }`}
+                            ? "bg-[#EFF6FF] text-[#2563EB] py-2 px-4"
+                            : "bg-[#E8E8E8] text-[#6C757D] py-2 px-4"
+                        }`}
                     >
                       {item?.status}
                     </button>
@@ -224,9 +211,9 @@ const MatchesManagementContainer = () => {
           </div>
           <div>
             <Link href="/organizer/matches-management/create-match">
-            <button className="flex items-center gap-2 bg-[#DF1020] py-3 px-9 rounded-[8px] text-[#F8F9FA] text-base font-medium leading-[150%] ">
-              <Plus /> Create Match
-            </button>
+              <button className="flex items-center gap-2 bg-[#DF1020] py-3 px-9 rounded-[8px] text-[#F8F9FA] text-base font-medium leading-[150%] ">
+                <Plus /> Create Match
+              </button>
             </Link>
           </div>
         </div>
