@@ -1,6 +1,6 @@
 import React from "react";
 import { Dialog, DialogContent } from "@/components/ui/dialog";
-import { TournamentPlayer } from "./players-management-data-type";
+import { TournamentPlayerItem } from "./players-management-data-type";
 import Image from "next/image";
 
 const PlayersView = ({
@@ -10,7 +10,7 @@ const PlayersView = ({
 }: {
   open: boolean;
   onOpenChange: (open: boolean) => void;
-  tournamentData: TournamentPlayer | null;
+  tournamentData: TournamentPlayerItem | null;
 }) => {
   if (!tournamentData) return null;
 
@@ -20,28 +20,28 @@ const PlayersView = ({
 
         <div className="space-y-2">
              <p>
-            <strong>Tournament Name :</strong> {tournamentData?.tournamentId?.tournamentName || "N/A"}
+            <strong>Tournament Name :</strong> {tournamentData?.tournamentDetails?.tournamentName || "N/A"}
           </p>
           <p className="flex items-center gap-5">
-            <strong>Player Profile :</strong> <Image src={tournamentData?.playerId?.profileImage || "/images/common/no-user.jpeg"} alt="Player Profile" width={50} height={50} className="w-10 h-10 object-cover rounded-[10px]"/> 
+            <strong>Player Profile :</strong> <Image src={tournamentData?.playerDetails?.profileImage || "/images/common/no-user.jpeg"} alt="Player Profile" width={50} height={50} className="w-10 h-10 object-cover rounded-[10px]"/> 
           </p>
           <p>
-            <strong>Player Name :</strong> {tournamentData?.playerId?.fullName || "N/A"}
+            <strong>Player Name :</strong> {tournamentData?.playerDetails?.fullName || "N/A"}
           </p>
           <p>
-            <strong>Player Email :</strong> {tournamentData?.playerId?.fullName || "N/A"}
+            <strong>Player Email :</strong> {tournamentData?.playerDetails?.fullName || "N/A"}
           </p>
           <p>
-            <strong>Phone :</strong> {tournamentData?.playerId?.phone || "N/A"}
+            <strong>Phone :</strong> {tournamentData?.playerDetails?.phone || "N/A"}
           </p>
           <p>
-            <strong>Country :</strong> {tournamentData?.playerId?.country || "N/A"}
+            <strong>Country :</strong> {tournamentData?.playerDetails?.country || "N/A"}
           </p>
            <p>
-            <strong>Handicap :</strong> {tournamentData?.playerId?.handicap || "N/A"}
+            <strong>Handicap :</strong> {tournamentData?.playerDetails?.handicap || "N/A"}
           </p>
           <p>
-            <strong>Status :</strong> {tournamentData?.playerId?.status || "N/A"}
+            <strong>Status :</strong> {tournamentData?.playerDetails?.status || "N/A"}
           </p>
         </div>
       </DialogContent>

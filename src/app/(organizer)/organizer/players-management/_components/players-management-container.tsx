@@ -21,7 +21,7 @@ import ErrorContainer from "@/components/shared/ErrorContainer/ErrorContainer";
 import TableSkeletonWrapper from "@/components/shared/TableSkeletonWrapper/TableSkeletonWrapper";
 import { useDebounce } from "@/hooks/useDebounce";
 import PlayersView from "./players-view";
-import { TournamentPlayerApiResponse, TournamentPlayer } from "./players-management-data-type";
+import { TournamentPlayerApiResponse, TournamentPlayerItem } from "./players-management-data-type";
 import Image from "next/image";
 
 const PlayersManagementContainer = () => {
@@ -31,7 +31,7 @@ const PlayersManagementContainer = () => {
   const [viewPlayer, setViewPlayer] = useState(false);
   const [playerId, setPlayerId] = useState("");
   const [selectedPlayer, setSelectedPlayer] =
-    useState<TournamentPlayer | null>(null);
+    useState<TournamentPlayerItem | null>(null);
     const debouncedSearch = useDebounce(search, 500);
 
   const queryClient = useQueryClient();
@@ -59,7 +59,7 @@ const PlayersManagementContainer = () => {
     enabled: !!token,
   });
 
-  console.log(data)
+  console.log(data?.data)
 
   let content;
 
@@ -119,38 +119,38 @@ const PlayersManagementContainer = () => {
             </TableRow>
           </TableHeader>
           <TableBody className="border-b border-x border-[#E6E7E6] rounded-b-[12px]">
-            {data?.data?.map((item) => {
+            {data?.data?.map((item, index) => {
               return (
-                <TableRow key={item?._id} className="">
+                <TableRow key={index} className="">
                   <TableCell className="w-[267px] text-base font-medium text-[#68706A] leading-[150%] pl-6 py-4">
-                    {item?.tournamentId?.tournamentName}
+                    {item?.tournamentDetails?.tournamentName || "N/A"}
                   </TableCell>
                   <TableCell className="flex items-center justify-start gap-2 text-base font-normal text-[#68706A] leading-[150%] py-4">
                     <div>
-                      <Image src={item?.playerId?.profileImage || "/images/common/no-user.jpeg"} alt="Profile" width={40} height={40} className="w-8 h-8 rounded-full object-cover" />
+                      <Image src={item?.playerDetails?.profileImage || "/images/common/no-user.jpeg"} alt="Profile" width={40} height={40} className="w-8 h-8 rounded-full object-cover" />
                     </div>
                     <div>
-                      {item?.playerId?.fullName || "N/A"} <br/> {item?.playerId?.email || "N/A"}
+                      {item?.playerDetails?.fullName || "N/A"} <br/> {item?.playerDetails?.email || "N/A"}
                     </div>
                   </TableCell>
                   <TableCell className="text-base font-normal text-[#68706A] leading-[150%] text-center py-4">
-                    {item?.playerId?.handicap || "N/A"}
+                    {item?.playerDetails?.handicap || "N/A"}
                   </TableCell>
                   <TableCell className="text-base font-normal text-[#68706A] leading-[150%] text-center py-4">
-                   {item?.playerId?.country || "N/A"}
+                   {item?.playerDetails?.country || "N/A"}
                   </TableCell>
                   <TableCell className="text-base font-normal text-[#68706A] leading-[150%] text-center py-4">
-                   {item?.playerId?.phone || "N/A"}
+                   {item?.playerDetails?.phone || "N/A"}
                   </TableCell>
                   <TableCell className="text-base font-medium text-[#68706A] leading-[150%] text-center py-4">
                     <button
                       className={`w-[140px] h-[40px] ${
-                        item?.playerId?.status === "active"
+                        item?.playerDetails?.status === "active"
                           ? "bg-[#E6FAEE] text-[#27BE69] py-2 px-4"
                           : "bg-[#E7E7E7] text-[#616161] py-2 px-4"
                       }`}
                     >
-                      {item?.playerId?.status || "N/A"}
+                      {item?.playerDetails?.status || "N/A"}
                     </button>
                   </TableCell>
                   <TableCell className="flex items-center justify-center gap-6 py-4">
@@ -166,7 +166,7 @@ const PlayersManagementContainer = () => {
                     <button
                       onClick={() => {
                         setDeleteModalOpen(true);
-                        setPlayerId(item?._id);
+                        setPlayerId(item?.playerDetails?._id);
                       }}
                       className="cursor-pointer"
                     >
