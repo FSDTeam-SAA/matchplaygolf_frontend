@@ -44,10 +44,16 @@ const TournamentsManagementContainer = () => {
     queryKey: ["tournaments", currentPage, debouncedSearch],
     queryFn: async () => {
       const res = await fetch(
-        `${process.env.NEXT_PUBLIC_BACKEND_URL}/tournament?page=${currentPage}&limit=8&tournamentName=${debouncedSearch}`
+        `${process.env.NEXT_PUBLIC_BACKEND_URL}/tournament/creator?page=${currentPage}&limit=8&tournamentName=${debouncedSearch}`,{
+          method: "GET",
+          headers: {
+            Authorization : `Bearer ${token}`
+          }
+        }
       );
       return res.json();
     },
+    enabled: !!token
   });
 
   let content;
@@ -126,7 +132,7 @@ const TournamentsManagementContainer = () => {
                     {moment(item?.endDate).format("MMM DD, YYYY")}
                   </TableCell>
                   <TableCell className="text-base font-medium text-[#343A40] leading-[150%] text-center py-4">
-                    {item?.playerCount || 0}
+                    {item?.totalParticipants || 0}
                   </TableCell>
                   <TableCell className="text-base font-medium text-[#68706A] leading-[150%] text-center py-4">
                     <button
