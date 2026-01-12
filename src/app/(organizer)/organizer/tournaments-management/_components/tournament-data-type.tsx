@@ -87,7 +87,7 @@ export interface Tournament {
   createdAt: string;
   updatedAt: string;
   __v: number;
-  playerCount: number;
+  totalParticipants: number;
 }
 
 export interface Pagination {
