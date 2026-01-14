@@ -88,7 +88,7 @@ const GetInTouch = () => {
   }
 
   return (
-    <div className="flex gap-10">
+    <div className="flex flex-col lg:flex-row gap-10">
       <div className="flex-1">
         <div className="mb-5">
           <h1 className="text-3xl font-hexco">
@@ -194,7 +194,7 @@ const GetInTouch = () => {
         </Form>
       </div>
 
-      <div className="w-[600px]">
+      <div className="hidden lg:block lg:w-[600px]">
         <Image
           src={"/images/contact/contact.jpg"}
           alt="img.png"
