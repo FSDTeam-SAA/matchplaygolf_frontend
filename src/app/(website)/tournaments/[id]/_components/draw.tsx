@@ -114,11 +114,11 @@ const Draw = ({
     return (
       <div className="space-y-6">
         {[1, 2, 3].map((item) => (
-          <div key={item} className="flex items-start gap-5 space-y-8">
-            <Skeleton className="h-6 w-8 rounded-md" />
-            <div className="flex-1 shadow-lg rounded-lg overflow-hidden ">
-              <div className="pl-4 pr-4 border-b border-b-gray-300 flex items-center">
-                <div className="border-r border-gray-300 lg:w-1/2 p-5">
+          <div key={item} className="flex flex-col sm:flex-row items-start gap-5 space-y-8">
+            <Skeleton className="h-6 w-8 rounded-md hidden sm:block" />
+            <div className="flex-1 shadow-lg rounded-lg overflow-hidden w-full">
+              <div className="flex flex-col md:flex-row items-center p-4 md:p-0 border-b border-b-gray-300">
+                <div className="border-b md:border-b-0 md:border-r border-gray-300 w-full md:w-1/2 p-4 md:p-5">
                   <div className="flex items-center gap-2">
                     <Skeleton className="h-12 w-12 rounded-full" />
                     <div className="space-y-2">
@@ -128,12 +128,12 @@ const Draw = ({
                   </div>
                 </div>
 
-                <div className="px-8">
+                <div className="p-4 md:px-8">
                   <Skeleton className="h-6 w-8" />
                 </div>
 
-                <div className="border-l border-gray-300 lg:w-1/2 flex justify-end p-5">
-                  <div className="flex items-center gap-2">
+                <div className="border-t md:border-t-0 md:border-l border-gray-300 w-full md:w-1/2 p-4 md:p-5">
+                  <div className="flex items-center gap-2 justify-end">
                     <div className="space-y-2 text-right">
                       <Skeleton className="h-4 w-32 ml-auto" />
                       <Skeleton className="h-3 w-16 ml-auto" />
@@ -144,7 +144,7 @@ const Draw = ({
               </div>
 
               <div className="bg-[#f9fafb] p-4">
-                <div className="flex justify-between items-center">
+                <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3">
                   <div className="space-y-2">
                     <Skeleton className="h-4 w-40" />
                     <Skeleton className="h-3 w-24" />
@@ -172,26 +172,26 @@ const Draw = ({
   }
 
   return (
-    <div>
-      <div className="mt-8 mb-5 grid grid-cols-3 lg:grid-cols-10 gap-5">
+    <div className="w-full">
+      <div className="mt-8 mb-5 grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-10 gap-3 sm:gap-5">
         {data?.rounds?.map((item) => {
           return (
             <Button
               key={item?._id}
               onClick={() => setRoundNumber(item?.roundNumber)}
-              className={`h-[45px] w-[130px] rounded-3xl hover:text-white  ${
+              className={`h-[40px] sm:h-[45px] w-full min-w-[80px] sm:w-[130px] rounded-3xl hover:text-white transition-all duration-200 ${
                 roundNumber === item?.roundNumber
                   ? "bg-primary text-white"
                   : "bg-inherit border border-primary text-primary"
               }`}
             >
-              {item?.roundName}
+              <span className="text-xs sm:text-sm truncate">{item?.roundName}</span>
             </Button>
           );
         })}
       </div>
 
-      <div className="space-y-6">
+      <div className="space-y-4 sm:space-y-6">
         {matches.map((item, index) => {
           const winner1 = item?.winner === item?.player1Id?._id;
           const winner2 = item?.winner === item?.player2Id?._id;
@@ -199,21 +199,24 @@ const Draw = ({
           return (
             <div key={item._id}>
               {item?.matchType === "Single" || item?.matchType === "Team" ? (
-                <div className="flex items-center gap-5 space-y-5">
-                  <div className="font-medium text-gray-500 pt-5">
+                <div className="flex flex-col sm:flex-row items-start sm:items-center gap-3 sm:gap-5 space-y-5 sm:space-y-0">
+                  <div className="font-medium text-gray-500 pt-5 hidden sm:block">
+                    {index + 1 < 10 ? `0${index + 1}` : index + 1}
+                  </div>
+                  <div className="font-medium text-gray-500 pt-5 block sm:hidden text-sm">
                     {index + 1 < 10 ? `0${index + 1}` : index + 1}
                   </div>
 
-                  <div className="flex-1 shadow-lg rounded-lg overflow-hidden border border-gray-200">
-                    <div className="border-b border-b-gray-300 flex items-center">
-                      {/* winner 1 card */}
+                  <div className="flex-1 w-full shadow-lg rounded-lg overflow-hidden border border-gray-200">
+                    <div className="flex flex-col md:flex-row items-center p-4 md:p-0 border-b border-b-gray-300">
+                      {/* Player 1 card */}
                       <div
-                        className={`border-r border-gray-300 lg:w-1/2 p-6 ${
+                        className={`border-b md:border-b-0 md:border-r border-gray-300 w-full md:w-1/2 p-4 md:p-6 ${
                           winner1 ? `bg-[#39674b] text-white` : ""
                         }`}
                       >
                         <div className="flex items-center gap-3">
-                          <div className="h-12 w-12 rounded-full flex items-center justify-center overflow-hidden bg-gray-100">
+                          <div className="h-10 w-10 md:h-12 md:w-12 rounded-full flex items-center justify-center overflow-hidden bg-gray-100">
                             {item.player1Id?.profileImage ? (
                               <Image
                                 src={item.player1Id.profileImage}
@@ -223,34 +226,34 @@ const Draw = ({
                                 className="h-full w-full rounded-full object-cover"
                               />
                             ) : (
-                              <span className="text-lg font-semibold text-red-800">
+                              <span className="text-base md:text-lg font-semibold text-red-800">
                                 {item.player1Id?.fullName?.charAt(0) || "P1"}
                               </span>
                             )}
                           </div>
                           <div>
-                            <h1 className="font-semibold">
+                            <h1 className="font-semibold text-sm md:text-base truncate">
                               {item.player1Id?.fullName || "Player 1"}
                             </h1>
                           </div>
                         </div>
                       </div>
 
-                      {/* vs button */}
+                      {/* VS section */}
                       <div
-                        className={`px-8 flex items-center gap-2 ${
+                        className={`px-4 md:px-8 py-3 md:py-0 flex items-center gap-2 ${
                           winner1 && "flex-row-reverse"
                         }`}
                       >
                         <div
                           onClick={() => handleVsOpen(item)}
-                          className="text-sm text-gray-500 cursor-pointer"
+                          className="text-sm text-gray-500 cursor-pointer hover:text-primary transition-colors"
                         >
                           VS
                         </div>
                         {item.status === "completed" && (
                           <div className="text-sm font-medium text-gray-600">
-                            <span className="text-red-700 font-bold text-xl flex">
+                            <span className="text-red-700 font-bold text-lg md:text-xl flex">
                               <span>{item.player1Score}</span> <span> /</span>{" "}
                               <span> {item.player2Score}</span>
                             </span>
@@ -258,19 +261,19 @@ const Draw = ({
                         )}
                       </div>
 
-                      {/* winner 2 card */}
+                      {/* Player 2 card */}
                       <div
-                        className={`border-l border-gray-300 lg:w-1/2 flex justify-end p-6 ${
+                        className={`border-t md:border-t-0 md:border-l border-gray-300 w-full md:w-1/2 p-4 md:p-6 ${
                           winner2 && `bg-[#39674b] text-white`
                         }`}
                       >
-                        <div className="flex items-center gap-3">
+                        <div className="flex items-center gap-3 justify-end">
                           <div className="text-right">
-                            <h1 className="font-semibold">
+                            <h1 className="font-semibold text-sm md:text-base truncate">
                               {item.player2Id?.fullName || "Player 2"}
                             </h1>
                           </div>
-                          <div className="h-12 w-12 rounded-full flex items-center justify-center overflow-hidden bg-gray-100">
+                          <div className="h-10 w-10 md:h-12 md:w-12 rounded-full flex items-center justify-center overflow-hidden bg-gray-100">
                             {item.player2Id?.profileImage ? (
                               <Image
                                 src={item.player2Id.profileImage}
@@ -280,7 +283,7 @@ const Draw = ({
                                 className="h-full w-full rounded-full object-cover"
                               />
                             ) : (
-                              <span className="text-lg font-semibold text-red-800">
+                              <span className="text-base md:text-lg font-semibold text-red-800">
                                 {item.player2Id?.fullName?.charAt(0) || "P2"}
                               </span>
                             )}
@@ -289,18 +292,18 @@ const Draw = ({
                       </div>
                     </div>
 
-                    <div className="bg-[#eaeaeecb] py-2 px-4">
+                    <div className="bg-[#eaeaeecb] py-3 px-4">
                       <div
                         className={`flex flex-col sm:flex-row ${
                           item.status === "completed"
                             ? "justify-between"
                             : "justify-center"
-                        } items-start sm:items-center gap-4`}
+                        } items-start sm:items-center gap-3`}
                       >
-                        <div></div>
-                        <div className="flex items-center gap-5">
-                          <div className="text-right">
-                            <span className="text-gray-700 text-sm">
+                        <div className="hidden sm:block"></div>
+                        <div className="flex flex-col sm:flex-row items-start sm:items-center gap-3 sm:gap-5 w-full sm:w-auto">
+                          <div className="text-right sm:text-left">
+                            <span className="text-gray-700 text-xs sm:text-sm">
                               {item?.date
                                 ? new Date(item?.date).toLocaleDateString(
                                     "en-US",
@@ -313,8 +316,8 @@ const Draw = ({
                                   )
                                 : "Date not set"}
                             </span>
-                            <span>, </span>
-                            <span className="text-gray-700 text-sm">
+                            <span className="hidden sm:inline">, </span>
+                            <span className="block sm:inline text-gray-700 text-xs sm:text-sm">
                               {item?.date
                                 ? new Date(item?.date).toLocaleTimeString(
                                     "en-US",
@@ -326,9 +329,9 @@ const Draw = ({
                                 : ""}
                             </span>
                           </div>
-                          <div className="flex items-center gap-3 justify-end">
+                          <div className="flex items-center gap-3 justify-end sm:justify-start">
                             <div
-                              className={`text-sm font-medium px-3 py-1 rounded-full ${getStatusColor(
+                              className={`text-xs sm:text-sm font-medium px-2 py-1 sm:px-3 sm:py-1 rounded-full ${getStatusColor(
                                 item.status
                               )}`}
                             >
@@ -338,10 +341,10 @@ const Draw = ({
                         </div>
 
                         {item.status === "completed" && (
-                          <div>
+                          <div className="w-full sm:w-auto text-right mt-2 sm:mt-0">
                             <button
                               onClick={() => handleOpenModal(item, winner1)}
-                              className="text-primary font-semibold text-sm"
+                              className="text-primary font-semibold text-sm hover:underline"
                             >
                               Moments
                             </button>
