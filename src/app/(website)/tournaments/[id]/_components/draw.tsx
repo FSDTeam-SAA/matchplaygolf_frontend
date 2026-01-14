@@ -173,7 +173,7 @@ const Draw = ({
 
   return (
     <div>
-      <div className="mt-8 mb-5 space-x-5">
+      <div className="mt-8 mb-5 grid grid-cols-3 lg:grid-cols-10 gap-5">
         {data?.rounds?.map((item) => {
           return (
             <Button
