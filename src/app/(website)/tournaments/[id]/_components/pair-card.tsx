@@ -30,6 +30,9 @@ const PairCard = ({
     setIsPairVsModalOpen(false);
   };
 
+
+  
+
   const handleOpenModal = (match: Match) => {
     setIsModalOpen(true);
     setMatchInfo(match);
