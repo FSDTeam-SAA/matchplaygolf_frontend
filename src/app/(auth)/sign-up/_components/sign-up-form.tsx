@@ -49,7 +49,7 @@ const SignUpForm = () => {
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const pathName = usePathname();
   const isPlayer = pathName?.includes("/player");
-  const roll = isPlayer ? "User" : "Organizer";
+  const role = isPlayer ? "User" : "Organizer";
 
   const form = useForm<FormType>({
     resolver: zodResolver(formSchema),
@@ -95,7 +95,7 @@ const SignUpForm = () => {
   async function onSubmit(values: FormType) {
     const submitData = {
       ...values,
-      roll: roll,
+      role: role,
     };
 
     try {
