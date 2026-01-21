@@ -161,7 +161,7 @@ const TournamentDetailsPage = (data: { data: TournamentResponseData }) => {
                 <FormItem>
                   <FormLabel className="text-base text-[#343A40] leading-[150%] font-medium">Event Name *</FormLabel>
                   <FormControl>
-                    <Input disabled className="w-full h-[48px] py-2 px-3 rounded-[8px] border border-[#C0C3C1] text-base font-medium leading-[120%] text-[#434C45)]" placeholder="Enter your tournament name" {...field} />
+                    <Input className="w-full h-[48px] py-2 px-3 rounded-[8px] border border-[#C0C3C1] text-base font-medium leading-[120%] text-[#434C45)]" placeholder="Enter your tournament name" {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -193,7 +193,6 @@ const TournamentDetailsPage = (data: { data: TournamentResponseData }) => {
                     <Select
                       value={field.value}
                       onValueChange={field.onChange}
-                      disabled
                     >
                       <SelectTrigger className="w-full h-[48px] py-2 px-3 rounded-[8px] border border-[#C0C3C1] text-base font-medium leading-[120%] text-[#434C45)]">
                         <SelectValue  placeholder="Select Sport name" />
@@ -224,7 +223,6 @@ const TournamentDetailsPage = (data: { data: TournamentResponseData }) => {
                     <div className="grid grid-cols-2 gap-6">
                       {DRAW_FORMAT_OPTIONS?.map((option) => (
                         <button
-                          disabled
                           key={option.id}
                           type="button"
                           onClick={() => field.onChange(option.value)}
@@ -258,7 +256,6 @@ const TournamentDetailsPage = (data: { data: TournamentResponseData }) => {
                     <Select
                       value={field.value}
                       onValueChange={field.onChange}
-                      disabled
                     >
                       <SelectTrigger className="w-full h-[48px] py-2 px-3 rounded-[8px] border border-[#C0C3C1] text-base font-medium leading-[120%] text-[#434C45)]">
                         <SelectValue placeholder="Pairs" />
@@ -287,7 +284,6 @@ const TournamentDetailsPage = (data: { data: TournamentResponseData }) => {
                     <Select
                       value={String(field.value)}
                       onValueChange={(value) => field.onChange(Number(value))}
-                      disabled
                     >
                       <SelectTrigger className="w-full h-[48px] py-2 px-3 rounded-[8px] border border-[#C0C3C1] text-base font-medium leading-[120%] text-[#434C45)]">
                         <SelectValue placeholder="Parallel Unique  Club" />

@@ -45,9 +45,9 @@ const formSchema = z.object({
 
 
 const TournamentRounds = (data: { data: TournamentResponseData & { rememberEmail?: number; totalRounds?: number } }) => {
-   const tournamentId = (data?.data as unknown as {_id:string})?._id;
+   const tournamentId = (data?.data?.tournament as unknown as {_id:string})?._id;
 
-   console.log(data?.data)
+   console.log(data)
     const session = useSession();
   const token = (session?.data?.user as { accessToken: string })?.accessToken;
   console.log(token)
@@ -70,11 +70,11 @@ const form = useForm<z.infer<typeof formSchema>>({
 useEffect(() => {
   if (!data?.data) return;
 
-  const totalRounds = data.data.totalRounds ?? 0;
+  const totalRounds = data?.data?.tournament?.totalRounds ?? 0;
   const existingRounds = data.data.rounds ?? [];
 
   form.reset({
-    rememberEmail: data?.data?.rememberEmail ?? undefined,
+    rememberEmail: data?.data?.tournament?.rememberEmail ?? undefined,
     rounds: Array.from({ length: totalRounds }, (_, index) => ({
       date: existingRounds[index]?.date
         ? new Date(existingRounds[index].date)

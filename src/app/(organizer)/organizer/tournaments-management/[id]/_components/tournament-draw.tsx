@@ -132,8 +132,8 @@ const TournamentDrawPage = (data: { data: TournamentResponseData }) => {
     <div>
       <h3 className="text-lg md:text-xl lg:text-2xl text-[#181818] font-bold leading-[150%]">Create Draw</h3>
       <ul className="py-4 md:py-5 lg:py-6">
-        <li className="text-sm md:text-base leading-[150%] text-[#181818] font-normal">You have {data?.data?.tournament?.registeredPlayers?.length || 0} participants added out of {data?.data?.tournament?.totalParticipants || 0} needed.</li>
-        <li className="text-sm md:text-base leading-[150%] text-[#181818] font-normal py-3">You have {data?.data?.tournament?.registeredPlayers?.length || 0} participants registered.</li>
+        <li className="text-sm md:text-base leading-[150%] text-[#181818] font-normal">You have {data?.data?.tournament?.totalParticipants || 0} participants added out of {data?.data?.tournament?.drawSize || 0} needed.</li>
+        <li className="text-sm md:text-base leading-[150%] text-[#181818] font-normal py-3">You have {data?.data?.tournament?.totalParticipants || 0} participants registered.</li>
         <li className="text-sm md:text-base leading-[150%] text-[#181818] font-normal">You have {data?.data?.tournament?.numberOfSeeds
  || 0} of participants seeded.</li>
       </ul>

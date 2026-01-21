@@ -7,7 +7,7 @@ import TournamentParticipantsPage from "./tournament-participants";
 import TournamentRounds from "./tournament-rounds";
 import TournamentDrawPage from "./tournament-draw";
 import { useSession } from "next-auth/react";
-import { Tournament, TournamentApiResponse, TournamentResponseData} from "./single-tournament-data-type";
+import { TournamentApiResponse, TournamentResponseData} from "./single-tournament-data-type";
 import TournamentsHeader from "./tournament-header";
 
 const TournamentsDetails = ({id}:{id:string}) => {
@@ -112,7 +112,7 @@ const TournamentsDetails = ({id}:{id:string}) => {
           )}
           {isActive === "participants" && (
             <div>
-              <TournamentParticipantsPage  data={data?.data as unknown as Tournament}  />
+              <TournamentParticipantsPage  data={data?.data as unknown as TournamentResponseData}  />
             </div>
           )}
             {isActive === "rounds" && (
