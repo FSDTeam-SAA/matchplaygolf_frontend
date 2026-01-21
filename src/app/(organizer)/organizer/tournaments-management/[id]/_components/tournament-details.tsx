@@ -35,14 +35,14 @@ import { CalendarIcon } from "lucide-react"
 import { Calendar } from "@/components/ui/calendar"
 import { format } from "date-fns"
 import { useEffect } from "react"
-import { Tournament } from "./single-tournament-data-type";
+import { TournamentResponseData } from "./single-tournament-data-type";
 
 const formSchema = z.object({
   tournamentName: z.string().min(2, {
     message: "Event Name must be at least 2 characters.",
   }),
-  sportName: z.string().min(2, {
-    message: "Sport must be at least 2 characters.",
+   sportName: z.string().min(1, {
+    message: "Sport Name is required.",
   }),
   numberOfSeeds: z
     .coerce
@@ -67,9 +67,9 @@ const formSchema = z.object({
   }),
 })
 
-const TournamentDetailsPage = (data: { data: Tournament }) => {
+const TournamentDetailsPage = (data: { data: TournamentResponseData }) => {
   console.log(data)
-  const tournamentId = (data?.data as unknown as { _id: string })?._id;
+  const tournamentId = (data?.data?.tournament as unknown as { _id: string })?._id;
   const session = useSession();
   const token = (session?.data?.user as { accessToken: string })?.accessToken;
   console.log(token)
@@ -99,21 +99,21 @@ const TournamentDetailsPage = (data: { data: Tournament }) => {
 
 
   useEffect(() => {
-    if (!data?.data) return;
+    if (!data?.data?.tournament) return;
 
     form.reset({
-      tournamentName: data?.data?.tournamentName ?? "",
-      sportName: data?.data?.sportName ?? "",
-      drawFormat: data?.data?.drawFormat,
-      format: data?.data?.format?.toLowerCase(),
-      drawSize: Number(data?.data?.drawSize),
-      location: data?.data?.location,
-      numberOfSeeds: Number(data?.data?.numberOfSeeds),
-      startDate: data?.data?.startDate
-        ? new Date(data?.data?.startDate)
+      tournamentName: data?.data?.tournament?.tournamentName ?? "",
+      sportName: data?.data?.tournament?.sportName ?? "",
+      drawFormat: data?.data?.tournament?.drawFormat,
+      format: data?.data?.tournament?.format,
+      drawSize: data?.data?.tournament?.drawSize,
+      location: data?.data?.tournament?.location,
+      numberOfSeeds: Number(data?.data?.tournament?.numberOfSeeds),
+      startDate: data?.data?.tournament?.startDate
+        ? new Date(data?.data?.tournament?.startDate)
         : null,
-      endDate: data?.data?.endDate
-        ? new Date(data?.data?.endDate)
+      endDate: data?.data?.tournament?.endDate
+        ? new Date(data?.data?.tournament?.endDate)
         : null,
       terms: false,
     });
@@ -161,13 +161,13 @@ const TournamentDetailsPage = (data: { data: Tournament }) => {
                 <FormItem>
                   <FormLabel className="text-base text-[#343A40] leading-[150%] font-medium">Event Name *</FormLabel>
                   <FormControl>
-                    <Input className="w-full h-[48px] py-2 px-3 rounded-[8px] border border-[#C0C3C1] text-base font-medium leading-[120%] text-[#434C45)]" placeholder="Spring Championship 2025" {...field} />
+                    <Input className="w-full h-[48px] py-2 px-3 rounded-[8px] border border-[#C0C3C1] text-base font-medium leading-[120%] text-[#434C45)]" placeholder="Enter your tournament name" {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
               )}
             />
-            <FormField
+            {/* <FormField
               control={form.control}
               name="sportName"
               render={({ field }) => (
@@ -177,6 +177,34 @@ const TournamentDetailsPage = (data: { data: Tournament }) => {
                     <Input className="w-full h-[48px] py-2 px-3 rounded-[8px] border border-[#C0C3C1] text-base font-medium leading-[120%] text-[#434C45)]" placeholder="Golf" {...field} />
                   </FormControl>
                   <FormMessage />
+                </FormItem>
+              )}
+            /> */}
+
+             <FormField
+              control={form.control}
+              name="sportName"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel className="text-base text-[#434C45] leading-[150%] font-medium">
+                    Sport <span className="text-red-500">*</span>
+                  </FormLabel>
+                  <FormControl>
+                    <Select
+                      value={field.value}
+                      onValueChange={field.onChange}
+                    >
+                      <SelectTrigger className="w-full h-[48px] py-2 px-3 rounded-[8px] border border-[#C0C3C1] text-base font-medium leading-[120%] text-[#434C45)]">
+                        <SelectValue  placeholder="Select Sport name" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="Golf">Golf</SelectItem>
+                        <SelectItem value="Football">Football</SelectItem>
+                        <SelectItem value="Tennis">Tennis</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </FormControl>
+                  <FormMessage className="text-red-500" />
                 </FormItem>
               )}
             />
@@ -230,12 +258,12 @@ const TournamentDetailsPage = (data: { data: Tournament }) => {
                       onValueChange={field.onChange}
                     >
                       <SelectTrigger className="w-full h-[48px] py-2 px-3 rounded-[8px] border border-[#C0C3C1] text-base font-medium leading-[120%] text-[#434C45)]">
-                        <SelectValue placeholder="Pair" />
+                        <SelectValue placeholder="Pairs" />
                       </SelectTrigger>
                       <SelectContent>
-                        <SelectItem value="single">Single</SelectItem>
-                        <SelectItem value="pair">Pair</SelectItem>
-                        <SelectItem value="team">Team</SelectItem>
+                        <SelectItem value="Single">Single</SelectItem>
+                        <SelectItem value="Pairs">Pairs</SelectItem>
+                        <SelectItem value="Team">Team</SelectItem>
                       </SelectContent>
                     </Select>
                   </FormControl>
@@ -280,7 +308,7 @@ const TournamentDetailsPage = (data: { data: Tournament }) => {
               name="numberOfSeeds"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel className="text-base text-[#343A40] leading-[150%] font-medium">Number of Seeds</FormLabel>
+                  <FormLabel className="text-base text-[#343A40] leading-[150%] font-medium">Number of Seeds (optional) </FormLabel>
                   <FormControl>
                     <Input className="w-full h-[48px] py-2 px-3 rounded-[8px] border border-[#C0C3C1] text-base font-medium leading-[120%] text-[#434C45)]" placeholder="Completed" value={String(field.value)} onChange={(e) => field.onChange(Number(e.target.value))} />
                   </FormControl>

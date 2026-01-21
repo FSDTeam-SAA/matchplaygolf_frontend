@@ -17,6 +17,13 @@ import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { format } from "date-fns";
 import { Input } from "@/components/ui/input";
 import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import {
   Popover,
   PopoverContent,
   PopoverTrigger,
@@ -37,8 +44,13 @@ const formSchema = z.object({
   newsletterPreference: z.string().min(1, "Please select an option"),
   fullName: z.string().min(2, { message: "Full Name must be at least 2 characters." }),
   phone: z.string().min(9, { message: "Phone Number must be at least 9 characters." }),
-  country: z.string().min(2, { message: "Country must be at least 2 characters." }),
-  sportNationalId: z.string().min(2, { message: "Sport National Id must be at least 2 characters." }),
+  country: z.string().min(1, {
+    message: "Countery Name is required.",
+  }),
+  sportNationalId: z.string().min(1, {
+    message: "Sport Name is required.",
+  }),
+  clubName: z.string().min(2, { message: "Club Name must be at least 2 characters." }),
   handicap: z.string().min(2, { message: "Handicap Index must be at least 2 characters." }),
   whsNumber: z.string().min(2, { message: "Whs Number must be at least 2 characters." }),
   dob: z.union([z.date(), z.string()]),
@@ -63,6 +75,7 @@ const PersonalInformationForm = () => {
       gender: "",
       newsletterPreference: "",
       fullName: "",
+      clubName: "",
       phone: "",
       country: "",
       sportNationalId: "",
@@ -94,7 +107,8 @@ const PersonalInformationForm = () => {
       form.reset({
         fullName: profile.fullName || "",
         phone: profile.phone || "",
-        country: profile.clubName || "",
+        clubName: profile.clubName || "",
+        country: profile.country || "",
         dob: profile.dob ? new Date(profile.dob) : new Date(),
         sportNationalId: profile.sportNationalId || "",
         handicap: profile.handicap || "",
@@ -183,6 +197,7 @@ const PersonalInformationForm = () => {
 
     formData.append("fullName", values.fullName);
     formData.append("gender", values.gender);
+    formData.append("clubName", values.clubName);
     formData.append("phone", values.phone);
     formData.append("country", values.country);
     formData.append("color", values.color);
@@ -288,26 +303,36 @@ const PersonalInformationForm = () => {
                   </FormItem>
                 )}
               />
+
               <FormField
-                control={form.control}
-                name="country"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel className="text-base text-[#434C45] leading-[150%] font-medium">
-                      Country
-                    </FormLabel>
-                    <FormControl>
-                      <Input
-                        className="w-full h-[48px] py-2 px-3 rounded-[8px] border border-[#C0C3C1] text-base font-medium leading-[120%] text-[#434C45)]"
-                        placeholder="US"
-                        {...field}
-                      />
-                    </FormControl>
-                    <FormMessage className="text-red-500" />
-                  </FormItem>
-                )}
-              />
-            </div>
+              control={form.control}
+              name="country"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel className="text-base text-[#434C45] leading-[150%] font-medium">
+                    Country
+                  </FormLabel>
+                  <FormControl>
+                    <Select
+                      value={field.value}
+                      onValueChange={field.onChange}
+                    >
+                      <SelectTrigger className="w-full h-[48px] py-2 px-3 rounded-[8px] border border-[#C0C3C1] text-base font-medium leading-[120%] text-[#434C45)]">
+                        <SelectValue placeholder="Select Country" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="England">England</SelectItem>
+                        <SelectItem value="Ireland">Ireland</SelectItem>
+                        <SelectItem value="Scotland">Scotland</SelectItem>
+                        <SelectItem value="Wales">Wales</SelectItem>
+                        <SelectItem value="Europe">Europe</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </FormControl>
+                  <FormMessage className="text-red-500" />
+                </FormItem>
+              )}
+            />
 
             <FormField
               control={form.control}
@@ -351,26 +376,59 @@ const PersonalInformationForm = () => {
               )}
             />
 
+             <FormField
+              control={form.control}
+              name="clubName"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel className="text-base text-[#434C45] leading-[150%] font-medium">
+                    Golf Club
+                  </FormLabel>
+                  <FormControl>
+                    <Input
+                      className="w-full h-[48px] py-2 px-3 rounded-[8px] border border-[#C0C3C1] text-base font-medium leading-[120%] text-[#434C45)]"
+                      placeholder="Enter your club name"
+                      {...field}
+                    />
+                  </FormControl>
+                  <FormMessage className="text-red-500" />
+                </FormItem>
+              )}
+            />
+            </div>
+
+            
+
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-              <FormField
-                control={form.control}
-                name="sportNationalId"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel className="text-base text-[#434C45] leading-[150%] font-medium">
-                      Sport National ID
-                    </FormLabel>
-                    <FormControl>
-                      <Input
-                        className="w-full h-[48px] py-2 px-3 rounded-[8px] border border-[#C0C3C1] text-base font-medium leading-[120%] text-[#434C45)]"
-                        placeholder="Pine Valley Golf Club"
-                        {...field}
-                      />
-                    </FormControl>
-                    <FormMessage className="text-red-500" />
-                  </FormItem>
-                )}
-              />
+
+               <FormField
+              control={form.control}
+              name="sportNationalId"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel className="text-base text-[#434C45] leading-[150%] font-medium">
+                    Sport 
+                    {/* <span className="text-red-500">*</span> */}
+                  </FormLabel>
+                  <FormControl>
+                    <Select
+                      value={field.value}
+                      onValueChange={field.onChange}
+                    >
+                      <SelectTrigger className="w-full h-[48px] py-2 px-3 rounded-[8px] border border-[#C0C3C1] text-base font-medium leading-[120%] text-[#434C45)]">
+                        <SelectValue placeholder="Golf" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="Golf">Golf</SelectItem>
+                        <SelectItem value="Football">Football</SelectItem>
+                        <SelectItem value="Tennis">Tennis</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </FormControl>
+                  <FormMessage className="text-red-500" />
+                </FormItem>
+              )}
+            />
               <FormField
                 control={form.control}
                 name="handicap"
