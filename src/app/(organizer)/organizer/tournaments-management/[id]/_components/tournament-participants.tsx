@@ -108,7 +108,7 @@ interface Props {
 const TournamentParticipantsPage = ({ data }: Props) => {
   const queryClient = useQueryClient()
   const { _id: tournamentId, format } = data
-  const isPair = format === "Pair"
+  const isPair = format === "Pairs"
 
   const { data: session } = useSession()
   const token = (session?.user as { accessToken: string })?.accessToken
@@ -370,7 +370,7 @@ const { mutate, isPending } = useMutation({
                   render={({ field }) => (
                     <FormItem>
                       <FormLabel className="text-base text-[#343A40] font-semibold leading-[150%]">
-                        Seed
+                        Seed (optional)
                       </FormLabel>
                       <FormControl>
                         <Input

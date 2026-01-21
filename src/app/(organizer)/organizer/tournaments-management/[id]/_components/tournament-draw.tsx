@@ -9,8 +9,8 @@ import { TournamentResponseData } from "./single-tournament-data-type"
 import { toast } from "sonner";
 import Link from "next/link";
 
-const TournamentDrawPage = ({ data }: { data: TournamentResponseData }) => {
-  const tournamentId = (data as unknown as { _id: string })?._id;
+const TournamentDrawPage = (data: { data: TournamentResponseData }) => {
+  const tournamentId = (data?.data?.tournament as unknown as { _id: string })?._id;
   const { data: session } = useSession();
   const token = (session?.user as { accessToken: string })?.accessToken;
 
@@ -18,6 +18,8 @@ const TournamentDrawPage = ({ data }: { data: TournamentResponseData }) => {
   const [emailSuccess, setEmailSuccess] = useState(false);
   const [eventLoading, setEventLoading] = useState(false);
   const [eventDrawnLoading, setEventDrawnLoading] = useState(false);
+
+  console.log(data)
 
 
   // handle participant invite send email 
@@ -130,9 +132,10 @@ const TournamentDrawPage = ({ data }: { data: TournamentResponseData }) => {
     <div>
       <h3 className="text-lg md:text-xl lg:text-2xl text-[#181818] font-bold leading-[150%]">Create Draw</h3>
       <ul className="py-4 md:py-5 lg:py-6">
-        <li className="text-sm md:text-base leading-[150%] text-[#181818] font-normal">You have 16 participants added out of 16 needed.</li>
-        <li className="text-sm md:text-base leading-[150%] text-[#181818] font-normal py-3">You have 3 participants registered.</li>
-        <li className="text-sm md:text-base leading-[150%] text-[#181818] font-normal">You have 0 of participants seeded.</li>
+        <li className="text-sm md:text-base leading-[150%] text-[#181818] font-normal">You have {data?.data?.tournament?.registeredPlayers?.length || 0} participants added out of {data?.data?.tournament?.totalParticipants || 0} needed.</li>
+        <li className="text-sm md:text-base leading-[150%] text-[#181818] font-normal py-3">You have {data?.data?.tournament?.registeredPlayers?.length || 0} participants registered.</li>
+        <li className="text-sm md:text-base leading-[150%] text-[#181818] font-normal">You have {data?.data?.tournament?.numberOfSeeds
+ || 0} of participants seeded.</li>
       </ul>
 
       <div className="pt-2">

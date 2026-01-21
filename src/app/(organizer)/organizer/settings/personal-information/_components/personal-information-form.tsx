@@ -17,6 +17,13 @@ import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { format } from "date-fns";
 import { Input } from "@/components/ui/input";
 import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import {
   Popover,
   PopoverContent,
   PopoverTrigger,
@@ -288,7 +295,7 @@ const PersonalInformationForm = () => {
                   </FormItem>
                 )}
               />
-              <FormField
+              {/* <FormField
                 control={form.control}
                 name="country"
                 render={({ field }) => (
@@ -306,7 +313,37 @@ const PersonalInformationForm = () => {
                     <FormMessage className="text-red-500" />
                   </FormItem>
                 )}
-              />
+              /> */}
+
+              <FormField
+              control={form.control}
+              name="country"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel className="text-base text-[#434C45] leading-[150%] font-medium">
+                    Country
+                  </FormLabel>
+                  <FormControl>
+                    <Select
+                      value={field.value}
+                      onValueChange={field.onChange}
+                    >
+                      <SelectTrigger className="w-full h-[48px] py-2 px-3 rounded-[8px] border border-[#C0C3C1] text-base font-medium leading-[120%] text-[#434C45)]">
+                        <SelectValue placeholder="Selete Country" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="England">England</SelectItem>
+                        <SelectItem value="Ireland">Ireland</SelectItem>
+                        <SelectItem value="Scotland">Scotland</SelectItem>
+                        <SelectItem value="Wales">Wales</SelectItem>
+                        <SelectItem value="Europe">Europe</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </FormControl>
+                  <FormMessage className="text-red-500" />
+                </FormItem>
+              )}
+            />
             </div>
 
             <FormField
@@ -352,7 +389,7 @@ const PersonalInformationForm = () => {
             />
 
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-              <FormField
+              {/* <FormField
                 control={form.control}
                 name="sportNationalId"
                 render={({ field }) => (
@@ -370,7 +407,36 @@ const PersonalInformationForm = () => {
                     <FormMessage className="text-red-500" />
                   </FormItem>
                 )}
-              />
+              /> */}
+
+               <FormField
+              control={form.control}
+              name="sportNationalId"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel className="text-base text-[#434C45] leading-[150%] font-medium">
+                    Sport 
+                    {/* <span className="text-red-500">*</span> */}
+                  </FormLabel>
+                  <FormControl>
+                    <Select
+                      value={field.value}
+                      onValueChange={field.onChange}
+                    >
+                      <SelectTrigger className="w-full h-[48px] py-2 px-3 rounded-[8px] border border-[#C0C3C1] text-base font-medium leading-[120%] text-[#434C45)]">
+                        <SelectValue placeholder="Golf" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="Golf">Golf</SelectItem>
+                        <SelectItem value="Football">Football</SelectItem>
+                        <SelectItem value="Tennis">Tennis</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </FormControl>
+                  <FormMessage className="text-red-500" />
+                </FormItem>
+              )}
+            />
               <FormField
                 control={form.control}
                 name="handicap"

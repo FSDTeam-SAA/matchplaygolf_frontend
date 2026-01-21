@@ -81,7 +81,7 @@ export interface Tournament {
   tournamentName: string
   sportName: string
   drawFormat: string
-  format: "Single" | "Pair" | "Team"
+  format: "Single" | "Pairs" | "Team"
   drawSize: number
   price: string
   paymentStatus: "pending" | "paid"
@@ -117,7 +117,7 @@ export interface BillingAddress {
 }
 
 export interface Registration {
-  type: "Single" | "Pair" | "Team"
+  type: "Single" | "Pairs" | "Team"
   users: string[]
   pairs: Pair[]
 }

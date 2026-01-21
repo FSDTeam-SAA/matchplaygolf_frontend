@@ -230,7 +230,7 @@ const TournamentsManagementContainer = () => {
           <div>
             <Link href="/organizer/tournaments-management/create-tournament">
               <button className="flex items-center gap-2 bg-[#DF1020] p-3 rounded-[8px] text-[#F8F9FA] text-base font-medium leading-[150%] ">
-                <Plus /> Create New Event
+                <Plus /> Create
               </button>
             </Link>
           </div>

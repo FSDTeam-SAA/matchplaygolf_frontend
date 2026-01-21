@@ -165,9 +165,9 @@ const CreateTournament = () => {
                         <SelectValue placeholder="Pairs" />
                       </SelectTrigger>
                       <SelectContent>
-                        <SelectItem value="single">Single</SelectItem>
-                        <SelectItem value="pairs">Pairs</SelectItem>
-                        <SelectItem value="team">Team</SelectItem>
+                        <SelectItem value="Single">Single</SelectItem>
+                        <SelectItem value="Pairs">Pairs</SelectItem>
+                        <SelectItem value="Team">Team</SelectItem>
                       </SelectContent>
                     </Select>
                   </FormControl>
