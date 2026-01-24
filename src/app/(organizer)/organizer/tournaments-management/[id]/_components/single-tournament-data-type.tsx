@@ -101,6 +101,7 @@ export interface Tournament {
   rules: string
   location: string
   numberOfSeeds: number
+  onHold: boolean
 }
 
 
