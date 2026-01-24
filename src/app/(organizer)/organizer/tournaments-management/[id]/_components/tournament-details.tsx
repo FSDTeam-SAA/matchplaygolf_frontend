@@ -19,7 +19,7 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
-import { Label } from "@/components/ui/label";
+// import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input"
 import { useSession } from "next-auth/react";
 import {
@@ -30,18 +30,19 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { Checkbox } from "@/components/ui/checkbox";
+// import { Checkbox } from "@/components/ui/checkbox";
 import { CalendarIcon } from "lucide-react"
 import { Calendar } from "@/components/ui/calendar"
 import { format } from "date-fns"
 import { useEffect } from "react"
 import { TournamentResponseData } from "./single-tournament-data-type";
+import HoldEachRoundToggle from "./hold-each-round";
 
 const formSchema = z.object({
   tournamentName: z.string().min(2, {
     message: "Event Name must be at least 2 characters.",
   }),
-   sportName: z.string().min(1, {
+  sportName: z.string().min(1, {
     message: "Sport Name is required.",
   }),
   numberOfSeeds: z
@@ -62,9 +63,9 @@ const formSchema = z.object({
   endDate: z.date().nullable(),
 
   location: z.string().optional(),
-  terms: z.boolean().refine((val) => val === true, {
-    message: "You must accept the terms and conditions.",
-  }),
+  // terms: z.boolean().refine((val) => val === true, {
+  //   message: "You must accept the terms and conditions.",
+  // }),
 })
 
 const TournamentDetailsPage = (data: { data: TournamentResponseData }) => {
@@ -86,7 +87,7 @@ const TournamentDetailsPage = (data: { data: TournamentResponseData }) => {
       endDate: null,
       numberOfSeeds: 1,
       location: "",
-      terms: false,
+      // terms: false,
     },
   })
 
@@ -115,7 +116,7 @@ const TournamentDetailsPage = (data: { data: TournamentResponseData }) => {
       endDate: data?.data?.tournament?.endDate
         ? new Date(data?.data?.tournament?.endDate)
         : null,
-      terms: false,
+      // terms: false,
     });
   }, [data, form]);
 
@@ -181,7 +182,7 @@ const TournamentDetailsPage = (data: { data: TournamentResponseData }) => {
               )}
             /> */}
 
-             <FormField
+            <FormField
               control={form.control}
               name="sportName"
               render={({ field }) => (
@@ -194,8 +195,8 @@ const TournamentDetailsPage = (data: { data: TournamentResponseData }) => {
                       value={field.value}
                       onValueChange={field.onChange}
                     >
-                      <SelectTrigger className="w-full h-[48px] py-2 px-3 rounded-[8px] border border-[#C0C3C1] text-base font-medium leading-[120%] text-[#434C45)]">
-                        <SelectValue  placeholder="Select Sport name" />
+                      <SelectTrigger className="w-full h-[48px] py-2 px-3 rounded-[8px] border border-[#C0C3C1] text-base font-medium leading-[120%] text-[#434C45]">
+                        <SelectValue placeholder="Select Sport name" />
                       </SelectTrigger>
                       <SelectContent>
                         <SelectItem value="Golf">Golf</SelectItem>
@@ -428,7 +429,7 @@ const TournamentDetailsPage = (data: { data: TournamentResponseData }) => {
           </div>
 
 
-          <div>
+          {/* <div>
             <FormField
               control={form.control}
               name="terms"
@@ -456,9 +457,11 @@ const TournamentDetailsPage = (data: { data: TournamentResponseData }) => {
                 </FormItem>
               )}
             />
-          </div>
+          </div> */}
+
+
           {/* Buttons */}
-          <div className="flex justify-end gap-6 pt-6">
+          <div className="flex justify-end gap-6 pt-3">
             <Button
               type="button"
               variant="outline"
@@ -479,6 +482,16 @@ const TournamentDetailsPage = (data: { data: TournamentResponseData }) => {
           </div>
         </form>
       </Form>
+
+      {/* hold each round */}
+      <div>
+        <HoldEachRoundToggle
+          tournamentId={tournamentId}
+          defaultValue={data?.data?.tournament?.onHold}
+        />
+        {/* <h4 className="text-base md:text-lg font-semibold text-[#131313] pb-1">Hold Each Round</h4>
+        <p className="text-sm md:text-base text-[#424242] text-font-normal">If checked, the next round of matches will not be displayed until the current round has been completed.</p> */}
+      </div>
     </div>
   )
 }

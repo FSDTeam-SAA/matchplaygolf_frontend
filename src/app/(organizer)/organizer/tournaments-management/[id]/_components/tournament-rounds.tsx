@@ -45,85 +45,85 @@ const formSchema = z.object({
 
 
 const TournamentRounds = (data: { data: TournamentResponseData & { rememberEmail?: number; totalRounds?: number } }) => {
-   const tournamentId = (data?.data?.tournament as unknown as {_id:string})?._id;
+  const tournamentId = (data?.data?.tournament as unknown as { _id: string })?._id;
 
-   console.log(data)
-    const session = useSession();
+  console.log(data)
+  const session = useSession();
   const token = (session?.data?.user as { accessToken: string })?.accessToken;
   console.log(token)
   const queryClient = useQueryClient();
 
 
-const form = useForm<z.infer<typeof formSchema>>({
-  resolver: zodResolver(formSchema),
-  defaultValues: {
-    rememberEmail: undefined,
-    rounds: [],
-  },
-});
+  const form = useForm<z.infer<typeof formSchema>>({
+    resolver: zodResolver(formSchema),
+    defaultValues: {
+      rememberEmail: undefined,
+      rounds: [],
+    },
+  });
 
 
 
   console.log(data?.data)
 
 
-useEffect(() => {
-  if (!data?.data) return;
+  useEffect(() => {
+    if (!data?.data) return;
 
-  const totalRounds = data?.data?.tournament?.totalRounds ?? 0;
-  const existingRounds = data.data.rounds ?? [];
+    const totalRounds = data?.data?.tournament?.totalRounds ?? 0;
+    const existingRounds = data.data.rounds ?? [];
 
-  form.reset({
-    rememberEmail: data?.data?.tournament?.rememberEmail ?? undefined,
-    rounds: Array.from({ length: totalRounds }, (_, index) => ({
-      date: existingRounds[index]?.date
-        ? new Date(existingRounds[index].date)
-        : null,
-    })),
-  });
-}, [data, form]);
-
-
+    form.reset({
+      rememberEmail: data?.data?.tournament?.rememberEmail ?? undefined,
+      rounds: Array.from({ length: totalRounds }, (_, index) => ({
+        date: existingRounds[index]?.date
+          ? new Date(existingRounds[index].date)
+          : null,
+      })),
+    });
+  }, [data, form]);
 
 
-const { mutate, isPending } = useMutation({
-  mutationKey: ["tournament-details", tournamentId],
-  mutationFn: async (payload: {rememberEmail: number, rounds: { roundName: string; date: string | null }[] }) => {
-    const res = await fetch(
-      `${process.env.NEXT_PUBLIC_BACKEND_URL}/tournament/${tournamentId}`,
-      {
-        method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-        body: JSON.stringify(payload),
+
+
+  const { mutate, isPending } = useMutation({
+    mutationKey: ["tournament-details", tournamentId],
+    mutationFn: async (payload: { rememberEmail: number, rounds: { roundName: string; date: string | null }[] }) => {
+      const res = await fetch(
+        `${process.env.NEXT_PUBLIC_BACKEND_URL}/tournament/${tournamentId}`,
+        {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify(payload),
+        }
+      );
+      return res.json();
+    },
+    onSuccess: (data) => {
+      if (!data?.success) {
+        toast.error(data?.message || "Something went wrong");
+        return;
       }
-    );
-    return res.json();
-  },
-  onSuccess: (data) => {
-    if (!data?.success) {
-      toast.error(data?.message || "Something went wrong");
-      return;
-    }
-    toast.success(data?.message || "Tournament updated successfully");
-    queryClient.invalidateQueries({ queryKey: ["single-tournament"] });
-  },
-});
+      toast.success(data?.message || "Tournament updated successfully");
+      queryClient.invalidateQueries({ queryKey: ["single-tournament"] });
+    },
+  });
 
 
-function onSubmit(values: z.infer<typeof formSchema>) {
-  const payload = {
-    rememberEmail: (values.rememberEmail ?? 0),
-    rounds: values.rounds.map((round, index) => ({
-      roundName: `Round ${index + 1}`,
-      date: round.date ? format(round.date, "yyyy-MM-dd") : null,
-    })),
-  };
+  function onSubmit(values: z.infer<typeof formSchema>) {
+    const payload = {
+      rememberEmail: (values.rememberEmail ?? 0),
+      rounds: values.rounds.map((round, index) => ({
+        roundName: `Round ${index + 1}`,
+        date: round.date ? format(round.date, "yyyy-MM-dd") : null,
+      })),
+    };
 
-  mutate(payload);
-}
+    mutate(payload);
+  }
 
 
 
@@ -146,12 +146,12 @@ function onSubmit(values: z.infer<typeof formSchema>) {
                   </FormLabel>
                   <FormControl>
                     <Select
-                        key={field.value} 
-          value={field.value !== undefined ? String(field.value) : undefined}
-          onValueChange={(value) => field.onChange(Number(value))}
+                      key={field.value}
+                      value={field.value !== undefined ? String(field.value) : undefined}
+                      onValueChange={(value) => field.onChange(Number(value))}
                     >
-                      <SelectTrigger className="w-full h-[48px] py-2 px-3 rounded-[8px] border border-[#C0C3C1] text-base font-medium leading-[120%] text-[#434C45)]">
-                        <SelectValue placeholder="5 Days Later" />
+                      <SelectTrigger className="w-full h-[48px] py-2 px-3 rounded-[8px] border border-[#C0C3C1] text-base font-medium leading-[120%] text-[#131313] placeholder:text-[#434C45]">
+                        <SelectValue placeholder="Select Reminder" />
                       </SelectTrigger>
                       <SelectContent>
                         <SelectItem value="5">5 Days Later</SelectItem>
@@ -217,26 +217,26 @@ function onSubmit(values: z.infer<typeof formSchema>) {
               ))}
 
             </div>
-             {/* Buttons */}
-          <div className="flex justify-end gap-6 pt-6">
-            <Button
-              type="button"
-              variant="outline"
-              onClick={() => form.reset()}
-              className="h-[49px] text-[#F2415A] text-lg font-medium leading-[150%] border-[1px] border-[#F2415A] rounded-[8px] py-3 px-16"
-            >
-              Cancel
-            </Button>
-            <Button
-              disabled={isPending}
-              type="submit"
-              className="h-[49px] bg-gradient-to-b from-[#DF1020] to-[#310000]
+            {/* Buttons */}
+            <div className="flex justify-end gap-6 pt-6">
+              <Button
+                type="button"
+                variant="outline"
+                onClick={() => form.reset()}
+                className="h-[49px] text-[#F2415A] text-lg font-medium leading-[150%] border-[1px] border-[#F2415A] rounded-[8px] py-3 px-16"
+              >
+                Cancel
+              </Button>
+              <Button
+                disabled={isPending}
+                type="submit"
+                className="h-[49px] bg-gradient-to-b from-[#DF1020] to-[#310000]
             hover:from-[#310000] hover:to-[#DF1020]
             transition-all duration-300 text-[#F7F8FA] font-bold text-lg leading-[120%] rounded-[8px] px-20"
-            >
-              {isPending ? "Adding..." : "Add"}
-            </Button>
-          </div>
+              >
+                {isPending ? "Adding..." : "Add"}
+              </Button>
+            </div>
           </form>
         </Form>
       </div>
