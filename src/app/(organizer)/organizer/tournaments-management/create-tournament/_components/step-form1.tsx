@@ -96,7 +96,7 @@ export default function Step1Form() {
               <FormControl>
                 <Input
                   className="w-full h-[48px] py-2 px-3 rounded-[8px] border border-[#C0C3C1] text-base font-medium leading-[120%] text-[#434C45)]"
-                  placeholder="Spring Championship 2023"
+                  placeholder="Enter Tournament name"
                   {...field}
                 />
               </FormControl>
@@ -115,7 +115,7 @@ export default function Step1Form() {
               <FormControl>
                 <Input
                   className="w-full h-[48px] py-2 px-3 rounded-[8px] border border-[#C0C3C1] text-base font-medium leading-[120%] text-[#434C45)]"
-                  placeholder="Spring Championship 2023"
+                  placeholder="Enter Sport name"
                   {...field}
                 />
               </FormControl>
@@ -169,7 +169,7 @@ export default function Step1Form() {
                   defaultValue={field.value}
                 >
                   <SelectTrigger className="w-full h-[48px] py-2 px-3 rounded-[8px] border border-[#C0C3C1] text-base font-medium leading-[120%] text-[#434C45)]">
-                    <SelectValue placeholder="Pairs" />
+                    <SelectValue placeholder="Select Format" />
                   </SelectTrigger>
                   <SelectContent>
                     <SelectItem value="single">Single</SelectItem>
@@ -197,7 +197,7 @@ export default function Step1Form() {
                   defaultValue={field.value}
                 >
                   <SelectTrigger className="w-full h-[48px] py-2 px-3 rounded-[8px] border border-[#C0C3C1] text-base font-medium leading-[120%] text-[#434C45)]">
-                    <SelectValue placeholder="Parallel Unique  Club" />
+                    <SelectValue placeholder="select Total Draw size" />
                   </SelectTrigger>
                   <SelectContent>
                     <SelectItem value="8">8</SelectItem>

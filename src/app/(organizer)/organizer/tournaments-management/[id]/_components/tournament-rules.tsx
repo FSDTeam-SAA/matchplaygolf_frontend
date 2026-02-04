@@ -1,3 +1,6 @@
+
+
+
 "use client"
 
 import { zodResolver } from "@hookform/resolvers/zod"
@@ -15,7 +18,7 @@ import {
   FormMessage,
 } from "@/components/ui/form"
 import { Input } from "@/components/ui/input"
-import { Textarea } from "@/components/ui/textarea" // Added for rules
+import { Textarea } from "@/components/ui/textarea" 
 import { useSession } from "next-auth/react"
 import { useMutation, useQueryClient } from "@tanstack/react-query"
 import { useEffect } from "react"
@@ -218,6 +221,8 @@ const TournamentRulesPage = (data: { data: TournamentResponseData }) => {
                     className="min-h-[200px] resize-none"
                     {...field}
                   />
+
+                
                 </FormControl>
                 <FormMessage />
               </FormItem>

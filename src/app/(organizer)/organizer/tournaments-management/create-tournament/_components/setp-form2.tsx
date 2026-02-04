@@ -154,7 +154,7 @@ export default function Step2Form() {
                   <FormControl>
                     <Input
                       className="w-full h-[48px] py-2 px-3 rounded-[8px] border border-[#C0C3C1] text-base font-medium leading-[120%] text-[#434C45)]"
-                      placeholder="Enter your email address"
+                      placeholder="Enter your full name"
                       {...field}
                     />
                   </FormControl>
@@ -173,7 +173,7 @@ export default function Step2Form() {
                   <FormControl>
                     <Input
                       className="w-full h-[48px] py-2 px-3 rounded-[8px] border border-[#C0C3C1] text-base font-medium leading-[120%] text-[#434C45)]"
-                      placeholder="Golf"
+                      placeholder="Enter your company name"
                       {...field}
                     />
                   </FormControl>
@@ -195,7 +195,7 @@ export default function Step2Form() {
                   <FormControl>
                     <Input
                       className="w-full h-[48px] py-2 px-3 rounded-[8px] border border-[#C0C3C1] text-base font-medium leading-[120%] text-[#434C45)]"
-                      placeholder="Enter your email address"
+                      placeholder="Enter your country/region"
                       {...field}
                     />
                   </FormControl>
@@ -214,7 +214,7 @@ export default function Step2Form() {
                   <FormControl>
                     <Input
                       className="w-full h-[48px] py-2 px-3 rounded-[8px] border border-[#C0C3C1] text-base font-medium leading-[120%] text-[#434C45)]"
-                      placeholder="Enter your email address"
+                      placeholder="Enter your street address"
                       {...field}
                     />
                   </FormControl>
@@ -236,7 +236,7 @@ export default function Step2Form() {
                   <FormControl>
                     <Input
                       className="w-full h-[48px] py-2 px-3 rounded-[8px] border border-[#C0C3C1] text-base font-medium leading-[120%] text-[#434C45)]"
-                      placeholder="Golf"
+                      placeholder="Enter your Town/city"
                       {...field}
                     />
                   </FormControl>
@@ -255,7 +255,7 @@ export default function Step2Form() {
                   <FormControl>
                     <Input
                       className="w-full h-[48px] py-2 px-3 rounded-[8px] border border-[#C0C3C1] text-base font-medium leading-[120%] text-[#434C45)]"
-                      placeholder="Golf"
+                      placeholder="Enter you Town/city"
                       {...field}
                     />
                   </FormControl>
@@ -276,7 +276,7 @@ export default function Step2Form() {
                   <FormControl>
                     <Input
                       className="w-full h-[48px] py-2 px-3 rounded-[8px] border border-[#C0C3C1] text-base font-medium leading-[120%] text-[#434C45)]"
-                      placeholder="Golf"
+                      placeholder="Enter your postcode"
                       {...field}
                     />
                   </FormControl>
@@ -295,7 +295,7 @@ export default function Step2Form() {
                   <FormControl>
                     <Input
                       className="w-full h-[48px] py-2 px-3 rounded-[8px] border border-[#C0C3C1] text-base font-medium leading-[120%] text-[#434C45)]"
-                      placeholder="Golf"
+                      placeholder="Enter your phone number"
                       {...field}
                     />
                   </FormControl>

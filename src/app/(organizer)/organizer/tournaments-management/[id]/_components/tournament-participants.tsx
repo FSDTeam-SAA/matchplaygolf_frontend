@@ -29,6 +29,7 @@ const playerSchema = z.object({
   fullName: z.string().optional(),
   email: z.string().optional(),
   phone: z.string().optional(),
+  captainName: z.string().optional(),
   seed: z.string().optional(),
 })
 
@@ -53,6 +54,7 @@ const formSchema = z
           player.fullName ||
           player.email ||
           player.phone ||
+          player.captainName ||
           player.seed
       )
 
@@ -73,6 +75,7 @@ const formSchema = z
             player.fullName ||
             player.email ||
             player.phone ||
+            player.captainName ||
             player.seed
         )
 
@@ -85,6 +88,8 @@ const formSchema = z
             /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(player.email) &&
             player.phone &&
             player.phone.length >= 6 &&
+            player.captainName && 
+            player.captainName.length >=2 &&
             player.seed &&
             player.seed.length >= 1
         )
@@ -124,10 +129,10 @@ const TournamentParticipantsPage = (data: { data: TournamentResponseData }) => {
       csvFile: undefined,
       players: isPair
         ? [
-            { fullName: "", email: "", phone: "", seed: "" },
-            { fullName: "", email: "", phone: "", seed: "" },
+            { fullName: "", email: "", phone: "", captainName: "", seed: "" },
+            { fullName: "", email: "", phone: "", captainName: "", seed: "" },
           ]
-        : [{ fullName: "", email: "", phone: "", seed: "" }],
+        : [{ fullName: "", email: "", phone: "", captainName: "", seed: "" }],
     },
   })
 
@@ -135,63 +140,6 @@ const TournamentParticipantsPage = (data: { data: TournamentResponseData }) => {
     control: form.control,
     name: "players",
   })
-
-
-  // previous code 
-    // const { mutate, isPending } = useMutation({
-    // mutationKey: ["tournament-participants", tournamentId],
-
-
-    // mutationFn: async (values: FormValues) => {
-    //   const formData = new FormData()
-
-    //   // Filter out empty players (players with no data)
-    //   const filledPlayers = values.players.filter(
-    //     (player) =>
-    //       player.fullName ||
-    //       player.email ||
-    //       player.phone ||
-    //       player.seed
-    //   )
-
-    //   // Only send players if there are filled ones
-    //   if (filledPlayers.length > 0) {
-    //     formData.append("players", JSON.stringify(filledPlayers))
-    //   }
-
-    //   // csv file
-    //   if (values.csvFile) {
-    //     formData.append("csvFile", values.csvFile)
-    //   }
-
-    //   const res = await fetch(
-    //     `${process.env.NEXT_PUBLIC_BACKEND_URL}/tournament/${tournamentId}`,
-    //     {
-    //       method: "PUT",
-    //       headers: {
-    //         Authorization: `Bearer ${token}`,
-    //       },
-    //       body: formData,
-    //     }
-    //   )
-
-    //   if (!res.ok) throw new Error("Failed to update")
-    //   return res.json()
-    // },
-    // onSuccess: (response) => {
-    //   if (!response?.success) {
-    //     toast.error(response?.message || "Something went wrong")
-    //     return
-    //   }
-    //   toast.success(response?.message || "Tournament updated successfully")
-    //   queryClient.invalidateQueries({ queryKey: ["single-tournament"] })
-    //   form.reset()
-    // },
-    // onError: () => {
-    //   toast.error("Failed to update tournament")
-    // },
-
-    // })
 
 
 const { mutate, isPending } = useMutation({
@@ -203,6 +151,7 @@ const { mutate, isPending } = useMutation({
         player.fullName ||
         player.email ||
         player.phone ||
+        player.captainName ||
         player.seed
     )
 
@@ -311,12 +260,12 @@ const { mutate, isPending } = useMutation({
                   render={({ field }) => (
                     <FormItem>
                       <FormLabel className="text-base text-[#343A40] font-semibold leading-[150%]">
-                        Player {index + 1} Name
+                        Team Name
                       </FormLabel>
                       <FormControl>
                         <Input
                           className="h-[48px] rounded-[4px] border border-[#C0C3C1] text-base text-[#343A40] placeholder:text-[#8E938F] font-semibold leading-[150%]"
-                          placeholder="Liam Davies(Collingtree Park GC)"
+                          placeholder="Enter Team Name"
                           {...field}
                         />
                       </FormControl>
@@ -331,12 +280,12 @@ const { mutate, isPending } = useMutation({
                   render={({ field }) => (
                     <FormItem>
                       <FormLabel className="text-base text-[#343A40] font-semibold leading-[150%]">
-                        Player {index + 1} Email
+                        Team Captain Email
                       </FormLabel>
                       <FormControl>
                         <Input
                           className="h-[48px] rounded-[4px] border border-[#C0C3C1] text-base text-[#343A40] placeholder:text-[#8E938F] font-semibold leading-[150%]"
-                          placeholder="yx04lbn@yahoo.co.uk"
+                          placeholder="Enter Team Captain Email"
                           {...field}
                         />
                       </FormControl>
@@ -351,12 +300,12 @@ const { mutate, isPending } = useMutation({
                   render={({ field }) => (
                     <FormItem>
                       <FormLabel className="text-base text-[#343A40] font-semibold leading-[150%]">
-                        Player {index + 1} Phone
+                        Team Captain Phone
                       </FormLabel>
                       <FormControl>
                         <Input
                           className="h-[48px] rounded-[4px] border border-[#C0C3C1] text-base text-[#343A40] placeholder:text-[#8E938F] font-semibold leading-[150%]"
-                          placeholder="Collingtree Park GC"
+                          placeholder="Enter Team Captain Phone number"
                           {...field}
                         />
                       </FormControl>
@@ -366,7 +315,26 @@ const { mutate, isPending } = useMutation({
                 />
               </div>
 
-              <div className="mt-4">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mt-4">
+                <FormField
+                  control={form.control}
+                  name={`players.${index}.captainName`}
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel className="text-base text-[#343A40] font-semibold leading-[150%]">
+                        Team Captain Name
+                      </FormLabel>
+                      <FormControl>
+                        <Input
+                          className="h-[48px] rounded-[4px] border border-[#C0C3C1] text-base text-[#343A40] placeholder:text-[#8E938F] font-semibold leading-[150%]"
+                          placeholder="Enter Team Captain Name"
+                          {...field}
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
                 <FormField
                   control={form.control}
                   name={`players.${index}.seed`}
