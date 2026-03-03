@@ -5,8 +5,13 @@ import React, { useState } from "react";
 import Rules from "./rules";
 import Details from "./details";
 import Draw from "./draw";
+import { TournamentApiResponse } from "../../../[id]/_components/single-tournament-data-type";
+import { useSession } from "next-auth/react";
+import TournamentsHeader from "../../../[id]/_components/tournament-header";
 
 const TournamentsDetails = () => {
+  const session = useSession();
+    const token = (session?.data?.user as { accessToken: string })?.accessToken;
   const params = useParams();
   const id = params?.id;
 
@@ -25,8 +30,34 @@ const TournamentsDetails = () => {
     },
   });
 
+
+  // get api call 
+    const { data:tournamentData } = useQuery<TournamentApiResponse>({
+      queryKey: ["single-tournament", id],
+      queryFn: async () => {
+        const res = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/tournament/${id}`,{
+          method: 'GET',
+          headers: {
+            'Authorization': `Bearer ${token}`,
+            'Content-Type': 'application/json',
+          },
+        })
+        return res.json();
+      },
+      enabled: !!token
+    })
+  
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+      const tournamentName = tournamentData && tournamentData?.data && tournamentData?.data?.tournament?.tournamentName || "N/A"
+  
+  
+  
+    console.log("tournament name", tournamentName)
+
   return (
-    <div className="p-6">
+    <div>
+        <TournamentsHeader tournamentName={tournamentName} description="View your tournament"/>
+         <div className="p-6">
 
       {/* sub-pages */}
       <div>
@@ -81,6 +112,8 @@ const TournamentsDetails = () => {
         </div>
       </div>
     </div>
+    </div>
+   
   );
 };
 

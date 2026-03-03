@@ -33,6 +33,7 @@ const playerSchema = z.object({
   seed: z.string().optional(),
 })
 
+
 const formSchema = z
   .object({
     players: z.array(playerSchema),
@@ -45,10 +46,8 @@ const formSchema = z
   })
   .refine(
     (data) => {
-      // Check if CSV file exists
       const hasCsvFile = !!data.csvFile
 
-      // Check if any player has filled data
       const hasPlayerData = data.players.some(
         (player) =>
           player.fullName ||
@@ -58,7 +57,6 @@ const formSchema = z
           player.seed
       )
 
-      // At least one of them must be present
       return hasCsvFile || hasPlayerData
     },
     {
@@ -68,7 +66,6 @@ const formSchema = z
   )
   .refine(
     (data) => {
-      // If no CSV file, validate that players with data are complete
       if (!data.csvFile) {
         const playersWithData = data.players.filter(
           (player) =>
@@ -79,7 +76,7 @@ const formSchema = z
             player.seed
         )
 
-        // Check if all filled players have complete data
+        // ✅ Seed is optional, so removed from required validation
         return playersWithData.every(
           (player) =>
             player.fullName &&
@@ -88,10 +85,8 @@ const formSchema = z
             /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(player.email) &&
             player.phone &&
             player.phone.length >= 6 &&
-            player.captainName && 
-            player.captainName.length >=2 &&
-            player.seed &&
-            player.seed.length >= 1
+            player.captainName &&
+            player.captainName.length >= 2
         )
       }
       return true
@@ -101,6 +96,75 @@ const formSchema = z
       path: ["players"],
     }
   )
+
+// const formSchema = z
+//   .object({
+//     players: z.array(playerSchema),
+//     csvFile: z
+//       .instanceof(File)
+//       .refine((file) => file.type === "text/csv", {
+//         message: "Only CSV files are allowed",
+//       })
+//       .optional(),
+//   })
+//   .refine(
+//     (data) => {
+//       // Check if CSV file exists
+//       const hasCsvFile = !!data.csvFile
+
+//       // Check if any player has filled data
+//       const hasPlayerData = data.players.some(
+//         (player) =>
+//           player.fullName ||
+//           player.email ||
+//           player.phone ||
+//           player.captainName ||
+//           player.seed
+//       )
+
+//       // At least one of them must be present
+//       return hasCsvFile || hasPlayerData
+//     },
+//     {
+//       message: "Please provide either CSV file or player information",
+//       path: ["csvFile"],
+//     }
+//   )
+//   .refine(
+//     (data) => {
+//       // If no CSV file, validate that players with data are complete
+//       if (!data.csvFile) {
+//         const playersWithData = data.players.filter(
+//           (player) =>
+//             player.fullName ||
+//             player.email ||
+//             player.phone ||
+//             player.captainName ||
+//             player.seed
+//         )
+
+//         // Check if all filled players have complete data
+//         return playersWithData.every(
+//           (player) =>
+//             player.fullName &&
+//             player.fullName.length >= 2 &&
+//             player.email &&
+//             /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(player.email) &&
+//             player.phone &&
+//             player.phone.length >= 6 &&
+//             player.captainName && 
+//             player.captainName.length >=2 &&
+//             player.seed &&
+//             player.seed.length >= 1
+//         )
+//       }
+//       return true
+//     },
+//     {
+//       message: "Please complete all fields for each player you're adding",
+//       path: ["players"],
+//     }
+//   )
 
 type FormValues = z.infer<typeof formSchema>
 

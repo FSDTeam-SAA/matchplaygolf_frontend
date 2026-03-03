@@ -67,9 +67,9 @@ const TournamentRounds = (data: { data: TournamentResponseData & { rememberEmail
   console.log(data?.data)
 
   // const startDate = data?.data?.tournament?.startDate
-  const startDate = data?.data?.tournament?.startDate
-  ? new Date(data.data.tournament.startDate)
-  : null;
+  // const startDate = data?.data?.tournament?.startDate
+  // ? new Date(data.data.tournament.startDate)
+  // : null;
 
 
 
@@ -119,36 +119,110 @@ const TournamentRounds = (data: { data: TournamentResponseData & { rememberEmail
   });
 
 
-  function onSubmit(values: z.infer<typeof formSchema>) {
+  // function onSubmit(values: z.infer<typeof formSchema>) {
 
-      if (!startDate) {
-    toast.error("Tournament start date not found");
-    return;
-  }
+  //     if (!startDate) {
+  //   toast.error("Tournament start date not found");
+  //   return;
+  // }
 
-  // 🔴 Validate rounds date
-  const invalidRound = values.rounds.find(
-    (round) => round.date && round.date <= startDate
-  );
+  // // 🔴 Validate rounds date
+  // const invalidRound = values.rounds.find(
+  //   (round) => round.date && round.date <= startDate
+  // );
 
-  if (invalidRound) {
-    toast.error(
-      `Round deadline must be after ${format(startDate, "dd-MM-yyyy")}`
-    );
-    return;
-  }
+  // if (invalidRound) {
+  //   toast.error(
+  //     `Round deadline must be after ${format(startDate, "dd-MM-yyyy")}`
+  //   );
+  //   return;
+  // }
 
   
-    const payload = {
-      rememberEmail: (values.rememberEmail ?? 0),
-      rounds: values.rounds.map((round, index) => ({
-        roundName: `Round ${index + 1}`,
-        date: round.date ? format(round.date, "yyyy-MM-dd") : null,
-      })),
-    };
+  //   const payload = {
+  //     rememberEmail: (values.rememberEmail ?? 0),
+  //     rounds: values.rounds.map((round, index) => ({
+  //       roundName: `Round ${index + 1}`,
+  //       date: round.date ? format(round.date, "yyyy-MM-dd") : null,
+  //     })),
+  //   };
 
-    mutate(payload);
+  //   mutate(payload);
+  // }
+
+
+  function onSubmit(values: z.infer<typeof formSchema>) {
+  const startDateRaw = data?.data?.tournament?.startDate
+  const endDateRaw = data?.data?.tournament?.endDate
+
+  const start = startDateRaw ? new Date(startDateRaw) : null
+  const end = endDateRaw ? new Date(endDateRaw) : null
+
+  if (!start) {
+    toast.error("Tournament start date not found")
+    return
   }
+
+  if (!end) {
+    toast.error("Tournament end date not found")
+    return
+  }
+
+  // normalize time (avoid time issues)
+  const startDay = new Date(start.getFullYear(), start.getMonth(), start.getDate())
+  const endDay = new Date(end.getFullYear(), end.getMonth(), end.getDate())
+
+  // 🔴 Validate: each round date must be inside startDate & endDate
+  const invalidIndex = values.rounds.findIndex((round) => {
+    if (!round.date) return false
+    const d = new Date(
+      round.date.getFullYear(),
+      round.date.getMonth(),
+      round.date.getDate()
+    )
+    return d < startDay || d > endDay
+  })
+
+  if (invalidIndex !== -1) {
+    toast.error(
+      `Round ${invalidIndex + 1} deadline must be between ${format(
+        startDay,
+        "dd-MM-yyyy"
+      )} and ${format(endDay, "dd-MM-yyyy")}`
+    )
+    return
+  }
+
+  // ✅ Duplicate round date check (same date can't be used in multiple rounds)
+const seen = new Map<string, number>() // dateStr -> first round index
+
+for (let i = 0; i < values.rounds.length; i++) {
+  const d = values.rounds[i]?.date
+  if (!d) continue // ignore empty dates
+
+  const dateStr = format(d, "yyyy-MM-dd") // normalized compare key
+
+  if (seen.has(dateStr)) {
+    const firstIndex = seen.get(dateStr)! + 1
+    toast.error(
+      `Duplicate deadline date found: ${format(d, "dd-MM-yyyy")} (Round ${firstIndex} & Round ${i + 1})`
+    )
+    return
+  }
+
+  seen.set(dateStr, i)
+}
+
+  const payload = {
+    rememberEmail: values.rememberEmail ?? 0,
+    rounds: values.rounds.map((round, index) => ({
+      roundName: `Round ${index + 1}`,
+      date: round.date ? format(round.date, "yyyy-MM-dd") : null,
+    })),
+  }
+
+  mutate(payload)
+}
 
 
 
