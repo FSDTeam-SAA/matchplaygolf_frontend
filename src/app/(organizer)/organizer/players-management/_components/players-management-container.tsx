@@ -9,7 +9,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { Eye, Trash } from "lucide-react";
+import { Eye, SquarePen, Trash } from "lucide-react";
 import MatchPlayGolfPagination from "@/components/ui/matchplaygolf-pagination";
 import { Input } from "@/components/ui/input";
 import DeleteModal from "@/components/modals/delete-modal";
@@ -23,11 +23,13 @@ import { useDebounce } from "@/hooks/useDebounce";
 import PlayersView from "./players-view";
 import { TournamentPlayerApiResponse, TournamentPlayerItem } from "./players-management-data-type";
 import Image from "next/image";
+import EditPlayerModal from "./edit-player";
 
 const PlayersManagementContainer = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [search, setSearch] = useState("");
   const [deleteModalOpen, setDeleteModalOpen] = useState(false);
+    const [editPlayerModalOpen, setEditPlayerModalOpen] = useState(false);
   const [viewPlayer, setViewPlayer] = useState(false);
   const [playerId, setPlayerId] = useState("");
   const [selectedPlayer, setSelectedPlayer] =
@@ -154,6 +156,15 @@ const PlayersManagementContainer = () => {
                     </button>
                   </TableCell>
                   <TableCell className="flex items-center justify-center gap-6 py-4">
+                      <button
+                      onClick={() => {
+                        setPlayerId(item?.playerId)
+                        setEditPlayerModalOpen(true)
+                      }}
+                      className="cursor-pointer"
+                    >
+                      <SquarePen  className="h-6 w-6 text-[#181818]" />
+                    </button>
                     <button
                       onClick={() => {
                         setViewPlayer(true);
@@ -273,6 +284,20 @@ const PlayersManagementContainer = () => {
               tournamentData={selectedPlayer}
             />
           )}
+        </div>
+
+         {/* player edit modal  */}
+
+        <div>
+          {
+            editPlayerModalOpen && (
+              <EditPlayerModal
+              open={editPlayerModalOpen}
+              onOpenChange={setEditPlayerModalOpen}
+              playerId={playerId}
+              />
+            )
+          }
         </div>
       </div>
     </div>
