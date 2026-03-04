@@ -172,14 +172,10 @@ const TournamentRounds = (data: { data: TournamentResponseData & { rememberEmail
   const startDay = new Date(start.getFullYear(), start.getMonth(), start.getDate())
   const endDay = new Date(end.getFullYear(), end.getMonth(), end.getDate())
 
-  // 🔴 Validate: each round date must be inside startDate & endDate
+  // ✅ 1) Validate: each round date must be inside startDate & endDate
   const invalidIndex = values.rounds.findIndex((round) => {
     if (!round.date) return false
-    const d = new Date(
-      round.date.getFullYear(),
-      round.date.getMonth(),
-      round.date.getDate()
-    )
+    const d = new Date(round.date.getFullYear(), round.date.getMonth(), round.date.getDate())
     return d < startDay || d > endDay
   })
 
@@ -193,25 +189,44 @@ const TournamentRounds = (data: { data: TournamentResponseData & { rememberEmail
     return
   }
 
-  // ✅ Duplicate round date check (same date can't be used in multiple rounds)
-const seen = new Map<string, number>() // dateStr -> first round index
+ // ✅ Duplicate round date check (same date can't be used in multiple rounds)
+const seen = new Set<string>()
 
 for (let i = 0; i < values.rounds.length; i++) {
   const d = values.rounds[i]?.date
   if (!d) continue // ignore empty dates
 
-  const dateStr = format(d, "yyyy-MM-dd") // normalized compare key
+  const key = format(d, "yyyy-MM-dd") // normalize to day
 
-  if (seen.has(dateStr)) {
-    const firstIndex = seen.get(dateStr)! + 1
-    toast.error(
-      `Duplicate deadline date found: ${format(d, "dd-MM-yyyy")} (Round ${firstIndex} & Round ${i + 1})`
-    )
+  if (seen.has(key)) {
+    toast.error(`Same deadline date can't be used in multiple rounds: ${format(d, "dd-MM-yyyy")}`)
     return
   }
 
-  seen.set(dateStr, i)
+  seen.add(key)
 }
+
+  // ✅ 3) Sequential round date check (Round N must be AFTER Round N-1)
+  for (let i = 1; i < values.rounds.length; i++) {
+    const prev = values.rounds[i - 1]?.date
+    const curr = values.rounds[i]?.date
+
+    // If you want required dates, replace this with an error instead of continue
+    if (!prev || !curr) continue
+
+    const prevDay = new Date(prev.getFullYear(), prev.getMonth(), prev.getDate())
+    const currDay = new Date(curr.getFullYear(), curr.getMonth(), curr.getDate())
+
+    if (currDay <= prevDay) {
+      toast.error(
+        `Round ${i + 1} deadline must be after Round ${i} (${format(
+          prevDay,
+          "dd-MM-yyyy"
+        )})`
+      )
+      return
+    }
+  }
 
   const payload = {
     rememberEmail: values.rememberEmail ?? 0,
