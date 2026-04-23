@@ -17,7 +17,7 @@ const TournamentsDetails = () => {
     queryKey: ["tournaments", roundNumber],
     queryFn: async () => {
       const res = await fetch(
-        `${process.env.NEXT_PUBLIC_BACKEND_URL}/tournament/getAllMatches/${id}?roundNumber=${roundNumber}`,
+        `${process.env.NEXT_PUBLIC_BACKEND_URL}/tournament/getAllMatches/${id}?roundNumber=${roundNumber}`
       );
 
       const data = await res.json();
@@ -25,10 +25,6 @@ const TournamentsDetails = () => {
       return data?.data;
     },
   });
-
-  const rounds = data?.tournament?.totalRounds
-    ? Array.from({ length: data.tournament.totalRounds }, (_, i) => i + 1)
-    : [];
 
   return (
     <div>
@@ -84,25 +80,6 @@ const TournamentsDetails = () => {
             Details
           </button>
         </div>
-
-        {/* Round Filters */}
-        {isActive === "draw" && rounds.length > 0 && (
-          <div className="flex items-center gap-4 mt-6 mb-6 flex-wrap">
-            {rounds.map((round) => (
-              <button
-                key={round}
-                className={`py-2 px-4 rounded-lg border transition-all ${
-                  roundNumber === round
-                    ? "bg-primary text-white border-primary font-semibold"
-                    : "bg-white text-gray-600 border-gray-300 hover:border-primary hover:text-primary"
-                }`}
-                onClick={() => setRoundNumber(round)}
-              >
-                Round {round}
-              </button>
-            ))}
-          </div>
-        )}
 
         <div className="mt-8">
           {isActive === "draw" && (
