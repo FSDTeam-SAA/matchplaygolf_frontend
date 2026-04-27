@@ -201,7 +201,7 @@ const Draw = ({
             <Button
               key={item?._id}
               onClick={() => setRoundNumber?.(item?.roundNumber)}
-              className={`h-[40px] sm:h-[45px] w-full min-w-[80px] sm:w-[130px] rounded-3xl hover:text-primary transition-all duration-200 ${
+              className={`h-[40px] sm:h-[45px] w-full min-w-[80px] sm:w-[130px] rounded-3xl  transition-all duration-200 ${
                 roundNumber === item?.roundNumber
                   ? "bg-primary text-white"
                   : "bg-inherit border border-primary text-primary hover:bg-primary/10"
