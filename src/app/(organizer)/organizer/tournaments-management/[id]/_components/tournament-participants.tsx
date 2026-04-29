@@ -197,7 +197,7 @@ const TournamentParticipantsPage = (data: { data: TournamentResponseData }) => {
         );
 
         if (!res.ok) {
-          throw new Error("Failed to update tournament");
+          throw new Error("Participant size exceeds tournament player size");
         }
 
         return res.json();
@@ -223,7 +223,7 @@ const TournamentParticipantsPage = (data: { data: TournamentResponseData }) => {
       );
 
       if (!res.ok) {
-        throw new Error("Failed to update tournament");
+        throw new Error("Participant size exceeds tournament player size");
       }
 
       return res.json();
@@ -246,7 +246,7 @@ const TournamentParticipantsPage = (data: { data: TournamentResponseData }) => {
 
     onError: (error) => {
       console.error(error);
-      toast.error("Failed to update tournament");
+      toast.error("Participant size exceeds tournament player size");
     },
   });
 
@@ -691,7 +691,7 @@ export default TournamentParticipantsPage;
 //         );
 
 //         if (!res.ok) {
-//           throw new Error("Failed to update tournament");
+//           throw new Error("Participant size exceeds tournament player size");
 //         }
 
 //         return res.json();
@@ -718,7 +718,7 @@ export default TournamentParticipantsPage;
 //       );
 
 //       if (!res.ok) {
-//         throw new Error("Failed to update tournament");
+//         throw new Error("Participant size exceeds tournament player size");
 //       }
 
 //       return res.json();
@@ -737,7 +737,7 @@ export default TournamentParticipantsPage;
 
 //     onError: (error) => {
 //       console.error(error);
-//       toast.error("Failed to update tournament");
+//       toast.error("Participant size exceeds tournament player size");
 //     },
 //   });
 
