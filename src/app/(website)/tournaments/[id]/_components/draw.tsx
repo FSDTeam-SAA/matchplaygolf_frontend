@@ -70,6 +70,7 @@ interface Round {
   _id: string;
   roundNumber: number;
   roundName: string;
+  date?: string; // Add optional date field
 }
 
 interface Props {
@@ -98,6 +99,17 @@ const Draw = ({
   const [isVsModalOpen, setIsVsModalOpen] = useState(false);
   const [matchInfo, setMatchInfo] = useState<Match>();
   const [winner1, setWinner1] = useState<boolean>();
+
+  // Helper function to format round date
+  const formatRoundDate = (dateString?: string) => {
+    if (!dateString) return "";
+    const date = new Date(dateString);
+    return date.toLocaleDateString("en-US", {
+      month: "short",
+      day: "numeric",
+      year: "numeric",
+    });
+  };
 
   const handleOpenModal = (match: Match, winner1: boolean) => {
     setIsModalOpen(true);
@@ -148,10 +160,10 @@ const Draw = ({
         {/* Round buttons skeleton */}
         <div className="mt-8 mb-5 grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-10 gap-3 sm:gap-5">
           {[1, 2, 3, 4, 5].map((item) => (
-            <Skeleton
-              key={item}
-              className="h-[40px] sm:h-[45px] w-full min-w-[80px] sm:w-[130px] rounded-3xl"
-            />
+            <div key={item} className="flex flex-col items-center gap-2">
+              <Skeleton className="h-[40px] sm:h-[45px] w-full min-w-[80px] sm:w-[130px] rounded-3xl" />
+              <Skeleton className="h-3 w-20 rounded" />
+            </div>
           ))}
         </div>
 
@@ -211,24 +223,33 @@ const Draw = ({
   return (
     <div className="w-full">
       {/* Round buttons - always visible */}
-      <div className="mt-8 mb-5 grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-10 gap-3 sm:gap-5">
-        {data?.rounds?.map((item) => {
-          return (
-            <Button
-              key={item?._id}
-              onClick={() => setRoundNumber(item?.roundNumber)}
-              className={`h-[40px] sm:h-[45px] w-full min-w-[80px] sm:w-[130px] rounded-3xl hover:text-white transition-all duration-200 ${
-                roundNumber === item?.roundNumber
-                  ? "bg-primary text-white"
-                  : "bg-inherit border border-primary text-primary"
-              }`}
-            >
-              <span className="text-xs sm:text-sm truncate">
-                {item?.roundName}
-              </span>
-            </Button>
-          );
-        })}
+      <div className="mt-8 mb-5">
+        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-10 gap-3 sm:gap-5">
+          {data?.rounds?.map((item) => {
+            return (
+              <div key={item?._id} className="flex flex-col items-center gap-2">
+                <Button
+                  onClick={() => setRoundNumber(item?.roundNumber)}
+                  className={`h-[40px] sm:h-[45px] w-full min-w-[80px] sm:w-[130px] rounded-3xl hover:text-white transition-all duration-200 ${
+                    roundNumber === item?.roundNumber
+                      ? "bg-primary text-white"
+                      : "bg-inherit border border-primary text-primary"
+                  }`}
+                >
+                  <span className="text-xs sm:text-sm truncate">
+                    {item?.roundName}
+                  </span>
+                </Button>
+                {/* Display round date */}
+                {item?.date && (
+                  <span className="text-xs text-gray-500 whitespace-nowrap">
+                    {formatRoundDate(item.date)}
+                  </span>
+                )}
+              </div>
+            );
+          })}
+        </div>
       </div>
 
       {/* Matches section - conditional rendering */}
@@ -402,7 +423,8 @@ const Draw = ({
                           <div className="flex items-center gap-3">
                             <div>
                               <p className="text-sm truncate">
-                                {item?.player2Id?.clubName || "No club assigned"}
+                                {item?.player2Id?.clubName ||
+                                  "No club assigned"}
                               </p>
                             </div>
                           </div>

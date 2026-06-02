@@ -66,6 +66,7 @@ interface Round {
   _id: string;
   roundNumber: number;
   roundName: string;
+  date: string; // Add date field to Round interface
 }
 
 interface Props {
@@ -130,6 +131,17 @@ const Draw = ({
     toast.error("You are not a participant of this match. Access denied.");
   };
 
+  // Helper function to format date
+  const formatRoundDate = (dateString: string) => {
+    if (!dateString) return "";
+    const date = new Date(dateString);
+    return date.toLocaleDateString("en-US", {
+      month: "short",
+      day: "numeric",
+      year: "numeric",
+    });
+  };
+
   // Skeleton loader
   if (isLoading) {
     return (
@@ -137,10 +149,10 @@ const Draw = ({
         {/* Round buttons skeleton */}
         <div className="mt-8 mb-5 grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-10 gap-3 sm:gap-5">
           {[1, 2, 3, 4, 5].map((item) => (
-            <Skeleton
-              key={item}
-              className="h-[40px] sm:h-[45px] w-full min-w-[80px] sm:w-[130px] rounded-3xl"
-            />
+            <div key={item} className="flex flex-col items-center gap-2">
+              <Skeleton className="h-[40px] sm:h-[45px] w-full min-w-[80px] sm:w-[130px] rounded-3xl" />
+              <Skeleton className="h-3 w-20 rounded" />
+            </div>
           ))}
         </div>
 
@@ -201,24 +213,33 @@ const Draw = ({
     <div className="space-y-6">
       {/* Round buttons */}
       {showRoundButtons && (
-        <div className="mt-8 mb-5 grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-10 gap-3 sm:gap-5">
-          {rounds.map((round) => (
-            <Button
-              key={round._id}
-              onClick={() =>
-                setRoundNumber && setRoundNumber(round.roundNumber)
-              }
-              className={`h-[40px] sm:h-[45px] w-full min-w-[80px] sm:w-[130px] rounded-3xl hover:text-white transition-all duration-200 ${
-                roundNumber === round.roundNumber
-                  ? "bg-primary text-white"
-                  : "bg-inherit border border-primary text-primary"
-              }`}
-            >
-              <span className="text-xs sm:text-sm truncate">
-                {round.roundName}
-              </span>
-            </Button>
-          ))}
+        <div className="mt-8 mb-5">
+          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-10 gap-3 sm:gap-5">
+            {rounds.map((round) => (
+              <div key={round._id} className="flex flex-col items-center gap-2">
+                <Button
+                  onClick={() =>
+                    setRoundNumber && setRoundNumber(round.roundNumber)
+                  }
+                  className={`h-[40px] sm:h-[45px] w-full min-w-[80px] sm:w-[130px] rounded-3xl hover:text-white transition-all duration-200 ${
+                    roundNumber === round.roundNumber
+                      ? "bg-primary text-white"
+                      : "bg-inherit border border-primary text-primary"
+                  }`}
+                >
+                  <span className="text-xs sm:text-sm truncate">
+                    {round.roundName}
+                  </span>
+                </Button>
+                {/* Display round date */}
+                {round.date && (
+                  <span className="text-xs text-gray-500 whitespace-nowrap">
+                    {formatRoundDate(round.date)} adfadsf
+                  </span>
+                )}
+              </div>
+            ))}
+          </div>
         </div>
       )}
 
@@ -417,7 +438,7 @@ const Draw = ({
                               {isParticipant && (
                                 <button
                                   onClick={() => handleViewOpen(item._id)}
-                                   className="text-xs sm:text-sm font-medium px-2 py-1 sm:px-3 sm:py-1 rounded-full bg-purple-100 text-purple-600"
+                                  className="text-xs sm:text-sm font-medium px-2 py-1 sm:px-3 sm:py-1 rounded-full bg-purple-100 text-purple-600"
                                 >
                                   View
                                 </button>
