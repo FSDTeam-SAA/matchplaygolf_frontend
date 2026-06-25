@@ -221,7 +221,7 @@ const Draw = ({
                   onClick={() =>
                     setRoundNumber && setRoundNumber(round.roundNumber)
                   }
-                  className={`h-[40px] sm:h-[45px] w-full min-w-[80px] sm:w-[130px] rounded-3xl hover:text-white transition-all duration-200 ${
+                  className={`h-[40px] sm:h-[45px] w-full rounded-3xl hover:text-white transition-all duration-200 ${
                     roundNumber === round.roundNumber
                       ? "bg-primary text-white"
                       : "bg-inherit border border-primary text-primary"
@@ -234,7 +234,7 @@ const Draw = ({
                 {/* Display round date */}
                 {round.date && (
                   <span className="text-xs text-gray-500 whitespace-nowrap">
-                    {formatRoundDate(round.date)} adfadsf
+                    {formatRoundDate(round.date)}
                   </span>
                 )}
               </div>

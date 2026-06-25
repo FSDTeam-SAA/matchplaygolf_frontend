@@ -230,7 +230,7 @@ const Draw = ({
               <div key={item?._id} className="flex flex-col items-center gap-2">
                 <Button
                   onClick={() => setRoundNumber(item?.roundNumber)}
-                  className={`h-[40px] sm:h-[45px] w-full min-w-[80px] sm:w-[130px] rounded-3xl hover:text-white transition-all duration-200 ${
+                  className={`h-[40px] sm:h-[45px] w-full rounded-3xl hover:text-white transition-all duration-200 ${
                     roundNumber === item?.roundNumber
                       ? "bg-primary text-white"
                       : "bg-inherit border border-primary text-primary"
