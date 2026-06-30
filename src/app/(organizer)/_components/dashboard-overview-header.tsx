@@ -5,6 +5,7 @@ const DashboardOverviewHeader = () => {
     <div className="sticky top-0  z-50">
       {/* Header */}
       <div className="bg-white p-6 ">
+        {/* heading */}
         <h1 className="text-2xl lg:text-3xl font-bold text-[#181818] leading-[150%]">
           Welcome back, Michael
         </h1>
