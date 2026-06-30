@@ -1,7 +1,7 @@
 "use client";
 import { useQuery } from "@tanstack/react-query";
 import Image from "next/image";
-import React, { useState } from "react";
+import React, { useState, useCallback } from "react";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Dialog, DialogContent } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
@@ -40,6 +40,97 @@ interface ApiResponse {
 
 const ITEMS_PER_PAGE = 8;
 
+// HTML entity names to their character equivalents
+const ENTITY_TO_CHAR: Record<string, string> = {
+  amp: "\x26",
+  lt: "\x3C",
+  gt: "\x3E",
+  quot: "\x22",
+  "#39": "\x27",
+  nbsp: "\xA0",
+};
+
+/**
+ * Decodes common HTML entities back to their actual characters.
+ */
+function decodeHtmlEntities(text: string): string {
+  // Decode named entities like & < > " &nbsp;
+  return text.replace(/&(\w+|#\d+);/g, (match, entity: string) => {
+    return ENTITY_TO_CHAR[entity] ?? match;
+  });
+}
+
+/**
+ * Strips all HTML tags, decodes entities, returning clean plain text.
+ */
+function stripHtml(html: string): string {
+  const withoutTags = html.replace(/<[^>]*>/g, "");
+  return decodeHtmlEntities(withoutTags).trim();
+}
+
+/**
+ * Escapes special HTML characters so they render as literal text.
+ */
+function escapeHtml(text: string): string {
+  // Must escape & first to avoid double-escaping
+  const AX = String.fromCharCode(38, 97, 109, 112, 59); // &
+  const LX = String.fromCharCode(38, 108, 116, 59); // <
+  const GX = String.fromCharCode(38, 103, 116, 59); // >
+  const QX = String.fromCharCode(38, 113, 117, 111, 116, 59); // "
+  const AMP = String.fromCharCode(38); // &
+  const LT = String.fromCharCode(60); // <
+  const GT = String.fromCharCode(62); // >
+  const QT = String.fromCharCode(34); // "
+
+  let result = text;
+  result = result.split(AMP).join(AX);
+  result = result.split(LT).join(LX);
+  result = result.split(GT).join(GX);
+  result = result.split(QT).join(QX);
+  return result;
+}
+
+/**
+ * Converts HTML description to plain text with clickable links.
+ * - Strips all HTML tags and decodes entities
+ * - Detects URLs (http/https/www) and wraps them in styled anchor tags
+ * - Returns safe HTML string for dangerouslySetInnerHTML
+ */
+function convertToPlainTextWithLinks(html: string): string {
+  // Step 1: Strip all HTML tags and decode entities to get raw plain text
+  const text = stripHtml(html);
+  if (!text) return "";
+
+  // Step 2: Escape HTML-sensitive characters so only our <a> tags render
+  const escaped = escapeHtml(text);
+
+  // Step 3: Find URLs and replace with clickable anchor tags
+  const urlRegex = /(https?:\/\/[^\s<>"']+|www\.[^\s<>"']+)/gi;
+  const withLinks = escaped.replace(urlRegex, (url) => {
+    const href = url.startsWith("http") ? url : "https://" + url;
+    return (
+      '<a href="' +
+      href +
+      '" target="_blank" rel="noopener noreferrer nofollow" class="text-primary font-semibold underline underline-offset-2 decoration-primary/30 hover:decoration-primary hover:text-primary/80 transition-all duration-200">' +
+      url +
+      "</a>"
+    );
+  });
+
+  // Step 4: Preserve line breaks
+  return withLinks.split("\n").join("<br />");
+}
+
+/**
+ * Gets a clean text preview from the HTML description (for grid cards).
+ */
+function getTextPreview(html: string, maxLength = 120): string {
+  const text = stripHtml(html);
+  if (!text) return "";
+  if (text.length <= maxLength) return text;
+  return text.slice(0, maxLength).trimEnd() + "...";
+}
+
 const SportsArticles = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [selectedArticle, setSelectedArticle] = useState<Article | null>(null);
@@ -64,28 +155,28 @@ const SportsArticles = () => {
   const articles = data?.data || [];
   const totalPages = data?.pagination?.totalPages || 1;
 
-  const handlePageChange = (page: number) => {
+  const handlePageChange = useCallback((page: number) => {
     setCurrentPage(page);
-  };
+  }, []);
 
-  const handleOpenModal = (article: Article) => {
+  const handleOpenModal = useCallback((article: Article) => {
     setSelectedArticle(article);
     setIsModalOpen(true);
-  };
+  }, []);
 
-  const handleCloseModal = () => {
+  const handleCloseModal = useCallback(() => {
     setSelectedArticle(null);
     setIsModalOpen(false);
-  };
+  }, []);
 
-  const formatDate = (dateString: string) => {
+  const formatDate = useCallback((dateString: string) => {
     const date = new Date(dateString);
     return date.toLocaleDateString("en-US", {
       month: "short",
       day: "numeric",
       year: "numeric",
     });
-  };
+  }, []);
 
   if (isLoading) {
     return (
@@ -184,12 +275,10 @@ const SportsArticles = () => {
                 {article.title}
               </h3>
 
-              <p
-                className="text-sm text-gray-600 mb-4 line-clamp-3"
-                dangerouslySetInnerHTML={{
-                  __html: `${article.description.slice(0, 100)}...`,
-                }}
-              ></p>
+              {/* Plain text preview - safe for grid cards */}
+              <p className="text-sm text-gray-600 mb-4 line-clamp-3">
+                {getTextPreview(article.description, 120)}
+              </p>
 
               {/* See Details Button */}
               <Button
@@ -257,20 +346,23 @@ const SportsArticles = () => {
                     Article Description
                   </h3>
 
-                  <p
-                    className="text-gray-700 leading-relaxed whitespace-pre-line"
+                  {/* Plain text content with clickable links */}
+                  <div
+                    className="text-gray-700 leading-relaxed"
                     dangerouslySetInnerHTML={{
-                      __html: `${selectedArticle.description}`,
+                      __html: convertToPlainTextWithLinks(
+                        selectedArticle.description
+                      ),
                     }}
-                  ></p>
+                  />
                 </div>
 
                 {/* Actions */}
-                <div className="mt-8 flex justify-end gap-3">
+                <div className="mt-8 flex justify-end gap-3 pt-6 border-t border-gray-100">
                   <Button
                     onClick={handleCloseModal}
                     variant="outline"
-                    className="border-gray-300 hover:bg-gray-50"
+                    className="border-gray-300 hover:bg-gray-50 text-gray-700"
                   >
                     Close
                   </Button>

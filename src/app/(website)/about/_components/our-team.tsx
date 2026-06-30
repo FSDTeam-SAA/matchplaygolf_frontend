@@ -1,8 +1,9 @@
 "use client";
 import { useQuery } from "@tanstack/react-query";
 import Image from "next/image";
-import React from "react";
-
+import React, { useState } from "react";
+import { Dialog, DialogContent } from "@/components/ui/dialog";
+import { Button } from "@/components/ui/button";
 // Define the type for team member data
 interface TeamMember {
   _id: string;
@@ -19,6 +20,9 @@ interface ApiResponse {
 }
 
 const OurTeam = () => {
+  const [selectedMember, setSelectedMember] = useState<TeamMember | null>(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
   const { data, isLoading } = useQuery<ApiResponse>({
     queryKey: ["team"],
     queryFn: async () => {
@@ -29,6 +33,16 @@ const OurTeam = () => {
       return data;
     },
   });
+
+  const handleOpenModal = (member: TeamMember) => {
+    setSelectedMember(member);
+    setIsModalOpen(true);
+  };
+
+  const handleCloseModal = () => {
+    setSelectedMember(null);
+    setIsModalOpen(false);
+  };
 
   const TeamSkeleton = () => (
     <div className="mt-10 grid grid-cols-1 lg:grid-cols-3 gap-6">
@@ -91,7 +105,19 @@ const OurTeam = () => {
                 <h3 className="my-3 font-medium text-lg">
                   {member.designation}
                 </h3>
-                <p className="line-clamp-3">{member.description}</p>
+
+                {/* Description with line-clamp-3 and See More button */}
+                <div>
+                  <p className="line-clamp-3 text-sm leading-relaxed">
+                    {member.description}
+                  </p>
+                  <button
+                    onClick={() => handleOpenModal(member)}
+                    className="mt-2 text-sm font-semibold text-white/90 hover:text-white underline underline-offset-2 decoration-white/40 hover:decoration-white transition-all duration-200"
+                  >
+                    See More
+                  </button>
+                </div>
               </div>
             </div>
           ))}
@@ -104,6 +130,55 @@ const OurTeam = () => {
           <p className="text-gray-500">No team members found.</p>
         </div>
       )}
+
+      {/* Team Member Details Modal */}
+      <Dialog open={isModalOpen} onOpenChange={handleCloseModal}>
+        <DialogContent className="max-w-lg max-h-[90vh] overflow-y-auto p-0 border-0">
+          {selectedMember && (
+            <div className="bg-white rounded-lg overflow-hidden">
+              {/* Modal Header with Image */}
+              <div className="relative h-64">
+                <Image
+                  src={selectedMember.image || "/images/about/team-1.jpg"}
+                  alt={selectedMember.memberName}
+                  fill
+                  className="object-cover"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent" />
+                <div className="absolute bottom-5 left-5 right-5">
+                  <h2 className="text-2xl font-bold text-white">
+                    {selectedMember.memberName}
+                  </h2>
+                  <p className="text-white/80 font-medium">
+                    {selectedMember.designation}
+                  </p>
+                </div>
+              </div>
+
+              {/* Modal Content */}
+              <div className="p-6">
+                <h3 className="text-lg font-semibold text-gray-800 mb-3">
+                  About
+                </h3>
+                <p className="text-gray-600 leading-relaxed whitespace-pre-line">
+                  {selectedMember.description}
+                </p>
+
+                {/* Close button */}
+                <div className="mt-6 flex justify-end">
+                  <Button
+                    onClick={handleCloseModal}
+                    variant="outline"
+                    className="border-gray-300 hover:bg-gray-50 text-gray-700"
+                  >
+                    Close
+                  </Button>
+                </div>
+              </div>
+            </div>
+          )}
+        </DialogContent>
+      </Dialog>
     </div>
   );
 };
