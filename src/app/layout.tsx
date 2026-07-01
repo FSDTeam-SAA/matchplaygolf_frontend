@@ -1,6 +1,5 @@
 import type { Metadata } from "next";
 import { Open_Sans } from "next/font/google";
-import { hexco } from "./fonts";
 import "./globals.css";
 import AppProvider from "@/components/provider/AppProvider";
 import { Toaster } from "sonner";
@@ -24,7 +23,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={`${openSans.className} ${hexco.variable} antialiased`}>
+      <body className={`${openSans.className} antialiased`}>
         <AppProvider>{children}</AppProvider>
         <Toaster richColors={true} position="bottom-right" />
       </body>
