@@ -12,6 +12,7 @@ import Link from "next/link";
 import React from "react";
 
 const Footer = () => {
+  
   return (
     <div className="mt-24 bg-black text-white py-10">
       <div className="container mx-auto flex flex-col lg:flex-row gap-5 justify-between border-b border-gray-500 pb-8">
@@ -128,7 +129,7 @@ const Footer = () => {
 
       <div>
         <h1 className="text-center text-gray-500 pt-8 text-sm">
-          @2025 Golf Knockout. All rights reserved.
+          @ {new Date().getFullYear()} Golf Knockout. All rights reserved.
         </h1>
       </div>
     </div>

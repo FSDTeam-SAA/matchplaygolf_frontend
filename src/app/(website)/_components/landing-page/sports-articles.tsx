@@ -5,7 +5,7 @@ import React, { useState, useCallback } from "react";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Dialog, DialogContent } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
-import { Calendar, Type, Eye, Clock } from "lucide-react";
+import { Calendar, Type, Eye, Clock, ExternalLink } from "lucide-react";
 import CustomPagination from "@/components/shared/pagination/custom-pagination";
 
 interface Article {
@@ -68,64 +68,25 @@ function stripHtml(html: string): string {
   return decodeHtmlEntities(withoutTags).trim();
 }
 
-/**
- * Escapes special HTML characters so they render as literal text.
- */
-function escapeHtml(text: string): string {
-  // Must escape & first to avoid double-escaping
-  const AX = String.fromCharCode(38, 97, 109, 112, 59); // &
-  const LX = String.fromCharCode(38, 108, 116, 59); // <
-  const GX = String.fromCharCode(38, 103, 116, 59); // >
-  const QX = String.fromCharCode(38, 113, 117, 111, 116, 59); // "
-  const AMP = String.fromCharCode(38); // &
-  const LT = String.fromCharCode(60); // <
-  const GT = String.fromCharCode(62); // >
-  const QT = String.fromCharCode(34); // "
+const URL_REGEX = /(https?:\/\/[^\s<>"']+|www\.[^\s<>"']+)/gi;
 
-  let result = text;
-  result = result.split(AMP).join(AX);
-  result = result.split(LT).join(LX);
-  result = result.split(GT).join(GX);
-  result = result.split(QT).join(QX);
-  return result;
+function extractUrls(text: string): string[] {
+  return Array.from(new Set(text.match(URL_REGEX) ?? []));
 }
 
-/**
- * Converts HTML description to plain text with clickable links.
- * - Strips all HTML tags and decodes entities
- * - Detects URLs (http/https/www) and wraps them in styled anchor tags
- * - Returns safe HTML string for dangerouslySetInnerHTML
- */
-function convertToPlainTextWithLinks(html: string): string {
-  // Step 1: Strip all HTML tags and decode entities to get raw plain text
-  const text = stripHtml(html);
-  if (!text) return "";
+function normalizeUrl(url: string): string {
+  return url.startsWith("http") ? url : `https://${url}`;
+}
 
-  // Step 2: Escape HTML-sensitive characters so only our <a> tags render
-  const escaped = escapeHtml(text);
-
-  // Step 3: Find URLs and replace with clickable anchor tags
-  const urlRegex = /(https?:\/\/[^\s<>"']+|www\.[^\s<>"']+)/gi;
-  const withLinks = escaped.replace(urlRegex, (url) => {
-    const href = url.startsWith("http") ? url : "https://" + url;
-    return (
-      '<a href="' +
-      href +
-      '" target="_blank" rel="noopener noreferrer nofollow" class="text-primary font-semibold underline underline-offset-2 decoration-primary/30 hover:decoration-primary hover:text-primary/80 transition-all duration-200">' +
-      url +
-      "</a>"
-    );
-  });
-
-  // Step 4: Preserve line breaks
-  return withLinks.split("\n").join("<br />");
+function removeUrlsFromText(text: string): string {
+  return text.replace(URL_REGEX, "").replace(/\s{2,}/g, " ").trim();
 }
 
 /**
  * Gets a clean text preview from the HTML description (for grid cards).
  */
 function getTextPreview(html: string, maxLength = 120): string {
-  const text = stripHtml(html);
+  const text = removeUrlsFromText(stripHtml(html));
   if (!text) return "";
   if (text.length <= maxLength) return text;
   return text.slice(0, maxLength).trimEnd() + "...";
@@ -154,6 +115,11 @@ const SportsArticles = () => {
 
   const articles = data?.data || [];
   const totalPages = data?.pagination?.totalPages || 1;
+  const selectedDescription = selectedArticle
+    ? stripHtml(selectedArticle.description)
+    : "";
+  const selectedLinks = selectedArticle ? extractUrls(selectedDescription) : [];
+  const selectedText = removeUrlsFromText(selectedDescription);
 
   const handlePageChange = useCallback((page: number) => {
     setCurrentPage(page);
@@ -346,15 +312,38 @@ const SportsArticles = () => {
                     Article Description
                   </h3>
 
-                  {/* Plain text content with clickable links */}
-                  <div
-                    className="text-gray-700 leading-relaxed"
-                    dangerouslySetInnerHTML={{
-                      __html: convertToPlainTextWithLinks(
-                        selectedArticle.description
-                      ),
-                    }}
-                  />
+                  <div className="space-y-5">
+                    <p className="text-base leading-8 text-gray-700 whitespace-pre-line">
+                      {selectedText || "No article description available."}
+                    </p>
+
+                    {selectedLinks.length > 0 && (
+                      <div className="rounded-2xl border border-primary/15 bg-primary/5 p-5">
+                        <p className="text-sm font-semibold tracking-wide text-primary uppercase">
+                          Open full article
+                        </p>
+                        <p className="mt-2 text-sm text-gray-600">
+                          Click below to open the article in a new tab.
+                        </p>
+                        <div className="mt-4 flex flex-col gap-3">
+                          {selectedLinks.map((url, index) => (
+                            <a
+                              key={`${url}-${index}`}
+                              href={normalizeUrl(url)}
+                              target="_blank"
+                              rel="noopener noreferrer nofollow"
+                              className="inline-flex w-full items-center justify-between rounded-xl border border-primary/20 bg-white px-4 py-3 text-left text-sm font-medium text-gray-700 transition-all duration-200 hover:border-primary hover:bg-primary/10 hover:text-primary"
+                            >
+                              <span className="pr-4">
+                                Open article link in new tab
+                              </span>
+                              <ExternalLink className="h-4 w-4 shrink-0" />
+                            </a>
+                          ))}
+                        </div>
+                      </div>
+                    )}
+                  </div>
                 </div>
 
                 {/* Actions */}
