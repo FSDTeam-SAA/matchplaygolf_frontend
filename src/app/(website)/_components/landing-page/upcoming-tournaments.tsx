@@ -217,7 +217,7 @@ const UpcomingTournaments = () => {
 
   return (
     <div>
-      <div className="text-center">
+      <div className="text-center pt-6 md:pt-8 lg:pt-10">
         <h1 className="text-3xl font-hexco">
           <span className="text-primary">Upcoming </span>Tournaments
         </h1>
