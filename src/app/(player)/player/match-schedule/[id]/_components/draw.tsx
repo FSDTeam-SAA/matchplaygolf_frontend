@@ -404,7 +404,7 @@ const Draw = ({
                                     )
                                   : "Date not set"}
                               </span>
-                              <span>, </span>
+                              {/* <span>, </span>
                               <span className="text-gray-700 text-sm">
                                 {item?.date
                                   ? new Date(item?.date).toLocaleTimeString(
@@ -415,7 +415,7 @@ const Draw = ({
                                       },
                                     )
                                   : ""}
-                              </span>
+                              </span> */}
                             </div>
                             <div className="flex items-center gap-3 justify-end">
                               <div

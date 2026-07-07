@@ -857,7 +857,7 @@ const EditMatchFormInner = ({ matchData, matchId, token }: { matchData: SingleMa
 
   const match = matchData?.data;
 
-  const players = matchData?.players ?? [];
+  const players = useMemo(() => matchData?.players ?? [], [matchData?.players]);
   // const isPairs = match?.matchType === "Pairs";
 
   const selectablePlayers = useMemo<SelectablePlayer[]>(() => {
@@ -1258,5 +1258,4 @@ const EditMatchFormInner = ({ matchData, matchId, token }: { matchData: SingleMa
 };
 
 export default EditMatchForm;
-
 
