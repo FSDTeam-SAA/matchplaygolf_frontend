@@ -1,15 +1,7 @@
 import type { Metadata } from "next";
-import { Open_Sans } from "next/font/google";
 import "./globals.css";
 import AppProvider from "@/components/provider/AppProvider";
 import { Toaster } from "sonner";
-
-const openSans = Open_Sans({
-  variable: "--font-open-sans",
-  subsets: ["latin"],
-  weight: ["300", "400", "500", "600", "700", "800"],
-  display: "swap",
-});
 
 export const metadata: Metadata = {
   title: "GOLFKO",
@@ -23,7 +15,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={`${openSans.className} antialiased`}>
+      <body className="antialiased">
         <AppProvider>{children}</AppProvider>
         <Toaster richColors={true} position="bottom-right" />
       </body>

@@ -385,7 +385,7 @@ const Draw = ({
                                     )
                                   : "Date not set"}
                               </span>
-                              <span className="hidden sm:inline">, </span>
+                              {/* <span className="hidden sm:inline">, </span>
                               <span className="block sm:inline text-gray-700 text-xs sm:text-sm">
                                 {item?.date
                                   ? new Date(item?.date).toLocaleTimeString(
@@ -396,7 +396,7 @@ const Draw = ({
                                       },
                                     )
                                   : ""}
-                              </span>
+                              </span> */}
                             </div>
                             <div className="flex items-center gap-3 justify-end sm:justify-start">
                               <div
