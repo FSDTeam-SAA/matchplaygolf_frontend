@@ -88,7 +88,7 @@ const GetInTouch = () => {
   }
 
   return (
-    <div className="flex flex-col lg:flex-row gap-10">
+    <div className="flex flex-col lg:flex-row gap-10 pt-6 md:pt-8 lg:pt-10">
       <div className="flex-1">
         <div className="mb-5">
           <h1 className="text-3xl font-hexco">
