@@ -1,11 +1,10 @@
 "use client";
 import {
-  Facebook,
-  Instagram,
-  Linkedin,
+  // Facebook,
+  // Instagram,
+  // Linkedin,
+  // Twitter,
   Mail,
-  Phone,
-  Twitter,
 } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
@@ -80,10 +79,10 @@ const Footer = () => {
                 <Mail className="h-45w-5" />
               </span>
 
-              <span>help@golfknockout.com</span>
+              <span>info@golfko.co.uk</span>
             </Link>
 
-            <Link
+            {/* <Link
               href={""}
               className="text-gray-400 hover:underline flex items-center gap-2"
             >
@@ -92,11 +91,11 @@ const Footer = () => {
               </span>
 
               <span>+1 (555) 123-4567</span>
-            </Link>
+            </Link> */}
           </div>
         </div>
 
-        <div>
+        {/* <div>
           <h1 className="mb-4 font-medium">Social Links</h1>
 
           <div className="flex items-center gap-5">
@@ -124,7 +123,7 @@ const Footer = () => {
               </div>
             </Link>
           </div>
-        </div>
+        </div> */}
       </div>
 
       <div>

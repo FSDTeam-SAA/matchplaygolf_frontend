@@ -5,7 +5,7 @@ import React from "react";
 
 const MissionVision = () => {
   return (
-    <div className="px-4 sm:px-6 lg:px-8">
+    <div className="px-4 sm:px-6 lg:px-8 pt-6 md:pt-8 lg:pt-10">
       {/* mission section */}
       <section className="flex flex-col lg:flex-row gap-8 lg:gap-10 items-center lg:items-start">
         <div className="w-full lg:w-1/2">
