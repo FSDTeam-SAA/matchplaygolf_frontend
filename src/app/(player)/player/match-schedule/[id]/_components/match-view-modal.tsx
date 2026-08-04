@@ -271,6 +271,7 @@ const MatchViewModal: React.FC<MatchViewModalProps> = ({
                           <h3 className="font-bold text-lg">
                             {match.player1Id?.fullName || "Player 1"}
                           </h3>
+                          <p className="text-sm font-medium leading-normal text-black">{match.player1Id?.email || "Email not available"}</p>
                           {match.player1Id?.clubName && (
                             <p className="text-sm text-gray-500 flex items-center justify-center gap-1">
                               <MapPin className="w-3 h-3" />
@@ -340,8 +341,9 @@ const MatchViewModal: React.FC<MatchViewModalProps> = ({
                         </div>
                         <div>
                           <h3 className="font-bold text-lg">
-                            {match.player2Id?.fullName || "Player 2"}
+                            {match.player2Id?.fullName || "N/A"}
                           </h3>
+                          <p className="text-sm font-medium leading-normal text-black">{match.player2Id?.email || "Email not available"}</p>
                           {match.player2Id?.clubName && (
                             <p className="text-sm text-gray-500 flex items-center justify-center gap-1">
                               <MapPin className="w-3 h-3" />
