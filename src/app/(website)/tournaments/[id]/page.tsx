@@ -2,7 +2,7 @@
 import React from "react";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
-import Banner from "../../_components/re-usable/banner";
+// import Banner from "../../_components/re-usable/banner";
 import TournamentsDetails from "./_components/tournaments-details";
 
 const Page = () => {
@@ -27,15 +27,15 @@ const Page = () => {
 
   return (
     <div className="space-y-24">
-      <Banner
+      {/* <Banner
         bannerURL="/images/landing-page/tournaments-details.jpg"
         title="LIVE TOURNAMENT DRAW"
         desc="See tournament details - Knockout Stage"
         buttonTitle="Join Tournament"
         buttonPath="/tournaments"
-      />
+      /> */}
 
-      <div className="container mx-auto">
+      <div className="container mx-auto pt-6 md:pt-8 xl:pt-10">
         <TournamentsDetails />
       </div>
     </div>
