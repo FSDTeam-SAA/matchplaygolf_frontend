@@ -19,6 +19,7 @@ interface PairId {
     fullName: string;
     email: string;
     profileImage: string;
+    handicap?: string | number;
     clubName?: string;
   };
   player2: {
@@ -26,6 +27,7 @@ interface PairId {
     fullName: string;
     email: string;
     profileImage: string;
+    handicap?: string | number;
     clubName?: string;
   };
 }
@@ -41,6 +43,7 @@ export interface Match {
     fullName: string;
     profileImage: string;
     email: string;
+    handicap?: string | number;
     clubName?: string;
   };
   player2Id: {
@@ -48,6 +51,7 @@ export interface Match {
     fullName: string;
     profileImage: string;
     email: string;
+    handicap?: string | number;
     clubName?: string;
   };
   player1Score: string;
@@ -105,8 +109,8 @@ const Draw = ({
   };
 
   const handleVsOpen = (match: Match) => {
-    setIsVsModalOpen(true);
     setMatchInfo(match);
+    setIsVsModalOpen(true);
   };
 
   const handleViewOpen = (matchId: string) => {
@@ -268,8 +272,6 @@ const Draw = ({
                     session.user.id === item.pair2Id?.player1?._id ||
                     session.user.id === item.pair2Id?.player2?._id)));
 
-            console.log("isParticipant: ", isParticipant);
-
             return (
               <div key={item._id}>
                 {item?.matchType === "Single" || item?.matchType === "Team" ? (
@@ -310,37 +312,34 @@ const Draw = ({
                           </div>
                         </div>
 
-                        {/* vs button */}
-                        {isParticipant ? (
-                          <div
-                            className={`px-8 flex items-center gap-2 ${
-                              winner1Flag && "flex-row-reverse"
-                            }`}
+                        {/* VS button and text use the same click handler */}
+                        <div
+                          className={`px-8 flex items-center gap-2 ${
+                            winner1Flag && "flex-row-reverse"
+                          }`}
+                        >
+                          <button
+                            type="button"
+                            onClick={() =>
+                              isParticipant
+                                ? handleVsOpen(item)
+                                : handleNotParticipant()
+                            }
+                            aria-label="View match details"
+                            className="text-base font-medium text-gray-500 cursor-pointer px-4 py-1 w-20 text-center hover:text-gray-700 transition-colors"
                           >
-                            <div
-                              onClick={() => handleVsOpen(item)}
-                              className="text-base font-medium text-gray-500 cursor-pointer px-4 py-1 w-20 text-center"
-                            >
-                              VS
+                            <span>VS</span>
+                          </button>
+                          {item.status === "completed" && (
+                            <div className="text-sm font-medium text-gray-600">
+                              <span className="text-red-700 font-bold text-xl flex">
+                                <span>{item.player1Score}</span>{" "}
+                                <span> & </span>{" "}
+                                <span>{item.player2Score}</span>
+                              </span>
                             </div>
-                            {item.status === "completed" && (
-                              <div className="text-sm font-medium text-gray-600">
-                                <span className="text-red-700 font-bold text-xl flex">
-                                  <span>{item.player1Score}</span>{" "}
-                                  <span> & </span>{" "}
-                                  <span>{item.player2Score}</span>
-                                </span>
-                              </div>
-                            )}
-                          </div>
-                        ) : (
-                          <div
-                            onClick={handleNotParticipant}
-                            className="text-base font-medium text-gray-500 cursor-pointer px-4 py-1 w-20 text-center"
-                          >
-                            VS
-                          </div>
-                        )}
+                          )}
+                        </div>
 
                         {/* winner 2 card */}
                         <div
@@ -384,7 +383,7 @@ const Draw = ({
                           {/* Left side - Player 1 Club */}
                           <div className="min-w-[100px]">
                             <p className="truncate text-sm">
-                              {item.player1Id?.clubName || "No club assigned"}
+                              {item?.player1Id?.clubName || "No club assigned"}
                             </p>
                           </div>
 
@@ -450,7 +449,7 @@ const Draw = ({
                           <div className="flex items-center gap-3 min-w-[180px] justify-end">
                             <div className="text-right">
                               <p className="text-sm truncate">
-                                {item.player2Id?.clubName || "No club assigned"}
+                                {item?.player2Id?.clubName || "No club assigned"}
                               </p>
                             </div>
                           </div>
