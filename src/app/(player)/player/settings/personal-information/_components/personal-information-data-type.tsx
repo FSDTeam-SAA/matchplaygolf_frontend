@@ -15,6 +15,7 @@ export interface ProfileData {
   gender: "male" | "female" | "other" | string;
   role: string;
   clubName: string;
+  teamName: string;
   handicap: string;
   whsNumber: string;
   profileImage: string;

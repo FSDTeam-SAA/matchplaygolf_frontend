@@ -36,8 +36,11 @@ const formSchema = z.object({
   country: z.string().min(2, {
     message: "Country must be at least 2 characters.",
   }),
-  sportNationalId: z.string().min(2, {
-    message: "Sport National Id must be at least 2 characters.",
+  clubName: z.string().min(2, {
+    message: "Club Name must be at least 2 characters.",
+  }),
+  teamName: z.string().min(2, {
+    message: "Team Name must be at least 2 characters.",
   }),
   handicap: z.string().min(1, {
     message: "Handicap Index must be at least 1 characters.",
@@ -59,7 +62,8 @@ const PersonalInformationForm = () => {
       fullName: "",
       phone: "",
       country: "",
-      sportNationalId: "",
+      clubName: "",
+      teamName: "",
       handicap: "",
       whsNumber: "",
       email:""
@@ -94,7 +98,8 @@ const PersonalInformationForm = () => {
         phone: data?.data?.phone,
         email: data?.data?.email,
         country: data?.data?.country,
-        sportNationalId: data?.data?.sportNationalId,
+        clubName: data?.data?.clubName,
+        teamName: data?.data?.teamName,
         handicap: data?.data?.handicap,
         whsNumber: data?.data?.whsNumber,
         gender: data?.data?.gender,
@@ -141,7 +146,8 @@ const PersonalInformationForm = () => {
     formData?.append("gender", values?.gender);
     formData?.append("phone", values?.phone);
     formData?.append("country", values?.country);
-    formData?.append("sportNationalId", values?.sportNationalId);
+    formData?.append("clubName", values?.clubName);
+    formData?.append("teamName", values?.teamName);
     formData?.append("whsNumber", values?.whsNumber);
     formData?.append("handicap", values?.handicap);
 
@@ -260,7 +266,7 @@ const PersonalInformationForm = () => {
               />
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
+            <div className="grid grid-cols-1 md:grid-cols-5 gap-6">
               <FormField
                 control={form.control}
                 name="phone"
@@ -280,9 +286,28 @@ const PersonalInformationForm = () => {
                   </FormItem>
                 )}
               />
+               <FormField
+                control={form.control}
+                name="teamName"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel className="text-base text-[#434C45] leading-[150%] font-medium">
+                      Team Name
+                    </FormLabel>
+                    <FormControl>
+                      <Input
+                        className="w-full h-[48px] py-2 px-3 rounded-[8px] border border-[#C0C3C1] text-base font-medium leading-[120%] text-[#434C45)]"
+                        placeholder="Your team name"
+                        {...field}
+                      />
+                    </FormControl>
+                    <FormMessage className="text-red-500" />
+                  </FormItem>
+                )}
+              />
               <FormField
                 control={form.control}
-                name="sportNationalId"
+                name="clubName"
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel className="text-base text-[#434C45] leading-[150%] font-medium">
@@ -299,6 +324,7 @@ const PersonalInformationForm = () => {
                   </FormItem>
                 )}
               />
+             
               <FormField
                 control={form.control}
                 name="handicap"
