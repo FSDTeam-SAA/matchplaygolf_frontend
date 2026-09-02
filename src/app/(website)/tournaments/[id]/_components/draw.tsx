@@ -319,14 +319,14 @@ const Draw = ({
                               <h1 className="font-semibold text-sm md:text-base truncate">
                                 {player1DisplayName}
                               </h1>
-                              {item.matchType === "Team" && item.player1Id?.teamName && (
+                              {/* {item.matchType === "Team" && item.player1Id?.teamName && (
                                 <p className="text-xs text-gray-600 truncate">
                                   Team: {item.player1Id.teamName}
                                 </p>
-                              )}
-                              <p className="text-xs text-gray-600">
+                              )} */}
+                              {/* <p className="text-xs text-gray-600">
                                 Seeder: {item.player1Id?.seeder ?? "N/A"}
-                              </p>
+                              </p> */}
                             </div>
                           </div>
                         </div>
@@ -365,14 +365,14 @@ const Draw = ({
                               <h1 className="font-semibold text-sm md:text-base truncate">
                                 {player2DisplayName}
                               </h1>
-                              {item.matchType === "Team" && item.player2Id?.teamName && (
+                              {/* {item.matchType === "Team" && item.player2Id?.teamName && (
                                 <p className="text-xs text-gray-600 truncate">
                                   Team: {item.player2Id.teamName}
                                 </p>
-                              )}
-                              <p className="text-xs text-gray-600">
+                              )} */}
+                              {/* <p className="text-xs text-gray-600">
                                 Seeder: {item.player2Id?.seeder ?? "N/A"}
-                              </p>
+                              </p> */}
                             </div>
                             <div className="h-10 w-10 md:h-12 md:w-12 rounded-full flex items-center justify-center overflow-hidden bg-gray-100">
                               {item.player2Id?.profileImage ? (

@@ -324,14 +324,14 @@ const Draw = ({
                               <h1 className="font-semibold">
                                 {player1DisplayName}
                               </h1>
-                              {item.matchType === "Team" && item.player1Id?.teamName && (
+                              {/* {item.matchType === "Team" && item.player1Id?.teamName && (
                                 <p className="text-xs text-gray-600 truncate">
                                   Team: {item.player1Id.teamName}
                                 </p>
                               )}
                               <p className="text-xs text-gray-600">
                                 Seeder: {item.player1Id?.seeder ?? "N/A"}
-                              </p>
+                              </p> */}
                             </div>
                           </div>
                         </div>
@@ -376,14 +376,14 @@ const Draw = ({
                               <h1 className="font-semibold">
                                 {player2DisplayName}
                               </h1>
-                              {item.matchType === "Team" && item.player2Id?.teamName && (
+                              {/* {item.matchType === "Team" && item.player2Id?.teamName && (
                                 <p className="text-xs text-gray-600 truncate">
                                   Team: {item.player2Id.teamName}
                                 </p>
                               )}
                               <p className="text-xs text-gray-600">
                                 Seeder: {item.player2Id?.seeder ?? "N/A"}
-                              </p>
+                              </p> */}
                             </div>
                             <div className="h-12 w-12 rounded-full flex items-center justify-center overflow-hidden bg-gray-100">
                               {item.player2Id?.profileImage ? (
