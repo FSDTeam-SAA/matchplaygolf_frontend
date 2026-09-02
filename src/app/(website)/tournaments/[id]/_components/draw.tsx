@@ -17,6 +17,8 @@ interface PairId {
   player1: {
     _id: string;
     fullName: string;
+    teamName?: string;
+    seeder?: number;
     email: string;
     profileImage: string;
     handicap: string;
@@ -25,6 +27,8 @@ interface PairId {
   player2: {
     _id: string;
     fullName: string;
+    teamName?: string;
+    seeder?: number;
     email: string;
     profileImage: string;
     handicap: string;
@@ -41,6 +45,8 @@ export interface Match {
   player1Id: {
     _id: string;
     fullName: string;
+    teamName?: string;
+    seeder?: number;
     profileImage: string;
     email: string;
     handicap: string;
@@ -49,6 +55,8 @@ export interface Match {
   player2Id: {
     _id: string;
     fullName: string;
+    teamName?: string;
+    seeder?: number;
     profileImage: string;
     email: string;
     handicap: string;
@@ -263,6 +271,14 @@ const Draw = ({
           {matches.map((item, index) => {
             const winner1 = item?.winner === item?.player1Id?._id;
             const winner2 = item?.winner === item?.player2Id?._id;
+            const player1DisplayName =
+              item.matchType === "Team"
+                ? item.player1Id?.teamName || "Team 1"
+                : item.player1Id?.fullName || "Player 1";
+            const player2DisplayName =
+              item.matchType === "Team"
+                ? item.player2Id?.teamName || "Team 2"
+                : item.player2Id?.fullName || "Player 2";
 
             return (
               <div key={item._id}>
@@ -288,21 +304,29 @@ const Draw = ({
                               {item.player1Id?.profileImage ? (
                                 <Image
                                   src={item.player1Id.profileImage}
-                                  alt={item.player1Id.fullName}
+                                  alt={player1DisplayName}
                                   width={1000}
                                   height={1000}
                                   className="h-full w-full rounded-full object-cover"
                                 />
                               ) : (
                                 <span className="text-base md:text-lg font-semibold text-red-800">
-                                  {item.player1Id?.fullName?.charAt(0) || "P1"}
+                                  {player1DisplayName.charAt(0)}
                                 </span>
                               )}
                             </div>
                             <div>
                               <h1 className="font-semibold text-sm md:text-base truncate">
-                                {item.player1Id?.fullName || "Player 1"}
+                                {player1DisplayName}
                               </h1>
+                              {item.matchType === "Team" && item.player1Id?.teamName && (
+                                <p className="text-xs text-gray-600 truncate">
+                                  Team: {item.player1Id.teamName}
+                                </p>
+                              )}
+                              <p className="text-xs text-gray-600">
+                                Seeder: {item.player1Id?.seeder ?? "N/A"}
+                              </p>
                             </div>
                           </div>
                         </div>
@@ -339,21 +363,29 @@ const Draw = ({
                           <div className="flex items-center gap-3 justify-end">
                             <div className="text-right">
                               <h1 className="font-semibold text-sm md:text-base truncate">
-                                {item.player2Id?.fullName || "Player 2"}
+                                {player2DisplayName}
                               </h1>
+                              {item.matchType === "Team" && item.player2Id?.teamName && (
+                                <p className="text-xs text-gray-600 truncate">
+                                  Team: {item.player2Id.teamName}
+                                </p>
+                              )}
+                              <p className="text-xs text-gray-600">
+                                Seeder: {item.player2Id?.seeder ?? "N/A"}
+                              </p>
                             </div>
                             <div className="h-10 w-10 md:h-12 md:w-12 rounded-full flex items-center justify-center overflow-hidden bg-gray-100">
                               {item.player2Id?.profileImage ? (
                                 <Image
                                   src={item.player2Id.profileImage}
-                                  alt={item.player2Id.fullName}
+                                  alt={player2DisplayName}
                                   width={1000}
                                   height={1000}
                                   className="h-full w-full rounded-full object-cover"
                                 />
                               ) : (
                                 <span className="text-base md:text-lg font-semibold text-red-800">
-                                  {item.player2Id?.fullName?.charAt(0) || "P2"}
+                                  {player2DisplayName.charAt(0)}
                                 </span>
                               )}
                             </div>

@@ -78,6 +78,14 @@ const VsModal = ({ isModalOpen, handleCloseModal, matchInfo }: Props) => {
             <h1 className="text-lg md:text-xl font-semibold text-gray-800 mt-2 line-clamp-2">
               {match?.player1Id?.fullName || "N/A"}
             </h1>
+            {match?.matchType === "Team" && (
+              <p className="text-sm md:text-base text-gray-600 mt-1">
+                Team Name: {match?.player1Id?.teamName || "N/A"}
+              </p>
+            )}
+            <p className="text-sm md:text-base text-gray-600 mt-1">
+              Seeder: {match?.player1Id?.seeder ?? "N/A"}
+            </p>
             <p className="text-sm md:text-base text-gray-600 mt-1 break-words max-w-full">
               {match?.player1Id?.email || "No email"}
             </p>
@@ -123,6 +131,14 @@ const VsModal = ({ isModalOpen, handleCloseModal, matchInfo }: Props) => {
             <h1 className="text-lg md:text-xl font-semibold text-gray-800 mt-2 line-clamp-2">
               {match?.player2Id?.fullName || "N/A"}
             </h1>
+            {match?.matchType === "Team" && (
+              <p className="text-sm md:text-base text-gray-600 mt-1">
+                Team Name: {match?.player2Id?.teamName || "N/A"}
+              </p>
+            )}
+            <p className="text-sm md:text-base text-gray-600 mt-1">
+              Seeder: {match?.player2Id?.seeder ?? "N/A"}
+            </p>
             <p className="text-sm md:text-base text-gray-600 mt-1 break-words max-w-full">
               {match?.player2Id?.email || "No email"}
             </p>
