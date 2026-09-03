@@ -46,6 +46,7 @@ type MatchUpdateFormValues = z.infer<typeof matchUpdateSchema>;
 interface Player {
   _id: string;
   fullName: string;
+  teamName?: string;
   email: string;
   profileImage?: string;
 }
@@ -54,6 +55,7 @@ interface Match {
   _id: string;
   player1Id: Player;
   player2Id: Player;
+  matchType?: string;
   player1Score?: number;
   player2Score?: number;
   date?: string;
@@ -66,7 +68,6 @@ interface Match {
 const UpdateMatch = () => {
   const searchParams = useSearchParams();
   const token = searchParams.get("token") || "";
-  console.log(token, "kongkon")
   const { id } = useParams();
   const queryClient = useQueryClient();
   // const session = useSession();
@@ -266,6 +267,10 @@ const UpdateMatch = () => {
   }
 
   const matchData = match?.data;
+  const getParticipantName = (player?: Player) =>
+    matchData?.matchType === "Team"
+      ? player?.teamName || player?.fullName
+      : player?.fullName;
 
   return (
     <div className="p-8 max-w-3xl mx-auto">
@@ -275,8 +280,9 @@ const UpdateMatch = () => {
             Update Match Result
           </CardTitle>
           <CardDescription className="text-center">
-            Update the match details between {matchData?.player1Id?.fullName}{" "}
-            and {matchData?.player2Id?.fullName}
+            Update the match details between{" "}
+            {getParticipantName(matchData?.player1Id)} and{" "}
+            {getParticipantName(matchData?.player2Id)}
           </CardDescription>
         </CardHeader>
         <CardContent>
@@ -307,7 +313,7 @@ const UpdateMatch = () => {
                               <FormLabel className="font-normal cursor-pointer flex-1">
                                 <div className="p-4 border-2 rounded-lg hover:bg-accent transition-all data-[state=checked]:border-primary data-[state=checked]:bg-primary/5">
                                   <div>
-                                    <span>{player?.fullName}</span>
+                                    <span>{getParticipantName(player)}</span>
                                   </div>
                                 </div>
                               </FormLabel>
@@ -329,7 +335,7 @@ const UpdateMatch = () => {
                   render={({ field }) => (
                     <FormItem>
                       <FormLabel>
-                        {matchData?.player1Id?.fullName} Score *
+                        {getParticipantName(matchData?.player1Id)} Score *
                       </FormLabel>
                       <FormControl>
                         <Input
@@ -350,7 +356,7 @@ const UpdateMatch = () => {
                   render={({ field }) => (
                     <FormItem>
                       <FormLabel>
-                        {matchData?.player2Id?.fullName} Score *
+                        {getParticipantName(matchData?.player2Id)} Score *
                       </FormLabel>
                       <FormControl>
                         <Input

@@ -19,9 +19,11 @@ interface Tournament {
     | "scheduled"
     | "upcoming"
     | "ongoing"
+    | "in progress"
     | "completed"
     | "cancelled"
     | "pending";
+  tournamentStatus: "pending" | "approved" | "rejected";
   sportName: string;
   format: string;
   drawFormat: string;
@@ -112,6 +114,14 @@ const UpcomingTournaments = () => {
 
   const tournaments = data?.tournaments || [];
 
+
+
+  const filteredTournaments = tournaments.filter(
+    (tournament: Tournament) =>
+      tournament.status === "in progress" &&
+      tournament.tournamentStatus === "approved"
+  );
+
   const totalPages = data?.pagination?.totalPages || 1;
 
   const handlePageChange = (page: number) => {
@@ -191,7 +201,7 @@ const UpcomingTournaments = () => {
     );
   }
 
-  if (tournaments.length === 0) {
+  if (filteredTournaments.length === 0) {
     return (
       <div>
         <div className="text-center">
@@ -243,7 +253,7 @@ const UpcomingTournaments = () => {
       </div>
 
       <div className="mt-10 grid grid-cols-1 md:grid-cols-3 gap-8">
-        {tournaments.map((tournament: Tournament) => (
+        {filteredTournaments.map((tournament: Tournament) => (
           <div
             key={tournament._id}
             className="p-5 rounded-lg shadow-[0px_2px_4px_2px_#0000001A] hover:scale-105 duration-200 transition-all"
