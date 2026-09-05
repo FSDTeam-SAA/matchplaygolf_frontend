@@ -1,30 +1,66 @@
 "use client";
 import { useQuery } from "@tanstack/react-query";
-import { useParams } from "next/navigation";
-import React, { useState } from "react";
+import { useParams, useSearchParams } from "next/navigation";
+import React, { useEffect, useState } from "react";
 import Rules from "./rules";
 import Details from "./details";
 import Draw from "./draw";
 
 const TournamentsDetails = () => {
   const params = useParams();
+  const searchParams = useSearchParams();
   const id = params?.id;
+  const requestedRound = Number(searchParams.get("round"));
+  const initialRound = Number.isInteger(requestedRound) && requestedRound > 0
+    ? requestedRound
+    : null;
 
   const [isActive, setIsActive] = useState("draw");
-  const [roundNumber, setRoundNumber] = useState(1);
+  const [roundNumber, setRoundNumber] = useState<number | null>(initialRound);
 
   const { data, isLoading } = useQuery({
-    queryKey: ["tournaments", roundNumber],
+    queryKey: ["tournaments", id, roundNumber],
     queryFn: async () => {
+      const roundQuery = roundNumber ? `?roundNumber=${roundNumber}` : "";
       const res = await fetch(
-        `${process.env.NEXT_PUBLIC_BACKEND_URL}/tournament/getAllMatches/${id}?roundNumber=${roundNumber}`
+        `${process.env.NEXT_PUBLIC_BACKEND_URL}/tournament/getAllMatches/${id}${roundQuery}`
       );
 
       const data = await res.json();
 
       return data?.data;
     },
+    enabled: !!id,
   });
+
+  useEffect(() => {
+    if (!data || roundNumber !== null) return;
+
+    const rounds = data?.rounds ?? [];
+    const serverCurrentRound = data?.currentRound?.roundNumber;
+
+    if (serverCurrentRound) {
+      setRoundNumber(serverCurrentRound);
+      return;
+    }
+
+    const now = new Date().getTime();
+    const roundsWithDates = rounds
+      .filter((round: { date?: string }) => round.date)
+      .sort(
+        (a: { date?: string }, b: { date?: string }) =>
+          new Date(a.date as string).getTime() -
+          new Date(b.date as string).getTime(),
+      );
+
+    const currentRound =
+      roundsWithDates.find(
+        (round: { date?: string }) =>
+          new Date(round.date as string).getTime() >= now,
+      ) ?? roundsWithDates[roundsWithDates.length - 1];
+
+    setRoundNumber(currentRound?.roundNumber ?? rounds[0]?.roundNumber ?? 1);
+  }, [data, roundNumber]);
 
   return (
     <div>
@@ -86,8 +122,8 @@ const TournamentsDetails = () => {
             <div>
               <Draw
                 data={data}
-                roundNumber={roundNumber}
-                setRoundNumber={setRoundNumber}
+                roundNumber={roundNumber ?? 1}
+                setRoundNumber={(value) => setRoundNumber(value)}
                 matches={data?.matches}
                 isLoading={isLoading}
               />
