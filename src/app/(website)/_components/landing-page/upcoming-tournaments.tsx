@@ -280,7 +280,7 @@ const UpcomingTournaments = () => {
             </div>
 
             <div className="mt-5">
-              <Link href={`/tournaments/${tournament?._id}`}>
+              <Link href={`/tournaments/${tournament?._id}?round=current`}>
                 <Button
                   variant={"outline"}
                   className="w-full h-[45px] border border-primary text-primary hover:text-primary font-semibold hover:bg-primary/10"
