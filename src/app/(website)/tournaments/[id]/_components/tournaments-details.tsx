@@ -2,6 +2,7 @@
 import { useQuery } from "@tanstack/react-query";
 import { useParams, useSearchParams } from "next/navigation";
 import React, { useEffect, useState } from "react";
+import { Check, Copy } from "lucide-react";
 import Rules from "./rules";
 import Details from "./details";
 import Draw from "./draw";
@@ -17,6 +18,25 @@ const TournamentsDetails = () => {
 
   const [isActive, setIsActive] = useState("draw");
   const [roundNumber, setRoundNumber] = useState<number | null>(initialRound);
+  const [shareUrl, setShareUrl] = useState("");
+  const [isCopied, setIsCopied] = useState(false);
+
+  useEffect(() => {
+    if (!id) return;
+
+    const tournamentId = Array.isArray(id) ? id[0] : id;
+    setShareUrl(
+      `${window.location.origin}/tournaments/${tournamentId}?round=current`,
+    );
+  }, [id]);
+
+  const handleCopyUrl = async () => {
+    if (!shareUrl) return;
+
+    await navigator.clipboard.writeText(shareUrl);
+    setIsCopied(true);
+    window.setTimeout(() => setIsCopied(false), 2000);
+  };
 
   const { data, isLoading } = useQuery({
     queryKey: ["tournaments", id, roundNumber],
@@ -64,11 +84,26 @@ const TournamentsDetails = () => {
 
   return (
     <div>
-      <div className=" mb-8">
-        <h3 className="text-3xl font-hexco">
-          {data?.tournament?.tournamentName}
+      <div className="mb-8">
+        <h3 className="text-3xl font-hexco sm:text-4xl">
+          {data?.tournament?.tournamentName ?? "Tournament"}
         </h3>
-        <p className="text-gray-500 mt-2">
+
+        <div className="mt-3 flex max-w-full items-center gap-2 text-sm font-semibold text-gray-700 sm:text-base">
+          <span className="min-w-0 break-all">{shareUrl}</span>
+          <button
+            type="button"
+            onClick={handleCopyUrl}
+            disabled={!shareUrl}
+            aria-label={isCopied ? "Tournament URL copied" : "Copy tournament URL"}
+            title={isCopied ? "Copied" : "Copy URL"}
+            className="shrink-0 rounded-md p-1.5 transition hover:bg-gray-100 disabled:cursor-not-allowed disabled:opacity-50"
+          >
+            {isCopied ? <Check className="h-5 w-5" /> : <Copy className="h-5 w-5" />}
+          </button>
+        </div>
+
+        <p className="mt-3 text-gray-500">
           Matches to be played by{" "}
           {new Date(data?.tournament?.startDate).toLocaleDateString("en-US", {
             month: "short",
